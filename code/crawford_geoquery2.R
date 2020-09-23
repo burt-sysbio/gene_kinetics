@@ -5,15 +5,16 @@ library(GEOquery)
 require(tidyr)
 require(dplyr)
 require(stringr)
-# load series and platform data from GEO
-# load series and platform data from GEO
+require(ggplot2)
 
+# load series and platform data from GEO
 gset <- getGEO("GSE41870", GSEMatrix =TRUE, AnnotGPL=TRUE)
 if (length(gset) > 1) idx <- grep("GPL6246", attr(gset, "names")) else idx <- 1
 gset <- gset[[idx]]
 
 # remove last 8 columns / samples because not kinetic data
 gset <- gset[,1:(ncol(exprs(gset))-8)]
+
 # log2 transform
 ex <- exprs(gset)
 qx <- as.numeric(quantile(ex, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
@@ -67,21 +68,37 @@ ex_sub <- ex_sub %>% mutate(cell_type = str_extract(cell_type, "CD."))
 ex_sub$infection[ex_sub$time == 0] <- "LCMV-Arm"
 ex_sub_d0 <- ex_sub %>% filter(time == 0)
 ex_sub_d0$infection <- "LCMV-Clone 13"
-
 ex_sub <- rbind(ex_sub, ex_sub_d0)
 
-require(ggplot2)
-
+# compute avg expression per infection, cell type, time point and gene
 avg <- ex_sub %>% group_by(time, `Gene symbol`, infection, cell_type) %>% summarize(avg = mean(value))
 ex_sub <- left_join(ex_sub, avg)
 
+# normalize expression to day 0
+ex_sub_d0 <- ex_sub %>% filter(time == 0)
+ex_sub_d0 <- ex_sub_d0 %>% select(-value, -time, -name)
+ex_sub_d0 <- rename(ex_sub_d0, "avgd0" = "avg")
+ex_sub <- left_join(ex_sub, ex_sub_d0)
+
+ex_sub <- ex_sub %>% mutate(avg_norm = avg / avgd0, val_norm = value / avgd0)
+
+
 ex_sub$time <- as.numeric(ex_sub$time)
-p1 <- ggplot(ex_sub, aes(time, value))
+
+p1 <- ggplot(ex_sub, aes(time, val_norm))
 p1 + 
   geom_point(aes(color = `Gene symbol`)) + 
-  geom_line(aes(time, avg, color = `Gene symbol`)) +
+  geom_line(aes(time, avg_norm, color = `Gene symbol`)) +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15))
   
 ggsave("figures/gene_kinetics.pdf")
+
+
+python <- ex_sub %>% select(infection, cell_type, `Gene symbol`, time, avg_norm)
+python <- distinct(python)
+python2 <- split(python, list(python$infection, python$cell_type))
+python2 <- lapply(python2, pivot_wider, names_from = time, values_from = avg_norm)
+python2 <- bind_rows(python2)
+write.csv(python2, "output/avg_expression_norm.csv", row.names = F)
