@@ -71,8 +71,7 @@ ex_sub_d0$infection <- "LCMV-Clone 13"
 ex_sub <- rbind(ex_sub, ex_sub_d0)
 
 # compute avg expression per infection, cell type, time point and gene
-avg <- ex_sub %>% group_by(time, `Gene symbol`, infection, cell_type) %>% summarize(avg = mean(value))
-ex_sub <- left_join(ex_sub, avg)
+ex_sub <- ex_sub %>% group_by(time, `Gene symbol`, infection, cell_type) %>% mutate(avg = mean(value)) %>% ungroup()
 
 # normalize expression to day 0
 ex_sub_d0 <- ex_sub %>% filter(time == 0)
@@ -82,6 +81,16 @@ ex_sub <- left_join(ex_sub, ex_sub_d0)
 
 ex_sub <- ex_sub %>% mutate(avg_norm = avg / avgd0, val_norm = value / avgd0)
 
+# change to response time dist subtract min
+ex_sub <- ex_sub %>% mutate(val_norm_rtm = val_norm - 1.0, avg_norm_rtm = avg_norm - 1.0)
+
+# divide by avg 
+ex_sub <- ex_sub %>% group_by(`Gene symbol`, infection, cell_type) %>% mutate(val_norm_rtm2 = val_norm_rtm / max(avg_norm_rtm))
+ex_sub <- ex_sub %>% group_by(`Gene symbol`, infection, cell_type) %>% mutate(avg_norm_rtm2 = avg_norm_rtm / max(avg_norm_rtm))
+
+# add errors for resp time distr and norm vals
+ex_sub <- ex_sub %>% group_by(cell_type, `Gene symbol`, infection, time) %>% mutate(err = sd(val_norm), err_rtm = sd(val_norm_rtm2))
+#ex_sub <- ex_sub %>% filter(`Gene symbol` == "Ifng")
 
 ex_sub$time <- as.numeric(ex_sub$time)
 
@@ -96,9 +105,31 @@ p1 +
 ggsave("figures/gene_kinetics.pdf")
 
 
-python <- ex_sub %>% select(infection, cell_type, `Gene symbol`, time, avg_norm)
+p1 <- ggplot(ex_sub, aes(time, val_norm_rtm))
+p1 + 
+  geom_point(aes(color = `Gene symbol`)) + 
+  geom_line(aes(time, avg_norm_rtm, color = `Gene symbol`)) +
+  facet_grid(infection~cell_type) +
+  theme_bw() +
+  theme(text = element_text(size = 15))
+
+ggsave("figures/gene_kinetics_rtm.pdf")
+
+
+
+p1 <- ggplot(ex_sub, aes(time, val_norm_rtm2))
+p1 + 
+  geom_point(aes(color = `Gene symbol`)) + 
+  geom_line(aes(time, avg_norm_rtm2, color = `Gene symbol`)) +
+  facet_grid(infection~cell_type) +
+  theme_bw() +
+  theme(text = element_text(size = 15))
+
+ggsave("figures/gene_kinetics_rtm.pdf")
+# save a wide form df with times and averages for python processing 
+python <- ex_sub %>% ungroup() %>% select(infection, cell_type, `Gene symbol`, time, avg_norm, err, avg_norm_rtm2, err_rtm)
 python <- distinct(python)
-python2 <- split(python, list(python$infection, python$cell_type))
-python2 <- lapply(python2, pivot_wider, names_from = time, values_from = avg_norm)
-python2 <- bind_rows(python2)
-write.csv(python2, "output/avg_expression_norm.csv", row.names = F)
+#python2 <- split(python, list(python$infection, python$cell_type))
+#python2 <- lapply(python2, pivot_wider, names_from = time, values_from = avg_norm)
+#python2 <- bind_rows(python2)
+write.csv(python, "output/avg_expression_norm.csv", row.names = F)

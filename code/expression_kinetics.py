@@ -8,10 +8,35 @@ Created on Wed Sep 23 13:48:39 2020
 import pandas as pd
 import numpy as np
 import seaborn as sns
-sns.set(context = "poster", style = "ticks")
-df = pd.read_csv("../output/avg_expression_norm.csv")
+from scipy.optimize import curve_fit
+from scipy.special import gammainc
 
-# only keep expression values
+def gamma_cdf(t, alpha, beta):
+    dummy = t*beta
+    return gammainc(alpha,dummy)
+
+
+sns.set(context = "poster", style = "ticks")
+data = pd.read_csv("../output/avg_expression_norm.csv")
+
+# =============================================================================
+# split and to wide format
+# =============================================================================
+df_raw_val = data[["infection", "cell_type", "Gene symbol", "time", "avg_norm"]]
+df_raw_err = data[["infection", "cell_type", "Gene symbol", "time", "err"]]
+df_rtm_val = data[["infection", "cell_type", "Gene symbol", "time", "avg_norm_rtm2"]]
+df_rtm_err = data[["infection", "cell_type", "Gene symbol", "time", "err_rtm"]]
+
+df_list = [df_raw_val, df_raw_err, df_rtm_val, df_rtm_err]
+df_list = [pd.pivot_table(data = df, 
+                          index = ["infection", "cell_type", "Gene symbol"], 
+                          columns = "time") for df in df_list]
+df_list = [df.reset_index() for df in df_list]
+
+# =============================================================================
+# raw data find genes that change at all
+# =============================================================================
+df = df_list[0]
 df_vals = df.iloc[:,-5:]
 arr = df_vals.values
 
@@ -33,11 +58,13 @@ arr3 = np.sum(arr3, axis = 1)
 adj_pairs = 1
 arr3 = arr3 > adj_pairs
 
-
 # subset df for genes that change
 df2 = df[arr3]
 df2 = df2.reset_index(drop = True)
 
+# =============================================================================
+# raw data add Nans after plateau phase
+# =============================================================================
 # kick out values that decrease after plateau
 df3 = df2.iloc[:,-5:].values
 # for each row check if row is monotonic, if not find first deviating element
@@ -52,15 +79,19 @@ for i in range(len(df3)):
         idx = idx[0]
         df3[i, (idx+1):] = np.nan
 
+# update nans in original df
 df4 = df2.copy()
 df4.iloc[:,-5:] = df3
 
-df4 = pd.melt(df4, id_vars = ["infection", "cell_type", "Gene symbol"],
-              var_name = "time", value_name = "expr")
+# =============================================================================
+# visualize
+# =============================================================================
+df4 = pd.melt(df4, id_vars = ["infection", "cell_type", "Gene symbol"])
+df4 = df4[["infection", "cell_type", "Gene symbol", "time", "value"]]
 
 df4["time"] = pd.to_numeric(df4["time"])
 
-g = sns.relplot(data = df4, x = "time", y = "expr", 
+g = sns.relplot(data = df4, x = "time", y = "value", 
                 hue = "Gene symbol", 
                 col = "infection",
                 row = "cell_type",
@@ -69,3 +100,51 @@ g = sns.relplot(data = df4, x = "time", y = "expr",
 
 g.set_titles(row_template="{row_name}", col_template = "{col_name}")
 
+
+# =============================================================================
+# use response time normed data for meaningful raw data
+# =============================================================================
+# filter for values where sth happens at all and only for plateau phase (all in df4)
+df5 = df4.dropna()
+df5 = df5.drop(["value"], axis = 1)
+
+df_rtm_val2 = pd.merge(df5, df_rtm_val, how = "left")
+df_rtm_err2 = pd.merge(df5, df_rtm_err, how = "left")
+
+
+g = sns.relplot(data = df_rtm_val2, x = "time", y = "avg_norm_rtm2", 
+                hue = "Gene symbol", 
+                col = "infection",
+                row = "cell_type",
+                kind = "line",
+                facet_kws = {"margin_titles":True})
+
+g.set_titles(row_template="{row_name}", col_template = "{col_name}")
+
+
+# need to make wide again for fit
+df_list = [df_rtm_val2, df_rtm_err2]
+df_list = [pd.pivot_table(data = df, 
+                          index = ["infection", "cell_type", "Gene symbol"], 
+                          columns = "time") for df in df_list]
+df_list = [df.reset_index() for df in df_list]
+
+# extract data and errors
+vals = df_list[0].iloc[:,-5:].values
+errs = df_list[1].iloc[:,-5:].values
+
+x = np.array([0, 6.0, 8.0, 15.0, 30.0])
+for i in range(len(vals)):
+    y = vals[i,:]
+    # kick out nans in y and later in sigma
+    y = y[~np.isnan(y)]
+    
+    # only do fit procedure if at least 3 vals in y to fit
+    if len(y) > 2:
+        xdata = x[:len(y)]
+        sigma = errs[i,:]
+        sigma = sigma[~np.isnan(sigma)]
+        fit = curve_fit(f = gamma_cdf, xdata= xdata, ydata = y, sigma = sigma,
+                        bounds=(0.0001, np.inf), absolute_sigma = True)
+        print(fit[0])
+    
