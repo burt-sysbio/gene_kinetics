@@ -36,10 +36,18 @@ fdata <- fdata %>% select(c("ID", "Gene title", "Gene symbol", "Gene ID"))
 fdata2 <- fdata %>% filter(`Gene symbol` != "")
 
 # choose gene subset
-gene_names <- c("Ifng", "Tbx21", "Gata3", "Il2", "Il21", "Il10", "Tnf")
+wei_th1 <- read_csv("gene_sets/references/wei_th1.CSV")
+zhu_2012 <- read_csv("gene_sets/references/zhu_2012.CSV")
+stubbington_th1 <- read_csv("gene_sets/references/stubbington_th1.CSV")
+colnames(wei_th1)[1] <- "gene_symbol"
+colnames(zhu_2012)[1] <- "gene_symbol"
+colnames(stubbington_th1)[1] <- "gene_symbol"
+
+
+gene_names <- wei_th1$gene_symbol
 fdata_sub <- fdata2 %>% filter(`Gene symbol` %in% gene_names)
 
-# subset of ex with corresponding genes
+# subset of ex with corresponding probe IDs
 ex_sub <- ex %>% filter(ID %in% fdata_sub$ID)
 ex_sub <- pivot_longer(ex_sub, cols = -ID)
 
@@ -77,6 +85,8 @@ ex_sub <- ex_sub %>% group_by(time, `Gene symbol`, infection, cell_type) %>% mut
 ex_sub_d0 <- ex_sub %>% filter(time == 0)
 ex_sub_d0 <- ex_sub_d0 %>% select(-value, -time, -name)
 ex_sub_d0 <- rename(ex_sub_d0, "avgd0" = "avg")
+# kick out duplicate rows that were induced because col removal
+ex_sub_d0 <- distinct(ex_sub_d0)
 ex_sub <- left_join(ex_sub, ex_sub_d0)
 
 ex_sub <- ex_sub %>% mutate(avg_norm = avg / avgd0, val_norm = value / avgd0)
@@ -101,9 +111,7 @@ p1 +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15))
-  
 ggsave("figures/gene_kinetics.pdf")
-
 
 p1 <- ggplot(ex_sub, aes(time, val_norm_rtm))
 p1 + 
@@ -112,10 +120,7 @@ p1 +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15))
-
 ggsave("figures/gene_kinetics_rtm.pdf")
-
-
 
 p1 <- ggplot(ex_sub, aes(time, val_norm_rtm2))
 p1 + 
@@ -124,11 +129,12 @@ p1 +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15))
-
 ggsave("figures/gene_kinetics_rtm.pdf")
+
 # save a wide form df with times and averages for python processing 
 python <- ex_sub %>% ungroup() %>% select(infection, cell_type, `Gene symbol`, time, avg_norm, err, avg_norm_rtm2, err_rtm)
 python <- distinct(python)
+
 #python2 <- split(python, list(python$infection, python$cell_type))
 #python2 <- lapply(python2, pivot_wider, names_from = time, values_from = avg_norm)
 #python2 <- bind_rows(python2)
