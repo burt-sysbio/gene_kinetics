@@ -44,7 +44,7 @@ arr = df_vals.values
 norm = arr[:,0]
 
 # define thresold crit how much vals should be greater than norm condition
-crit = 1.1
+crit = 1.3
 norm = norm*crit
 
 # add extra dimension to normalization conditino(d0) because then I can broadcast to whole arr
@@ -102,7 +102,7 @@ g.set_titles(row_template="{row_name}", col_template = "{col_name}")
 
 
 # =============================================================================
-# use response time normed data for meaningful raw data
+# use response time normed data subset from meaningful raw data
 # =============================================================================
 # filter for values where sth happens at all and only for plateau phase (all in df4)
 df5 = df4.dropna()
@@ -133,18 +133,40 @@ df_list = [df.reset_index() for df in df_list]
 vals = df_list[0].iloc[:,-5:].values
 errs = df_list[1].iloc[:,-5:].values
 
+# xdata for gamma dist fit (time series from crawford et al)
 x = np.array([0, 6.0, 8.0, 15.0, 30.0])
+alpha_list = []
+cov_list = []
+
+# fit gamma dist for each gene
 for i in range(len(vals)):
     y = vals[i,:]
     # kick out nans in y and later in sigma
     y = y[~np.isnan(y)]
     
+    alpha_fit = np.nan
+    alpha_err = np.nan
     # only do fit procedure if at least 3 vals in y to fit
-    if len(y) > 2:
+    if len(y) > 3:
         xdata = x[:len(y)]
         sigma = errs[i,:]
         sigma = sigma[~np.isnan(sigma)]
-        fit = curve_fit(f = gamma_cdf, xdata= xdata, ydata = y, sigma = sigma,
-                        bounds=(0.0001, np.inf), absolute_sigma = True)
-        print(fit[0])
-    
+        fit_val, fit_err = curve_fit(f = gamma_cdf, xdata= xdata, ydata = y, sigma = sigma,
+                                     absolute_sigma = True)
+
+        # according to docs this is the error of covariance of fitted params
+        # I am only interested in the identifiability of alpha, so take only first param        
+        alpha_err =  np.sqrt(np.diag(fit_err))[0]
+        alpha_fit = fit_val[0]
+        
+    # add alpha fit and err
+    alpha_list.append(alpha_fit)
+    cov_list.append(alpha_err)    
+
+
+#bounds=([1.0,0], np.inf)
+
+df_final = df_list[0]
+df_final["alpha"] = alpha_list
+df_final["fit_err"] = cov_list
+
