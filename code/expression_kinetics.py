@@ -10,10 +10,26 @@ import numpy as np
 import seaborn as sns
 from scipy.optimize import curve_fit
 from scipy.special import gammainc
+import matplotlib.pyplot as plt
 
 def gamma_cdf(t, alpha, beta):
     dummy = t*beta
     return gammainc(alpha,dummy)
+
+
+def gamma_cdf1(t, beta):
+    dummy = t*beta
+    return gammainc(1.0,dummy)
+
+
+def gamma_cdf2(t, beta):
+    dummy = t*beta
+    return gammainc(2,dummy)
+
+
+def gamma_cdf3(t, beta):
+    dummy = t*beta
+    return gammainc(10.0,dummy)
 
 
 sns.set(context = "poster", style = "ticks")
@@ -71,7 +87,7 @@ df3 = df2.iloc[:,-5:].values
 for i in range(len(df3)):
     row = df3[i,:]
     # check if row is monotonic
-    desc_thres = 0.1
+    desc_thres = 0.05
     idx = np.where((row[1:]-row[:-1]) < -desc_thres)
     idx = idx[0]
     # check if element is empty if not assign everything to nan
@@ -96,9 +112,11 @@ g = sns.relplot(data = df4, x = "time", y = "value",
                 col = "infection",
                 row = "cell_type",
                 kind = "line",
-                facet_kws = {"margin_titles":True})
+                facet_kws = {"margin_titles":True},
+                legend = False)
 
-g.set_titles(row_template="{row_name}", col_template = "{col_name}")
+g.set(ylabel = "expr. norm.")
+g.set_titles(row_template="{row_name}")
 
 
 # =============================================================================
@@ -117,10 +135,13 @@ g = sns.relplot(data = df_rtm_val2, x = "time", y = "avg_norm_rtm2",
                 col = "infection",
                 row = "cell_type",
                 kind = "line",
-                facet_kws = {"margin_titles":True})
+                facet_kws = {"margin_titles":True},
+                legend = False)
 
-g.set_titles(row_template="{row_name}", col_template = "{col_name}")
+g.set_titles(row_template="{row_name}")
+g.set(ylabel = "expr. norm.")
 
+g.savefig("../figures/gene_kinetics_norm.pdf")
 
 # need to make wide again for fit
 df_list = [df_rtm_val2, df_rtm_err2]
@@ -135,38 +156,82 @@ errs = df_list[1].iloc[:,-5:].values
 
 # xdata for gamma dist fit (time series from crawford et al)
 x = np.array([0, 6.0, 8.0, 15.0, 30.0])
-alpha_list = []
-cov_list = []
 
-# fit gamma dist for each gene
-for i in range(len(vals)):
-    y = vals[i,:]
-    # kick out nans in y and later in sigma
-    y = y[~np.isnan(y)]
-    
-    alpha_fit = np.nan
-    alpha_err = np.nan
-    # only do fit procedure if at least 3 vals in y to fit
-    if len(y) > 3:
-        xdata = x[:len(y)]
-        sigma = errs[i,:]
-        sigma = sigma[~np.isnan(sigma)]
-        fit_val, fit_err = curve_fit(f = gamma_cdf, xdata= xdata, ydata = y, sigma = sigma,
-                                     absolute_sigma = True)
 
-        # according to docs this is the error of covariance of fitted params
-        # I am only interested in the identifiability of alpha, so take only first param        
-        alpha_err =  np.sqrt(np.diag(fit_err))[0]
-        alpha_fit = fit_val[0]
+gamma_list = [gamma_cdf1, gamma_cdf2, gamma_cdf3]
+err_list = [[], [], []]
+
+for fun, err in zip(gamma_list, err_list):
+    # fit gamma dist for each gene
+    for i in range(len(vals)):
+        y = vals[i,:]
+        # kick out nans in y and later in sigma
+        y = y[~np.isnan(y)]
         
-    # add alpha fit and err
-    alpha_list.append(alpha_fit)
-    cov_list.append(alpha_err)    
-
+        #alpha_fit = np.nan
+        chisq = np.nan
+        # only do fit procedure if at least 3 vals in y to fit
+        if len(y) > 2:
+            xdata = x[:len(y)]
+            sigma = errs[i,:]
+            sigma = sigma[~np.isnan(sigma)]
+            
+            try:
+                # run fit catch runtime exception for bad fit
+                # restrain alpha within 1 and 100
+                fit_val, fit_err = curve_fit(f = fun, 
+                                             xdata= xdata, 
+                                             ydata = y, 
+                                             sigma = sigma,
+                                             absolute_sigma = True)
+        
+                # according to docs this is the error of covariance of fitted params
+                alpha_err =  np.sqrt(np.diag(fit_err))[0]
+                
+                # compute chi sqr
+                nexp = fun(xdata, *fit_val)
+                # get residuals
+                r = y - nexp
+                # only reassign chisq for low error in identified parameter              
+                if alpha_err < 1.0:
+                    chisq = np.sum((r/sigma)**2)
+            except RuntimeError:
+                print("max calls reached no good fit")
+        # add alpha fit and err
+        #alpha_list.append(alpha_fit)
+        #cov_list.append(alpha_err)    
+        err.append(chisq)
 
 #bounds=([1.0,0], np.inf)
 
 df_final = df_list[0]
-df_final["alpha"] = alpha_list
-df_final["fit_err"] = cov_list
+df_final["alpha1"] = err_list[0]
+df_final["alpha2"] = err_list[1]
+df_final["alpha3"] = err_list[2]
 
+df_fit_res = pd.DataFrame({"alpha1": err_list[0], 
+                           "alpha2" : err_list[1], 
+                           "alpha10" : err_list[2]})
+
+
+df_fit_res = df_fit_res.dropna()
+
+n_alpha1 = sum((df_fit_res.alpha1 < df_fit_res.alpha2) & (df_fit_res.alpha1 < df_fit_res.alpha10))
+n_alpha2 = sum((df_fit_res.alpha2 < df_fit_res.alpha1) & (df_fit_res.alpha2 < df_fit_res.alpha10))
+n_alpha10 = sum((df_fit_res.alpha10 < df_fit_res.alpha1) & (df_fit_res.alpha10 < df_fit_res.alpha2))
+
+x = [r"$\alpha=1$", r"$\alpha=2$", r"$\alpha=10$"]
+y = [n_alpha1, n_alpha2, n_alpha10]
+
+df = pd.DataFrame({"best_fit":x, "n_genes":y})
+
+fig, ax = plt.subplots()
+ax = sns.barplot(data = df, x = "best_fit", y = "n_genes", color = "tab:blue")
+plt.tight_layout()
+fig.savefig("../figures/gene_kinetics_fit_results.pdf")
+
+#df_fit_res["crit"] = crit
+
+#n_hits = sum(df_fit_res.crit)
+#n_total = len(df_fit_res.crit)
+#print(n_hits, n_total)
