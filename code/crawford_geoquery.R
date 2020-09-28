@@ -37,9 +37,14 @@ fdata <- fdata %>% select(c("ID", "Gene title", "Gene symbol", "Gene ID"))
 fdata2 <- fdata %>% filter(`Gene symbol` != "")
 
 # choose gene subset
-wei_th1 <- read_csv("gene_sets/references/wei_th1.csv")
-zhu_th1 <- read_csv("gene_sets/references/zhu_th1.csv")
-stubbington_th1 <- read_csv("gene_sets/references/stubbington_th1.csv")
+wei_th1 <- read_csv("gene_sets/references/wei_th1.CSV")
+zhu_th1 <- read_csv("gene_sets/references/zhu_th1.CSV")
+stubbington_th1 <- read_csv("gene_sets/references/stubbington_th1.CSV")
+
+colnames(wei_th1)[1] <- "gene_name"
+colnames(zhu_th1)[1] <- "gene_name"
+colnames(stubbington_th1)[1] <- "gene_name"
+
 df_genelist <- distinct(rbind(wei_th1, zhu_th1, stubbington_th1))
 
 gene_names <- df_genelist$gene_name
@@ -121,7 +126,7 @@ p1 +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15), legend.position = "none")
-ggsave("figures/gene_kinetics.pdf")
+#ggsave("figures/gene_kinetics.pdf")
 
 p1 <- ggplot(ex_sub, aes(time, val_norm_rtm))
 p1 + 
@@ -130,7 +135,7 @@ p1 +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15), legend.position = "none")
-ggsave("figures/gene_kinetics_rtm.pdf")
+#ggsave("figures/gene_kinetics_rtm.pdf")
 
 p1 <- ggplot(ex_sub, aes(time, val_norm_rtm2))
 p1 + 
@@ -139,7 +144,7 @@ p1 +
   facet_grid(infection~cell_type) +
   theme_bw() +
   theme(text = element_text(size = 15), legend.position = "none")
-ggsave("figures/gene_kinetics_rtm.pdf")
+#ggsave("figures/gene_kinetics_rtm.pdf")
 
 # save a wide form df with times and averages for python processing 
 python <- ex_sub %>% ungroup() %>% 
@@ -149,4 +154,4 @@ python <- distinct(python)
 #python2 <- split(python, list(python$infection, python$cell_type))
 #python2 <- lapply(python2, pivot_wider, names_from = time, values_from = avg_norm)
 #python2 <- bind_rows(python2)
-write.csv(python, "output/avg_expression_norm.csv", row.names = F)
+#write.csv(python, "output/avg_expression_norm.csv", row.names = F)

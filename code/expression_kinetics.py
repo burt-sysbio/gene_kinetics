@@ -49,6 +49,9 @@ df_list = [pd.pivot_table(data = df,
                           columns = "time") for df in df_list]
 df_list = [df.reset_index() for df in df_list]
 
+
+a = df_raw_val["Gene symbol"].values
+print(a, len(np.unique(a)))
 # =============================================================================
 # raw data find genes that change at all
 # =============================================================================
@@ -141,7 +144,7 @@ g = sns.relplot(data = df_rtm_val2, x = "time", y = "avg_norm_rtm2",
 g.set_titles(row_template="{row_name}")
 g.set(ylabel = "expr. norm.")
 
-g.savefig("../figures/gene_kinetics_norm.pdf")
+#g.savefig("../figures/gene_kinetics_norm.pdf")
 
 # need to make wide again for fit
 df_list = [df_rtm_val2, df_rtm_err2]
@@ -228,7 +231,7 @@ df = pd.DataFrame({"best_fit":x, "n_genes":y})
 fig, ax = plt.subplots()
 ax = sns.barplot(data = df, x = "best_fit", y = "n_genes", color = "tab:blue")
 plt.tight_layout()
-fig.savefig("../figures/gene_kinetics_fit_results.pdf")
+#fig.savefig("../figures/gene_kinetics_fit_results.pdf")
 
 #df_fit_res["crit"] = crit
 
