@@ -50,7 +50,7 @@ df_list = [pd.pivot_table(data = df,
 df_list = [df.reset_index() for df in df_list]
 
 
-a = df_raw_val["Gene symbol"].values
+a = data["Gene symbol"].values
 print(a, len(np.unique(a)))
 # =============================================================================
 # raw data find genes that change at all
