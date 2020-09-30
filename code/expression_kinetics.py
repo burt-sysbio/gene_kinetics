@@ -219,6 +219,7 @@ df_fit_res = pd.DataFrame({"alpha1": err_list[0],
 
 df_fit_res = df_fit_res.dropna()
 
+df_fit_res.to_csv("../output/kinetics_fit.csv")
 n_alpha1 = sum((df_fit_res.alpha1 < df_fit_res.alpha2) & (df_fit_res.alpha1 < df_fit_res.alpha10))
 n_alpha2 = sum((df_fit_res.alpha2 < df_fit_res.alpha1) & (df_fit_res.alpha2 < df_fit_res.alpha10))
 n_alpha10 = sum((df_fit_res.alpha10 < df_fit_res.alpha1) & (df_fit_res.alpha10 < df_fit_res.alpha2))

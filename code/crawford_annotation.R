@@ -7,7 +7,7 @@ require(dplyr)
 require(stringr)
 require(ggplot2)
 require(readr)
-
+require(biomaRt)
 # load series and platform data from GEO
 gset <- getGEO("GSE41870", GSEMatrix =TRUE, AnnotGPL=TRUE)
 if (length(gset) > 1) idx <- grep("GPL6246", attr(gset, "names")) else idx <- 1
@@ -31,7 +31,7 @@ ex$ID <- as.numeric(rownames(ex))
 
 
 # get annotation
-ensembl <- useEnsembl(biomart = "genes")
+ensembl <- useMart("ensembl")
 ensembl <- useDataset(dataset = "mmusculus_gene_ensembl", mart = ensembl)
 gene_ids <- ex$ID
 
