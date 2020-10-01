@@ -75,7 +75,7 @@ df_vals = data3.iloc[:,-n_timepoints:]
 arr = df_vals.values
 
 # apply fc criterion on log2fc absolute values
-fc_crit = 0.5
+fc_crit = 0.25
 
 arr2 = arr > fc_crit
 
@@ -96,10 +96,6 @@ print("%s genes after fc crit 2subseq. days filter" % n_genes)
 
 df_kinetic = data2[data2["gene_name"].isin(genes_kinetic)]
 
-#g = sns.relplot(data = df_kinetic, x = "time", hue = "gene_name", y = "log2FC_mean", row = "infection",
-#                col = "cell_type", kind = "line", facet_kws= {"margin_titles" : True}, legend= False)
-
-#g.set_titles(row_template = '{row_name}', col_template = '{col_name}')
 
 # compute sd
 df_kinetic["log2fc_abs"] = np.abs(df_kinetic.log2FC)
@@ -108,5 +104,22 @@ df_kinetic["max"] = df_kinetic.groupby(['infection', 'cell_type', 'gene_name'])[
 df_kinetic["sd"] = df_kinetic.groupby(['infection', 'cell_type', 'gene_name', 'time'])["log2fc_abs"].transform("std")
 df_kinetic["expr_norm"] = df_kinetic["log2fc_mean_abs"] / df_kinetic["max"]
 
-df_kinetic.to_csv("../output/kinetics_tidy.csv", index = False)
 
+# add info if gene is kinetic in specific condition
+df5 = data4.melt(id_vars = ["infection", "cell_type", "gene_name"])
+df5 = df5[["infection", "cell_type", "gene_name", "time"]]
+df5["kinetic"] = True
+df6 = pd.merge(df_kinetic, df5, how = "left", on = ["infection", "cell_type", "gene_name", "time"])
+df6.kinetic = df6.kinetic.fillna(False)
+
+df6.to_csv("../output/kinetics_tidy.csv", index = False)
+
+
+# plot fold change distr.
+vals = data2.log2FC_mean.values
+fig,ax = plt.subplots()
+ax.hist(vals)
+ax.set_ylim(0, 100000)
+ax.set_xlim(-1,1)
+ax.set_xlabel("expr fold-change")
+ax.set_ylabel("n genes")

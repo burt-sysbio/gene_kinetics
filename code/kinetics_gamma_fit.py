@@ -33,6 +33,8 @@ def gamma_cdf3(t, beta):
 
 df_kinetic = pd.read_csv("../output/kinetics_tidy.csv")
 
+df_kinetic = df_kinetic[df_kinetic.kinetic == True]
+
 df_err = df_kinetic[["infection", "cell_type", "gene_name", "time", "sd"]]
 df_err = df_err.drop_duplicates()
 df_val = df_kinetic[["infection", "cell_type", "gene_name", "time", "expr_norm"]]
@@ -63,8 +65,12 @@ for fun, err in zip(gamma_list, err_list):
     # fit gamma dist for each gene
     for i in range(len(vals)):
         y = vals[i,:]
+        
+        assert np.any(y==1.0)
+        max_idx = np.where(y==1.0)[0][0]
+        y = y[:max_idx]
         # kick out nans in y and later in sigma
-        y = y[~np.isnan(y)]
+        #y = y[~np.isnan(y)]
         
         #alpha_fit = np.nan
         chisq = np.nan
@@ -72,8 +78,8 @@ for fun, err in zip(gamma_list, err_list):
         if len(y) > 2:
             xdata = x[:len(y)]
             sigma = errs[i,:]
-            sigma = sigma[~np.isnan(sigma)]
-            
+            #sigma = sigma[~np.isnan(sigma)]
+            sigma = sigma[:max_idx]   
             try:
                 # run fit catch runtime exception for bad fit
                 # restrain alpha within 1 and 100
