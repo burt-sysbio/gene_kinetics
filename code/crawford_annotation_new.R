@@ -37,9 +37,9 @@ ensembl <- useDataset(dataset = "mmusculus_gene_ensembl", mart = ensembl)
 gene_ids <- ex$ID
 
 foo <- getBM(attributes=c('affy_mogene_1_0_st_v1','external_gene_name', 'ensembl_gene_id', "entrezgene_id"),
-                             filters = 'affy_mogene_1_0_st_v1',
-                             values = gene_ids,
-                             mart = ensembl)
+             filters = 'affy_mogene_1_0_st_v1',
+             values = gene_ids,
+             mart = ensembl)
 
 # kick out most non protein coding genes (should have no entrezgene id, at least for pseudogenes)
 foo <- na.omit(foo)
@@ -70,24 +70,30 @@ ex_sub <- pivot_longer(ex_sub, cols = -ID)
 ex_sub <- left_join(ex_sub, pdata2, by = "name")
 ex_sub <- left_join(ex_sub, foo, by = "ID")
 
-# take median for genes that match multiple probes
-ex_sub <- ex_sub %>% group_by(cell_type, time, gene_name, name, infection) %>% mutate(value2 = median(value)) %>% ungroup()
+# take median for genes that match multiple probes for each sample (each timepoint/celltype/infection/replicate)
+ex_sub <- ex_sub %>% group_by(name, gene_name) %>% mutate(value2 = median(value)) %>% ungroup()
 # kick out unneccessary columns
-ex_sub <- ex_sub %>% dplyr::select(-ID, -value, -name)
+ex_sub2 <- ex_sub[c("name", "gene_name", "value2")]
 # keep unique rows
-ex_sub <- distinct(ex_sub)
+ex_sub2 <- distinct(ex_sub2)
 
+# make wide again and keep only genes above median in at least one condition
+ex_sub3 <- pivot_wider(ex_sub2, names_from = name, values_from = value2)
+names <- ex_sub3$gene_name
+ex_sub3 <- dplyr::select(ex_sub3, -gene_name)
+rownames(ex_sub3) <- names
 
-# need to have d0 as duplicate for arm and cl13
-ex_sub$cell_type[(ex_sub$time == 0) & (ex_sub$cell_type == "Naive CD44Lo CD8+ T cells")] <- "H2-Db GP33-specific CD8+ T cells"
-ex_sub$cell_type[(ex_sub$time == 0) & (ex_sub$cell_type == "Naive CD44Lo CD4+ T cell")] <- "H2-IAb GP66 specific CD4+ T cell"
+ex_sub4 <- apply(ex_sub3, 2, as.numeric)
+rownames(ex_sub4) <- names
 
-# shorten cell type column
-ex_sub <- ex_sub %>% mutate(cell_type = str_extract(cell_type, "CD."))
-# add arm and cl13 infection for d0 cells even though they are naive
-ex_sub$infection[ex_sub$time == 0] <- "LCMV-Arm"
-ex_sub_d0 <- ex_sub %>% filter(time == 0)
-ex_sub_d0$infection <- "LCMV-Clone 13"
-ex_sub2 <- rbind(ex_sub, ex_sub_d0)
+rowmax <- apply(ex_sub4, 1, max)
 
-write.csv(ex_sub2, "output/crawford_annotation.csv", row.names = F)
+threshold <- median(ex_sub4)
+# only keep rows where maximum is over median
+ex_sub4 <- ex_sub4[rowmax >= threshold,]
+ex_sub4 <- as.data.frame(ex_sub4)
+ex_sub4$name <- rownames(ex_sub4)
+
+write.csv(ex_sub4, "output/crawford_data_median_threshold.csv", row.names = F)
+write.csv(ex_sub3, "output/crawford_data_annot.csv")
+write.csv(pdata, "output/crawford_data_features.csv", row.names = F)

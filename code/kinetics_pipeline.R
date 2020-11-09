@@ -110,6 +110,7 @@ ex_sub <- ex_sub %>% mutate(avg_norm = avg/avgd0, val_norm = value/avgd0)
 ex_sub <- ex_sub %>% mutate(val_norm_rtm = val_norm - 1.0, avg_norm_rtm = avg_norm - 1.0)
 
 print(length(unique(ex_sub$`Gene symbol`)))
+
 # get maximum val per gene over all times and set expression threshold (based on fc values)
 max_gene_thres <- 0.25
 ex_sub <- ex_sub %>% 
