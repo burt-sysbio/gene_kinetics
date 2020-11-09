@@ -7,19 +7,6 @@ require(stringr)
 require(readr)
 require(maSigPro)
 
-pdata <- read.csv("output/crawford_data_features.csv")
-df <- read.csv("output/crawford_data_median_threshold.csv")
-rownames(df) <- df$name
-df <- df[colnames(df) != "name"]
-
-cols <- c("name", "time", "infection", "cell_type")
-pdata <- pdata[cols]
-# rename cells not a mistake that its cell and cells below
-pdata$cell_type[pdata$cell_type == "Naive CD44Lo CD8+ T cells"] <- "H2-Db GP33-specific CD8+ T cells"
-pdata$cell_type[pdata$cell_type == "Naive CD44Lo CD4+ T cell"] <- "H2-IAb GP66 specific CD4+ T cell"
-pdata <- pdata %>% mutate(cell_type = str_extract(cell_type, "CD."))
-
-
 # create design matrix for masigpro, day 6 has for 1 case only 3 replicates instead of 4
 make_des_matrix <- function(df, cell, inf){
   
@@ -43,25 +30,6 @@ make_des_matrix <- function(df, cell, inf){
   return(out)
 }
 
-#design_CD4_arm <- make_des_matrix(pdata, "CD4", "LCMV-Arm")
-#design_CD4_cl13 <- make_des_matrix(pdata, "CD4", "LCMV-Clone 13")
-#design_CD8_arm <- make_des_matrix(pdata, "CD8", "LCMV-Arm")
-#design_CD8_cl13 <- make_des_matrix(pdata, "CD8", "LCMV-Clone 13")
-
-#df_cd4_arm <- df[rownames(design_CD4_arm)]
-
-#design <- make.design.matrix(design_CD4_arm, degree = 2)
-
-#fit <- p.vector(df_cd4_arm, design=design)
-#t <- T.fit(fit, step.method = "backward", alfa = 0.05)
-
-#ss.example <- maSigPro(df_cd4_arm, design_CD4_arm, vars="each")
-
-# next steps: get genes and make tidy df --> compute mean and SD as in previous scripts
-# keep only genes that have their max at last position
-
-#sigs <- get.siggenes(t, rsq = 0.6, vars = "all")
-#genes <- sigs$summary
 
 pipeline <- function(df, pdata, cell, inf){
   
@@ -98,6 +66,10 @@ get_rtm_df <- function(df, pdata, cell, inf){
   
   # norm
   df <- norm_rtm(df)
+  
+  # keep only genes with max at d30 or d15
+  #print(df[1:3,])
+  df <- get_late_genes(df)
   
   if(inf == "LCMV-Clone 13"){
     infstr <- "cl13"
@@ -143,9 +115,40 @@ norm_d0 <- function(df){
   return(df)
 }
 
+# get genes from crawford data with max at day15 or day30
+get_late_genes <- function(df){
+  df_late <- df %>% filter((time == 30 | time == 15) & avg_norm_rtm2 == 1.0)
+  genes_late <- unique(df_late$gene_name)
+  df <- df[df$gene_name %in% genes_late,]
+  return(df)
+}
+
+run_all <- function(df, pdata, cell, inf){
+  df <- pipeline(df, pdata, cell, inf)
+  df <- norm_rtm(df)
+}
+
+### read data
+pdata <- read.csv("output/crawford_data_features.csv")
+df <- read.csv("output/crawford_data_median_threshold.csv")
+rownames(df) <- df$name
+df <- df[colnames(df) != "name"]
+
+cols <- c("name", "time", "infection", "cell_type")
+pdata <- pdata[cols]
+
+# rename cells not a mistake that its cell and cells below
+pdata$cell_type[pdata$cell_type == "Naive CD44Lo CD8+ T cells"] <- "H2-Db GP33-specific CD8+ T cells"
+pdata$cell_type[pdata$cell_type == "Naive CD44Lo CD4+ T cell"] <- "H2-IAb GP66 specific CD4+ T cell"
+pdata <- pdata %>% mutate(cell_type = str_extract(cell_type, "CD."))
+
+# get kinetic genes masigpro
 df_cd4_arm <- pipeline(df, pdata, cell = "CD4", inf = "LCMV-Arm")
 df_cd4_cl13 <- pipeline(df, pdata, cell = "CD4", inf = "LCMV-Clone 13")
 df_cd8_arm <- pipeline(df, pdata, cell = "CD8", inf = "LCMV-Arm")
 df_cd8_cl13 <- pipeline(df, pdata, cell = "CD8", inf = "LCMV-Clone 13")
 
-
+df_cd4_arm_rtm <- get_rtm_df(df_cd4_arm, pdata, cell = "CD4", inf = "LCMV-Arm")
+df_cd4_cl13_rtm <- get_rtm_df(df_cd4_cl13, pdata, cell = "CD4", inf = "LCMV-Clone 13")
+df_cd8_arm_rtm <- get_rtm_df(df_cd8_arm, pdata, cell = "CD8", inf = "LCMV-Arm")
+df_cd8_cl13_rtm <- get_rtm_df(df_cd8_cl13, pdata, cell = "CD8", inf = "LCMV-Clone 13")
