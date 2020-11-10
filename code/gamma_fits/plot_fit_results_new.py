@@ -180,7 +180,24 @@ g.set(yscale="log", xscale = "log", xlim = (1e-6, 1e2), ylim = (1e-6, 1e2))
 df_exp = df_craw[df_craw.best_alpha == 10]
 df_exp = df_exp.sort_values("diff_err", ascending = False)
 df_exp = df_exp.iloc[1:5,:]
+df_exp2 = df_exp.drop(["alpha1", "alpha2", "alpha10", "best_alpha", "err_alpha", "alpha_2_10", "diff_err"], axis = 1)
+id_vars = ["cell_type", "infection", "study", "category", "gene_name", "beta_1", "beta_2", "beta_10"]
+df_exp3 = df_exp2.melt(id_vars = id_vars, var_name = "time", value_name = "exp_data")
+df_exp3 = df_exp3.dropna()
+df_exp3 = df_exp3.melt(id_vars = ["cell_type", "infection", "study", "category", "gene_name", "time", "exp_data"], 
+                       var_name = "beta", value_name = "beta_fit")
 
-df_exp = df_exp[["infection", "cell_type", "gene_name", "alpha1", "alpha10", "diff_err", "beta_1", "beta_2", "beta_10"]]
+df_exp3["time"] = pd.to_numeric(df_exp3["time"])
+df_exp3["alpha"] = 1
+df_exp3["alpha"][df_exp3.beta == "beta_2"] = 2
+df_exp3["alpha"][df_exp3.beta == "beta_10"] = 10
 
-print(df_exp.iloc[:, 3:])
+def get_ydata(row):
+    beta = row["beta_fit"]
+    alpha = row["alpha"]
+    t = row["time"]
+    print(type(t), alpha, beta)
+    model_fit = gamma_cdf(t, alpha, beta)
+    return(model_fit)
+
+df_exp3["model_fit"] = df_exp3.apply(get_ydata, axis = 1)

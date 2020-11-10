@@ -33,6 +33,12 @@ def gamma_cdf3(t, beta):
     return gammainc(10.0,dummy)
 
 
+def conv_cols(df):
+    df.columns = df.columns.droplevel()
+    df.columns = [str(col) for col in df.columns]
+    df = df.reset_index()
+    return(df)
+
 def prep_data(df):
 
     df_err = df[["cell_type", "gene_name", "time", "SD"]]
@@ -40,14 +46,14 @@ def prep_data(df):
 
     df_val = df[["cell_type", "gene_name", "time", "avg_norm_rtm2"]]
     df_val = df_val.drop_duplicates()
-    
-    
+       
     # need to make wide again for fit
     df_list = [df_val, df_err]
     df_list = [pd.pivot_table(data = df, 
                               index = ["cell_type", "gene_name"], 
                               columns = "time") for df in df_list]
-    df_list = [df.reset_index() for df in df_list]
+    df_list = [conv_cols(df) for df in df_list]
+    
     
     # extract data and errors
     timepoints = df.time.drop_duplicates().values
