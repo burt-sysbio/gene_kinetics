@@ -26,12 +26,14 @@ df_tf = pd.read_csv("../gene_sets/references/stubbington_tfs.csv")
 df_list = [df_kinetics, df_th1, df_tf, df_cytos, df_receptor]
 savenames = ["all", "th1", "tfs", "cytokines", "receptors"]
 
+# do analysis with and wo error threshold
 err_list = [np.inf, 1]
 
 df_out = [[],[]]
 err_dist = [[],[]]
 
 for err, out, err_dis in zip(err_list, df_out, err_dist):
+    # max error is either 1 or inf
     max_err = err
       
     for df, name in zip(df_list, savenames):

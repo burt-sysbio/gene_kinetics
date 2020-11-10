@@ -65,8 +65,8 @@ def fit_kinetic(df, rep_available, gamma_list = [gamma_cdf1, gamma_cdf2, gamma_c
     df_list, vals, errs, x = prep_data(df)
 
     err_list = [[], [], []]
-    
-    for fun, err in zip(gamma_list, err_list):
+    beta_list = [[], [], []]
+    for fun, err, beta in zip(gamma_list, err_list, beta_list):
         # fit gamma dist for each gene
         for i in range(len(vals)):
             y = vals[i,:]
@@ -79,6 +79,7 @@ def fit_kinetic(df, rep_available, gamma_list = [gamma_cdf1, gamma_cdf2, gamma_c
             
             #alpha_fit = np.nan
             chisq = np.nan
+            beta_fit = np.nan
             # only do fit procedure if at least 3 vals in y to fit
             if len(y) > 2:
                 xdata = x[:len(y)]
@@ -109,46 +110,66 @@ def fit_kinetic(df, rep_available, gamma_list = [gamma_cdf1, gamma_cdf2, gamma_c
                     r = y - nexp
                     # only reassign chisq for low error in identified parameter              
                     if alpha_err < 1.0:
-                        chisq = np.sum((r/sigma)**2)
+                        beta_fit = fit_val[0]
+                        if sigma is None:
+                            chisq = np.sum(r**2)
+                        else:
+                            chisq = np.sum((r/sigma)**2)
                 except RuntimeError:
                     print("max calls reached no good fit")
             # add alpha fit and err
             #alpha_list.append(alpha_fit)
             #cov_list.append(alpha_err)    
             err.append(chisq)
+            beta.append(beta_fit)
     
-    return(df_list, err_list)
+    return(df_list, err_list, beta_list)
 
 
 def run_fit(df, data, cell, inf, rep_available, gamma_list = [gamma_cdf1, gamma_cdf2, gamma_cdf3]):
     
-    df_list, err_list = fit_kinetic(df, rep_available = rep_available, gamma_list = gamma_list)
+    df_list, err_list, beta_list = fit_kinetic(df, rep_available = rep_available, gamma_list = gamma_list)
     df_final = df_list[0]
     df_final["alpha1"] = err_list[0]
     df_final["alpha2"] = err_list[1]
     df_final["alpha10"] = err_list[2]
     
+    df_final["beta_1"] = beta_list[0]
+    df_final["beta_2"] = beta_list[1]
+    df_final["beta_10"] = beta_list[2]
     
     # nas were generated during fit if not enough data was available
     df_final = df_final.dropna()
-    df_final = df_final[["cell_type", "gene_name", "alpha1", "alpha2", "alpha10"]]
-    df_final = df_final.reset_index(drop=True)
+    #df_final = df_final[["cell_type", "gene_name", "alpha1", "alpha2", "alpha10"]]
+    #df_final = df_final.reset_index(drop=True)
     
-    filename = "../output/gamma_fit_"+data+"_"+cell+"_"+inf+".csv"
+    filename = "../../output/gamma_fits/gamma_fit_"+data+"_"+cell+"_"+inf+".csv"
     df_final.to_csv(filename, index = False)
+    
+    return(df_final)
 #bounds=([1.0,0], np.inf)
 # xdata for gamma dist fit (time series from crawford et al)
 
-df = pd.read_csv("../output/data_rtm_CD4_arm.csv")
-data = "crawford"
-cell = "CD4"
-inf = "arm"
-rep_available = True
-
-run_fit(df, data, cell, inf, rep_available)
-
-
-
-
-
-
+data = ["peine", "crawford"]
+for d in data:
+    if d == "peine":
+        rep_available = False
+        inf = "invitro"
+        cell = ["Th0", "Th1", "Th2", "ThMix"]       
+        for c in cell:
+            file = "../../output/rtm_data/"+d+"_rtm_"+c+"_"+inf+".csv"
+            
+            df = pd.read_csv(file)
+            df2 = run_fit(df, data = d, cell = c, inf = inf, rep_available = rep_available)
+            
+    else:
+        rep_available = True
+        inf = ["arm", "cl13"]
+        cell = ["CD4", "CD8"]
+        
+        for c in cell:
+            for i in inf:
+                file = "../../output/rtm_data/"+d+"_rtm_"+c+"_"+i+".csv"
+                
+                df = pd.read_csv(file)
+                df2 = run_fit(df, data = d, cell = c, inf = i, rep_available = rep_available)                
