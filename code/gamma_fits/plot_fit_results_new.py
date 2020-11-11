@@ -175,29 +175,75 @@ g.set(yscale="log", xscale = "log", xlim = (1e-6, 1e2), ylim = (1e-6, 1e2))
 
 #g = sns.catplot(data = best_alpha, x = "best_alpha", hue = "cell_type", y = "gene_name", kind = "bar", col = "category")
 
+def tidy_df(df, timepoints, alpha, n_genes = 3):
+    # keep cols where desired alpha is best fit and of those only good fits   
+    df = df[df.best_alpha == alpha]
+    thres = 0.1
+    df = df[df.err_alpha < thres]
+    
+    # sort by bad fits for other alpha
+    sort_by = "alpha10" if alpha == 1 else "alpha1"
+    df = df.sort_values(sort_by, ascending = False)
+    df = df.iloc[:n_genes,:]
+    
+    print(df[["gene_name", "alpha1", "alpha10"]])    
+    # convert to long format for timepoints
 
-# get genes for which
-df_exp = df_craw[df_craw.best_alpha == 10]
-df_exp = df_exp.sort_values("diff_err", ascending = False)
-df_exp = df_exp.iloc[1:5,:]
-df_exp2 = df_exp.drop(["alpha1", "alpha2", "alpha10", "best_alpha", "err_alpha", "alpha_2_10", "diff_err"], axis = 1)
-id_vars = ["cell_type", "infection", "study", "category", "gene_name", "beta_1", "beta_2", "beta_10"]
-df_exp3 = df_exp2.melt(id_vars = id_vars, var_name = "time", value_name = "exp_data")
-df_exp3 = df_exp3.dropna()
-df_exp3 = df_exp3.melt(id_vars = ["cell_type", "infection", "study", "category", "gene_name", "time", "exp_data"], 
-                       var_name = "beta", value_name = "beta_fit")
+    id_vars = ["gene_name", "beta_1", "beta_10"]
+    df = df[id_vars + timepoints]
+    df = df.melt(id_vars = id_vars, var_name = "time", value_name = "exp_data")
+    df = df.dropna()
+    df["time"] = pd.to_numeric(df["time"])
+    
+    # convert to long format for beta fit
+    #df = df.melt(id_vars = ["gene_name", "time", "exp_data"], 
+    #                       var_name = "beta", value_name = "beta_fit")
 
-df_exp3["time"] = pd.to_numeric(df_exp3["time"])
-df_exp3["alpha"] = 1
-df_exp3["alpha"][df_exp3.beta == "beta_2"] = 2
-df_exp3["alpha"][df_exp3.beta == "beta_10"] = 10
+    # add alpha to each corresonding beta 
+    #df["alpha"] = 1
+    #df["alpha"][df.beta == "beta_10"] = 10    
+    # now beta column is not needed 
+    #df = df.drop(["beta"], axis = 1)
+    
+    # for each gene at each time compute gamma cdf for alpha and beta fit 
+    #df["model_fit"] = df.apply(get_ydata, axis = 1)
+    return(df)
+    
 
 def get_ydata(row):
     beta = row["beta_fit"]
     alpha = row["alpha"]
     t = row["time"]
-    print(type(t), alpha, beta)
     model_fit = gamma_cdf(t, alpha, beta)
     return(model_fit)
 
-df_exp3["model_fit"] = df_exp3.apply(get_ydata, axis = 1)
+
+# focus on specific cell type and infection
+my_df = df_craw[(df_craw.infection == "arm") & (df_craw.cell_type == "CD4")]
+timepoints = [0,6,8,15,30]
+timepoints = [str(val) for val in timepoints]
+
+df_rtm = tidy_df(df_craw, timepoints, alpha = 10)
+#g = sns.relplot(data = df_rtm, x = "time", y = "exp_data", col = "gene_name")
+
+g = sns.relplot(data = df_rtm, x = "time", y = "exp_data", col = "gene_name",
+                kind = "scatter")
+
+# get unique genes
+genes = df_rtm.gene_name.drop_duplicates()
+genes = genes.values
+for (ax, gene) in zip(g.axes.flat, genes):
+    p = df_rtm.loc[df_rtm.gene_name == gene]
+    print(p)
+    betas = ["beta_1", "beta_10"]
+    alphas = [1, 10]
+    colors = ["tab:blue", "tab:red"]
+    for alpha, beta, c in zip(alphas, betas, colors):
+        # create x array spanning experiment time
+        x = np.linspace(p.time.min(), p.time.max(), 100)
+        # get one beta value, should all be the same
+        b = p[beta].values[0]
+
+        y = gamma_cdf(x, alpha, b)
+        ax.plot(x,y, ls = "--", color = c)
+    
