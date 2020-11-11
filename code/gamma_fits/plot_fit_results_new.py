@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 sns.set(context = "poster", style = "ticks")
+savedir = "../../figures/gamma_fits/"
 
 from scipy.special import gammainc
 
@@ -92,88 +93,57 @@ df_all["category"][df_all.gene_name.isin(df_tf.gene_name)]="TF"
 df_all["category"][df_all.gene_name.isin(df_cyto.gene_name)]="Cytokine"
 df_all["category"][df_all.gene_name.isin(df_receptor.gene_name)]="Cyto. Rec."
 
+
 # split up
 df_peine = df_all.loc[df_all.study == "peine"]
 df_craw = df_all.loc[df_all.study == "crawford"]
 
+
+# plotting params
 alpha = 0.8
 s = 60
-g = sns.jointplot(data = df_all, x = "alpha1", y = "alpha_2_10", height = 10, 
-                  hue = "study", kind = "scatter", alpha = alpha, s = s)
-g.ax_joint.set(yscale="log", xscale = "log")
-g.ax_joint.plot([0,100], [0,100], '--k') 
+lower = 1e-2
+upper = 1e1
+
+
+# visualize error distributions per study
+g = sns.relplot(data = df_all, x = "alpha1", y = "alpha10", col = "study", 
+                kind = "scatter", alpha = alpha, s = s)
+g.set(yscale="log", xscale = "log")
+for ax in g.axes.flat:
+    ax.plot([0,100], [0,100], '--k') 
+g.savefig(savedir+"scatter_fit.pdf")
 
 
 # zoom in
-lower = 1e-4
-upper = 1e2
-g = sns.jointplot(data = df_all, x = "alpha1", y = "alpha_2_10", height = 10, 
-                  hue = "study", kind = "scatter", alpha = alpha, s = s,
-                  xlim = (lower,upper), ylim = (lower, upper))
-g.ax_joint.set(yscale="log", xscale = "log")
-g.ax_joint.plot([0,100], [0,100], '--k') 
+g = sns.relplot(data = df_all, x = "alpha1", y = "alpha10", col = "study", 
+                kind = "scatter", alpha = alpha, s = s)
+g.set(yscale="log", xscale = "log", xlim = (lower,upper), ylim = (lower, upper))
+for ax in g.axes.flat:
+    ax.plot([0,100], [0,100], '--k') 
+g.savefig(savedir+"scatter_fit_zoom.pdf")
 
 
 # kick out genes with no annotation
 df3 = df_all.loc[df_all.category != "other"]
-lower = 1e-5
-upper = 1e1
-g = sns.jointplot(data = df3, x = "alpha1", y = "alpha_2_10", height = 10, 
-                  hue = "category", kind = "scatter",
-                  xlim = (lower,upper), ylim = (lower, upper))
-g.ax_joint.set(yscale="log", xscale = "log")
-g.ax_joint.plot([0,100], [0,100], '--k') 
-#g.set(yscale="log", xscale = "log", )
-
-# kick out genes with no annotation
-df4 = df_craw.loc[df_craw.category != "other"]
-lower = 1e-5
-upper = 1e1
-g = sns.jointplot(data = df3, x = "alpha1", y = "alpha_2_10", height = 10, 
-                  hue = "category", kind = "scatter",
-                  xlim = (lower,upper), ylim = (lower, upper))
-g.ax_joint.set(yscale="log", xscale = "log")
-g.ax_joint.plot([0,100], [0,100], '--k') 
-#g.set(yscale="log", xscale = "log", )
+g = sns.relplot(data = df3, x = "alpha1", y = "alpha10", col = "category", kind = "scatter")
+g.set(yscale="log", xscale = "log", xlim = (lower,upper), ylim = (lower, upper))
+for ax in g.axes.flat:
+    ax.plot([0,100], [0,100], '--k') 
+g.savefig(savedir+"scatter_fit_gene_sets.pdf")
 
 
+# compare arm vs cl13
+df4 = df_craw.loc[df_craw.cell_type == "CD4"]
+df4 = df4.loc[(df4.infection == "arm") | (df4.infection == "cl13")]
 
-# kick out genes with no annotation
-df5 = df_peine.loc[df_peine.category != "other"]
-lower = 1e-5
-upper = 1e1
-g = sns.jointplot(data = df3, x = "alpha1", y = "alpha_2_10", height = 10, 
-                  hue = "category", kind = "scatter",
-                  xlim = (lower,upper), ylim = (lower, upper))
-g.ax_joint.set(yscale="log", xscale = "log")
-g.ax_joint.plot([0,100], [0,100], '--k') 
-#g.set(yscale="log", xscale = "log", )
+g = sns.relplot(data = df3, x = "alpha1", y = "alpha10", hue = "category", 
+                kind = "scatter", col = "infection")
+g.set(yscale="log", xscale = "log", xlim = (lower,upper), ylim = (lower, upper))
+for ax in g.axes.flat:
+    ax.plot([0,100], [0,100], '--k') 
+g.savefig(savedir+"scatter_fit_infection.pdf")
 
-
-
-
-# compare cl13 and arm
-alpha = 0.8
-s = 60
-g = sns.relplot(data = df_craw, x = "alpha1", y = "alpha_2_10", 
-                col = "infection", hue = "cell_type", kind = "scatter", alpha = alpha, s = s)
-g.set(yscale="log", xscale = "log", xlim = (1e-6, 1e2), ylim = (1e-6, 1e2))
-
-
-
-# old stuff
-
-#df4 = df3[["cell_type", "gene_name", "err_alpha", "best_alpha", "infection", "study", "category"]]
-
-#g = sns.catplot(data = df3, x = "best_alpha", y = "err_alpha", hue = "study", kind = "violin")
-
-# get number of alphas
-#best_alpha = df4.groupby(["best_alpha", "cell_type", "study", "category"])["gene_name"].count()
-#best_alpha = best_alpha.to_frame()
-
-#best_alpha = best_alpha.reset_index()
-
-#g = sns.catplot(data = best_alpha, x = "best_alpha", hue = "cell_type", y = "gene_name", kind = "bar", col = "category")
 
 def tidy_df(df, timepoints, alpha, n_genes = 3):
     # keep cols where desired alpha is best fit and of those only good fits   
@@ -185,8 +155,6 @@ def tidy_df(df, timepoints, alpha, n_genes = 3):
     sort_by = "alpha10" if alpha == 1 else "alpha1"
     df = df.sort_values(sort_by, ascending = False)
     df = df.iloc[:n_genes,:]
-    
-    print(df[["gene_name", "alpha1", "alpha10"]])    
     # convert to long format for timepoints
 
     id_vars = ["gene_name", "beta_1", "beta_10"]
@@ -195,55 +163,55 @@ def tidy_df(df, timepoints, alpha, n_genes = 3):
     df = df.dropna()
     df["time"] = pd.to_numeric(df["time"])
     
-    # convert to long format for beta fit
-    #df = df.melt(id_vars = ["gene_name", "time", "exp_data"], 
-    #                       var_name = "beta", value_name = "beta_fit")
 
-    # add alpha to each corresonding beta 
-    #df["alpha"] = 1
-    #df["alpha"][df.beta == "beta_10"] = 10    
-    # now beta column is not needed 
-    #df = df.drop(["beta"], axis = 1)
-    
-    # for each gene at each time compute gamma cdf for alpha and beta fit 
-    #df["model_fit"] = df.apply(get_ydata, axis = 1)
     return(df)
+
+
+def plot_rtm_genes(df, n_genes, alpha, savename):
     
+    # check that df is only from one study and add corresponding timepoints
+    study = df.study.unique()[0]
 
-def get_ydata(row):
-    beta = row["beta_fit"]
-    alpha = row["alpha"]
-    t = row["time"]
-    model_fit = gamma_cdf(t, alpha, beta)
-    return(model_fit)
+    assert((study == "crawford") | (study == "peine"))
+    if study == "peine":
+        timepoints = [0,3,6,12,24,35,48,73,96,120]
+    else: 
+        timepoints = [0,6,8,15,30]
+        
+    timepoints = [str(val) for val in timepoints]
 
-
+    df = tidy_df(df, timepoints, alpha = alpha, n_genes = n_genes)
+    
+    # plot data
+    g = sns.relplot(data = df, x = "time", y = "exp_data", col = "gene_name",
+                    kind = "scatter")
+    
+    # get unique genes and add model fits
+    genes = df.gene_name.drop_duplicates()
+    genes = genes.values
+    for (ax, gene) in zip(g.axes.flat, genes):
+        p = df.loc[df.gene_name == gene]
+        betas = ["beta_1", "beta_10"]
+        alphas = [1, 10]
+        colors = ["tab:blue", "tab:red"]
+        for alpha, beta, c in zip(alphas, betas, colors):
+            # create x array spanning experiment time
+            x = np.linspace(p.time.min(), p.time.max(), 100)
+            # get one beta value, should all be the same
+            b = p[beta].values[0]
+    
+            y = gamma_cdf(x, alpha, b)
+            ax.plot(x,y, ls = "--", color = c)
+    
+    savedir = "../../figures/gamma_fits/"
+    g.savefig(savedir+savename+".pdf")
 # focus on specific cell type and infection
 my_df = df_craw[(df_craw.infection == "arm") & (df_craw.cell_type == "CD4")]
-timepoints = [0,6,8,15,30]
-timepoints = [str(val) for val in timepoints]
 
-df_rtm = tidy_df(df_craw, timepoints, alpha = 10)
-#g = sns.relplot(data = df_rtm, x = "time", y = "exp_data", col = "gene_name")
+plot_rtm_genes(my_df, alpha = 10, n_genes = 3, savename = "crawford_rtm")
+plot_rtm_genes(my_df, alpha = 1, n_genes = 3, savename = "crawford_expo")
 
-g = sns.relplot(data = df_rtm, x = "time", y = "exp_data", col = "gene_name",
-                kind = "scatter")
+peine_df = df_peine[df_peine.cell_type == "Th1"]
 
-# get unique genes
-genes = df_rtm.gene_name.drop_duplicates()
-genes = genes.values
-for (ax, gene) in zip(g.axes.flat, genes):
-    p = df_rtm.loc[df_rtm.gene_name == gene]
-    print(p)
-    betas = ["beta_1", "beta_10"]
-    alphas = [1, 10]
-    colors = ["tab:blue", "tab:red"]
-    for alpha, beta, c in zip(alphas, betas, colors):
-        # create x array spanning experiment time
-        x = np.linspace(p.time.min(), p.time.max(), 100)
-        # get one beta value, should all be the same
-        b = p[beta].values[0]
-
-        y = gamma_cdf(x, alpha, b)
-        ax.plot(x,y, ls = "--", color = c)
-    
+plot_rtm_genes(peine_df, alpha = 10, n_genes = 3, savename = "peine_rtm")
+plot_rtm_genes(peine_df, alpha = 1, n_genes = 3, savename = "peine_expo")
