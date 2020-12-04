@@ -3,24 +3,17 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 from scipy.special import gammainc
+from scipy import stats
+from statsmodels.stats.multitest import fdrcorrection
+
 
 def gamma_cdf(t, alpha, beta):
-    dummy = t*beta
-    return gammainc(alpha,dummy)
+    dummy = t * beta
+    return gammainc(alpha, dummy)
+
 
 def gamma_cdf1(t, beta):
-    dummy = t*beta
-    return gammainc(1.0,dummy)
-
-
-def gamma_cdf2(t, beta):
-    dummy = t*beta
-    return gammainc(2,dummy)
-
-
-def gamma_cdf3(t, beta):
-    dummy = t*beta
-    return gammainc(10.0,dummy)
+    return gamma_cdf(t, 1, beta)
 
 
 def conv_cols(df):
@@ -62,12 +55,13 @@ def fit_kinetic(df, gamma_fun):
     # fit gamma dist for each gene
     for i, gene in zip(range(len(vals)), genes):
         y = vals[i, :]
-        #check that data is normalized and keep array only until max is reached
+        # check that there are no nans in y
+        assert (~np.isnan(y).any())
+        # check that data is normalized and keep array only until max is reached
         assert np.max(y) == 1.0
         max_idx = np.where(y == 1.0)[0][0]
-        y = y[:max_idx]
-        # kick out nans in y and later in sigma
-        # y = y[~np.isnan(y)]
+        y = y[:(max_idx + 1)]
+
         # only focus on arrays where y has 4 time points
         if len(y) > 3:
             xdata = x[:len(y)]
@@ -75,76 +69,85 @@ def fit_kinetic(df, gamma_fun):
                 sigma = errs[i, :]
                 # sigma = sigma[~np.isnan(sigma)]
                 sigma = sigma[:max_idx]
-                absolute_sigma = True
+                sigma_abs = True
             else:
                 sigma = None
-                absolute_sigma = False
-            alpha_fit, beta_fit, chisqr = fit_gamma(xdata, y, sigma, absolute_sigma, gamma_fun)
-            out = [gene, alpha_fit, beta_fit, chisqr]
-        # add alpha fit and err
-        fit_res.append(out)
+                sigma_abs = False
 
-    return fit_res
+            # run fit and append output including gene name
+            out = fit_gamma(xdata, y, sigma, sigma_abs, gamma_fun)
+            out = [gene] + out
+            fit_res.append(out)
+
+    # convert fit res to dataframe
+    colnames = ["gene", "alpha", "beta", "rss", "alpha_err", "beta_err"]
+    df_fit_res = pd.DataFrame(fit_res, columns= colnames)
+    return df_fit_res
 
 
-def fit_gamma(x, y, sigma, absolute_sigma, gamma_fun):
-    # check that data is normalized and get index of max, check that at least 4 legit time points are there
-    # alpha_fit = np.nan
-    chisq = np.nan
-    out = np.array([0, 0, 0])
-    # only do fit procedure if at least 3 vals in y to fit
+def fit_gamma(x, y, sigma, sigma_abs, gamma_fun):
+    # dummy output in case fit does not work (e.g. gene kinetics are bimodal)
+    out = [np.nan, np.nan, np.nan]
     try:
         # run fit catch runtime exception for bad fit
-        # restrain alpha within 1 and 100
-        fit_val, fit_err = curve_fit(f=gamma_fun,xdata=x, ydata=y,sigma=sigma,absolute_sigma=absolute_sigma)
-        # according to docs this is the error of covariance of fitted params
-        alpha_err = np.sqrt(np.diag(fit_err))
+        fit_val, fit_err = curve_fit(f=gamma_fun, xdata=x, ydata=y, sigma=sigma,
+                                     absolute_sigma=sigma_abs)
 
+        # error of fitted params (not used atm)
+        err = np.sqrt(np.diag(fit_err))
+
+        # assign fit values depending on gamma_fun (exponential fit only fits beta not alpha)
         if gamma_fun == gamma_cdf:
             alpha_fit, beta_fit = fit_val
+            alpha_err, beta_err = err
         else:
-            beta_fit = fit_val
+            beta_fit = fit_val[0]
             alpha_fit = 1
+            alpha_err = np.nan
+            beta_err = err[0]
 
-        # compute chi sqr
+        # compute chi sqr and get residuals
+        # need to change pipeline function in R to write sigma as 1 instead of NA
         nexp = gamma_fun(x, *fit_val)
-        # get residuals
         r = y - nexp
-        # only reassign chisq for low error in identified parameter
-        if (alpha_err < 10.0).all():
-            if sigma is None:
-                chisq = np.sum(r ** 2)
-            else:
-                chisq = np.sum((r / sigma) ** 2)
+        if sigma is None: sigma = 1
+        rss = np.sum((r / sigma) ** 2)
 
-        out = np.array([alpha_fit, beta_fit, chisq])
+        out = [alpha_fit, beta_fit, rss, alpha_err, beta_err]
 
     except RuntimeError:
         print("max calls reached no good fit")
-        print(x)
-        print(y)
 
     return out
 
 
-def run_fit(df, data, cell, inf, gamma_list=[gamma_cdf, gamma_cdf1]):
+def f_test(rss1, rss2, n_obs, f1=1, f2=2):
+    d1 = f2 - f1
+    d2 = n_obs - f2
+    F = ((rss1 - rss2) / d1) / (rss2 / d2)
+    f_crit = 1 - stats.f.cdf(F, d1, d2)
+    return f_crit
 
-    df_list, fit_res = fit_kinetic(df, gamma_list=gamma_list)
-    #df_final = df_list[0]
-    #df_final["alpha1"] = err_list[0]
-    #df_final["alpha2"] = err_list[1]
-    #df_final["alpha10"] = err_list[2]
 
-    #df_final["beta_1"] = beta_list[0]
-    #df_final["beta_2"] = beta_list[1]
-    #df_final["beta_10"] = beta_list[2]
+def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
+    fit_res1 = fit_kinetic(df, gamma_1)
+    fit_res2 = fit_kinetic(df, gamma_2)
 
-    # nas were generated during fit if not enough data was available
-    #df_final = df_final.dropna()
-    # df_final = df_final[["cell_type", "gene_name", "alpha1", "alpha2", "alpha10"]]
-    # df_final = df_final.reset_index(drop=True)
+    df_fit_res = pd.merge(fit_res1, fit_res2, on="gene")
+    # get genes were any fit did not work well
+    genes_bimodal = np.isnan(df_fit_res[["alpha_x", "alpha_y"]]).any(axis=1)
+    genes_bimodal2 = df_fit_res.gene[genes_bimodal]
+    df_fit_res = df_fit_res.loc[~genes_bimodal]
 
-    #filename = "output/gamma_fits/gamma_fit_" + data + "_" + cell + "_" + inf + ".csv"
-    #df_final.to_csv(filename, index=False)
+    df_fit_res["pval"] = f_test(df_fit_res["rss_x"].values,
+                                df_fit_res["rss_y"].values,
+                                n_obs=10)
+    # get fdr, use only second element which are adjusted pvalues
+    df_fit_res["padj"] = fdrcorrection(df_fit_res.pval.values)[1]
+    df_fit_res["sig"] = True
+    df_fit_res["sig"][df_fit_res["padj"]>0.05] = False
 
-    return df_final
+    return df_fit_res
+
+#df = pd.read_csv("../../output/rtm_data/peine_rtm_Th0_invitro.csv")
+#fit_res = run_f_test(df)

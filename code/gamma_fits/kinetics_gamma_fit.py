@@ -8,33 +8,8 @@ fit gamma dist for output generated from R should work on all kinetic data toget
 """
 
 import pandas as pd
-import numpy as np
+from utils import run_f_test
+df = pd.read_csv("../../output/rtm_data/peine_rtm_Th0_invitro.csv")
+fit_res = run_f_test(df)
+fit_res.to_csv("../../output/gamma_fits/dec2020/gamma_fit_peine_Th0.csv")
 
-from utils import run_fit
-print("hi")
-bounds=([1.0,0], np.inf)
-#xdata for gamma dist fit (time series from crawford et al)
-#
-data = ["peine", "crawford"]
-for d in data:
-    if d == "peine":
-        rep_available = False
-        inf = "invitro"
-        cell = ["Th0", "Th1", "Th2", "ThMix"]
-        for c in cell:
-            file = "output/rtm_data/"+d+"_rtm_"+c+"_"+inf+".csv"
-
-            df = pd.read_csv(file)
-            df2 = run_fit(df, data = d, cell = c, inf = inf, rep_available = rep_available)
-
-    else:
-        rep_available = True
-        inf = ["arm", "cl13"]
-        cell = ["CD4", "CD8"]
-
-        for c in cell:
-            for i in inf:
-                file = "output/rtm_data/"+d+"_rtm_"+c+"_"+i+".csv"
-
-                df = pd.read_csv(file)
-                df2 = run_fit(df, data = d, cell = c, inf = i, rep_available = rep_available)
