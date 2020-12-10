@@ -24,6 +24,10 @@ def conv_cols(df):
 
 
 def prep_data(df):
+    # check column names because old version used gene name
+    if "gene" in df.columns:
+        df = df.rename(columns = {"gene" : "gene_name"})
+
     df_err = df[["cell_type", "gene_name", "time", "SD"]]
     df_err = df_err.drop_duplicates()
 
@@ -134,19 +138,30 @@ def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
     fit_res2 = fit_kinetic(df, gamma_2)
 
     df_fit_res = pd.merge(fit_res1, fit_res2, on="gene")
+
     # get genes were any fit did not work well
     genes_bimodal = np.isnan(df_fit_res[["alpha_x", "alpha_y"]]).any(axis=1)
-    genes_bimodal2 = df_fit_res.gene[genes_bimodal]
+    df_bimodal = df_fit_res.loc[genes_bimodal]
     df_fit_res = df_fit_res.loc[~genes_bimodal]
 
+    # run f test to compare gamma fits
+    timepoints = df.time.drop_duplicates().values
+    n_timepoints = len(timepoints)
     df_fit_res["pval"] = f_test(df_fit_res["rss_x"].values,
                                 df_fit_res["rss_y"].values,
-                                n_obs=10)
+                                n_obs=n_timepoints)
+
     # get fdr, use only second element which are adjusted pvalues
     df_fit_res["padj"] = fdrcorrection(df_fit_res.pval.values)[1]
-    df_fit_res["sig"] = True
-    df_fit_res["sig"][df_fit_res["padj"]>0.05] = False
+    df_fit_res["sig"] = "Non-exponential"
+    df_fit_res["sig"][df_fit_res["padj"]>0.05] = "Exponential"
 
+    # add genes for which fit did not work
+    df_bimodal["pval"] = None
+    df_bimodal["padj"] = None
+    df_bimodal["sig"] = "other"
+
+    df_fit_res = pd.concat([df_fit_res, df_bimodal])
     return df_fit_res
 
 #df = pd.read_csv("../../output/rtm_data/peine_rtm_Th0_invitro.csv")
