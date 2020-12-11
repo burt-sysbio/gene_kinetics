@@ -54,3 +54,33 @@ def plot_rtm_genes(df, n_genes, alpha, savename):
     
     savedir = "../../figures/gamma_fits/"
     g.savefig(savedir+savename+".pdf")
+
+
+def plot_fit(gene : str, data, fit):
+    """
+    purpose: plot gene expression time course from data with corresponding fits
+    data: df from data_rtm processed data
+    fit : df from gamma fits generated from data
+    """
+    # get fit vals but only until 1 is reached
+    exp = data.loc[gene]
+    x_idx = exp.avg_norm_rtm2.values
+    x_idx = np.where(x_idx == 1)[0][0]
+    exp = exp.iloc[:(x_idx+1), :]
+
+    alpha_2 = fit.loc[gene].alpha_y
+    beta_1 = fit.loc[gene].beta_x
+    beta_2 = fit.loc[gene].beta_y
+
+    # get gamma cdf vals
+    x_sim = exp.time.values
+    x_sim = np.linspace(min(x_sim), max(x_sim), 100)
+    y_sim1 = gamma_cdf1(x_sim, beta_1)
+    y_sim2 = gamma_cdf(x_sim, alpha_2, beta_2)
+
+    fig, ax = plt.subplots()
+    sns.scatterplot(data = exp, x = "time", y = "val_norm_rtm2", ax = ax)
+    ax.plot(x_sim, y_sim1)
+    ax.plot(x_sim, y_sim2)
+    plt.tight_layout()
+    plt.show()
