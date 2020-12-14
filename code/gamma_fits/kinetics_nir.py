@@ -9,83 +9,106 @@ sns.set(context = "talk", style = "ticks")
 fit = pd.read_csv("../../output/gamma_fits/dec2020/gamma_fit_nir_Th0.csv")
 data = pd.read_csv("../../data/data_rtm/nir_rtm_Th0.csv")
 
-# use gene name as index - this should be changed when output is generated
-fit = fit.set_index("gene", drop = True)
-data = data.set_index("gene", drop = True)
 
 # look at residual squares distribution
-ylim = 700
-r = (0,0.5)
-fig,ax = plt.subplots(1,2, figsize = (6,3))
-ax[0].hist(fit.rss_x, range = r)
-ax[0].set_ylim(0,ylim)
-ax[0].set_xlabel("fit alpha=1")
-ax[0].set_ylabel("fit error")
-ax[1].hist(fit.rss_y, range = r)
-ax[1].set_xlabel("fit alpha!=1")
-ax[1].set_ylim(0,ylim)
+g = sns.displot(data = fit, x = "rss", col = "model")
 plt.show()
 
-# look at error distribution
-r_err = (0,2)
-fig,ax = plt.subplots(1,3, figsize = (7,2))
-ax[0].hist(fit.beta_err_x, range = r_err)
-ax[0].set_xlabel("err beta x")
-ax[1].hist(fit.beta_err_y, range = r_err)
-ax[1].set_xlabel("err beta y")
-ax[2].hist(fit.alpha_err_y, range = r_err)
-ax[2].set_xlabel("err alpha y")
-plt.show()
+# look err distribution
+#g = sns.displot(data = fit, x = "beta_err", col = "model")
+#g.set(xscale = "log")
+#plt.show()
 
+
+# look err distribution
+#fit_gamma = fit.loc[fit.model == "gamma"]
+#g= sns.displot(data = fit_gamma, x = "alpha_err")
+#g.set(xscale = "log")
+#plt.show()
 
 # filter for low error and residual squares
-fit_o = fit.loc[fit.sig == "other"]
-fit = fit.loc[((fit.rss_x < 1) | (fit.rss_y < 1)) & (fit.alpha_err_y < 2)]
+fit = fit.loc[(fit.rss < 0.5) &
+              ((fit["alpha_err"] < 2) | (np.isnan(fit["alpha_err"]))) &
+              (fit["beta_err"] < 2)]
 
 # make volcona plot of pval vs alpha
-fit1 = fit.loc[fit.sig != "other"]
-fit1["log10padj"] = -np.log10(fit1.padj.values)
-g = sns.relplot(data = fit1, x = "alpha_y", y = "log10padj", hue = "sig")
-plt.show()
+fit["log10padj"] = -np.log10(fit.padj.values)
 
 # plot distribution of mean arrivals
-fit_g = fit.loc[fit.sig == "Non-exponential"]
-fit_e = fit.loc[fit.sig == "Exponential"]
-
-fit_g["mu"] = fit_g.alpha_y.values / fit_g.beta_y.values
-fit_e["mu"] = fit_e.alpha_x.values / fit_e.beta_x.values
-fit_o["mu"] = np.nan
+fit["mean_arrival"] = fit.alpha.values / fit.beta.values
+#sns.displot(data = fit, x = "mean_arrival", hue = "model")
+#plt.show()
 
 
-r_mu = (0,100)
-fig, ax = plt.subplots(1, 2)
-ax[0].hist(fit_g["mu"].values)
-ax[0].set_xlabel("mu x")
-ax[1].hist(fit_e["mu"].values)
-ax[1].set_xlabel("mu y")
+# plot volcano
+fit_gamma = fit.loc[fit.model == "gamma"]
+g = sns.relplot(data = fit_gamma, x = "alpha", y = "log10padj", hue = "f-test")
+g.set(xscale = "log")
 plt.show()
 
-# plot distribution of alpha values for non exponential fit
-r_alpha = (0,10)
-fig, ax = plt.subplots()
-ax.hist(fit_g.alpha_y.values)
-ax.set_xlabel("alpha non Exponential")
+# plot alpha distribution
+#g = sns.displot(data = fit_gamma, x = "alpha")
+#g.set(xscale = "log")
+#plt.show()
+
+# merge fit results with data and plot normalized arrival times for expo and gamma fits
+fit_merge = fit[["gene", "model", "f-test", "mean_arrival"]]
+df = fit_merge.merge(data, how = "left", on = "gene")
+df["time_norm"] = df.time.values / df.mean_arrival.values
+
+data_gamma = df.loc[(df.model != "expo") & (df["f-test"] == "sig")]
+data_expo = df.loc[(df.model == "expo") & (df["f-test"] == "ns")]
+df = pd.concat([data_expo, data_gamma])
+#g = sns.relplot(data = df, x = "time_norm",y = "avg_norm_rtm2",
+#                col = "model", legend = False)
+#g.set(xlim = (0,10))
+#plt.show()
+
+df2 = df.loc[(df.gene == "Nudt1") | (df.gene == "Actn1")]
+g = sns.relplot(data = df2, x = "time_norm", y = "avg_norm_rtm2",
+                col = "model", hue = "gene", legend = False)
 plt.show()
 
-# filter non exponential fits for high alphas and focus on distinct mean arrival range
-mu_min = 30
-mu_max = 120
-alpha_min = 2
-fit_g = fit_g.loc[fit_g.alpha_y > alpha_min]
-fit_mu = pd.concat([fit_e, fit_g, fit_o])
-fit_mu = fit_mu.loc[((fit_mu.mu > mu_min) & (fit_mu.mu < mu_max)) | fit_mu.mu.isnull()]
+# get time when max is reached
+time_idx = df.loc[df.avg_norm_rtm2 == 1.0][["time", "gene"]]
+time_idx = time_idx.rename(columns = {"time" : "timemax"})
 
-# plot timecourse of gene expression for exponential non exponential and other category
-df = data.merge(fit_mu, how = "left", left_index= True, right_index=True)
-df = df.reset_index()
-g = sns.relplot(data = df, x = "time", y = "avg_norm_rtm2", ci = "sd",
-                col = "sig", kind = "line",  legend = False)
-g.set(ylabel = "expr. norm.")
+df = df.merge(time_idx, how = "left", on = "gene")
+df = df.loc[df.time <= df.timemax]
+df["time_norm2"] = df.time / df.timemax
+
+g = sns.relplot(data = df, x = "time_norm2", y = "avg_norm_rtm2",
+                kind = "line", col = "model", legend = False)
 plt.show()
+
+# normalize time to mean arrival time
+#df = data.merge(fit, how = "left", left_index= True, right_index=True)
+#df = df.reset_index()
+#g = sns.relplot(data = df, x = "time", y = "avg_norm_rtm2", ci = "sd",
+#                col = "sig", kind = "line",  legend = False)
+#g.set(ylabel = "expr. norm.")
+#plt.show()
 
 #plot_fit("Fbxo36", data, fit)
+
+# t = np.linspace(0,10, 100)
+# x1 = gamma_cdf(t, 1,1)
+# x2 = gamma_cdf(t, 1,2)
+# x3 = gamma_cdf(t, 1, 0.5)
+#
+# fig,ax = plt.subplots()
+# ax.plot(t, x1)
+# ax.plot(t, x2)
+# ax.plot(t, x3)
+# plt.show()
+#
+# y1 = t
+# y2 = t/0.5
+# y3 = t/2
+#
+#
+# fig,ax = plt.subplots()
+# ax.plot(y1, x1)
+# ax.plot(y2, x2)
+# ax.plot(y3, x3)
+# plt.show()

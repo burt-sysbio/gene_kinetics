@@ -86,6 +86,9 @@ def fit_kinetic(df, gamma_fun):
     # convert fit res to dataframe
     colnames = ["gene", "alpha", "beta", "rss", "alpha_err", "beta_err"]
     df_fit_res = pd.DataFrame(fit_res, columns= colnames)
+    model_name = "gamma" if gamma_fun == gamma_cdf else "expo"
+    df_fit_res["model"] = model_name
+
     return df_fit_res
 
 
@@ -95,7 +98,7 @@ def fit_gamma(x, y, sigma, sigma_abs, gamma_fun):
     try:
         # run fit catch runtime exception for bad fit
         fit_val, fit_err = curve_fit(f=gamma_fun, xdata=x, ydata=y, sigma=sigma,
-                                     absolute_sigma=sigma_abs)
+                                     absolute_sigma=sigma_abs, bounds=(0, np.inf))
 
         # error of fitted params (not used atm)
         err = np.sqrt(np.diag(fit_err))
@@ -125,43 +128,52 @@ def fit_gamma(x, y, sigma, sigma_abs, gamma_fun):
     return out
 
 
+# compare nested models by F test for two least squares fits (f1 and f2 are degrees of freedom from two nested models)
 def f_test(rss1, rss2, n_obs, f1=1, f2=2):
     d1 = f2 - f1
     d2 = n_obs - f2
     F = ((rss1 - rss2) / d1) / (rss2 / d2)
-    f_crit = 1 - stats.f.cdf(F, d1, d2)
-    return f_crit
+    pval = 1 - stats.f.cdf(F, d1, d2)
+    return pval
 
 
 def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
     fit_res1 = fit_kinetic(df, gamma_1)
     fit_res2 = fit_kinetic(df, gamma_2)
 
-    df_fit_res = pd.merge(fit_res1, fit_res2, on="gene")
 
     # get genes were any fit did not work well
-    genes_bimodal = np.isnan(df_fit_res[["alpha_x", "alpha_y"]]).any(axis=1)
-    df_bimodal = df_fit_res.loc[genes_bimodal]
-    df_fit_res = df_fit_res.loc[~genes_bimodal]
+    #genes_bimodal = np.isnan(df_fit_res[["alpha_x", "alpha_y"]]).any(axis=1)
+    #df_bimodal = df_fit_res.loc[genes_bimodal]
+    #df_fit_res = df_fit_res.loc[~genes_bimodal]
 
-    # run f test to compare gamma fits
+    # run f test to compare gamma fits and perform multiple testing
     timepoints = df.time.drop_duplicates().values
     n_timepoints = len(timepoints)
-    df_fit_res["pval"] = f_test(df_fit_res["rss_x"].values,
-                                df_fit_res["rss_y"].values,
-                                n_obs=n_timepoints)
+    rss1 = fit_res1["rss"].values
+    rss2 = fit_res2["rss"].values
+    pvals = f_test(rss1, rss2, n_obs=n_timepoints)
+    padj = fdrcorrection(pvals)[1]
+
+    # add p values to original data frames
+    fit_res1["pval"] = pvals
+    fit_res1["padj"] = padj
+    fit_res2["pval"] = pvals
+    fit_res2["padj"] = padj
+
+    # combine dfs
+    df_fit_res = pd.concat([fit_res1, fit_res2])
 
     # get fdr, use only second element which are adjusted pvalues
-    df_fit_res["padj"] = fdrcorrection(df_fit_res.pval.values)[1]
-    df_fit_res["sig"] = "Non-exponential"
-    df_fit_res["sig"][df_fit_res["padj"]>0.05] = "Exponential"
+    df_fit_res["f-test"] = "sig"
+    df_fit_res["f-test"][df_fit_res["padj"]>0.05] = "ns"
 
     # add genes for which fit did not work
-    df_bimodal["pval"] = None
-    df_bimodal["padj"] = None
-    df_bimodal["sig"] = "other"
+    #df_bimodal["pval"] = None
+    #df_bimodal["padj"] = None
+    #df_bimodal["sig"] = "other"
 
-    df_fit_res = pd.concat([df_fit_res, df_bimodal])
+    #df_fit_res = pd.concat([df_fit_res, df_bimodal])
     return df_fit_res
 
 #df = pd.read_csv("../../output/rtm_data/peine_rtm_Th0_invitro.csv")
