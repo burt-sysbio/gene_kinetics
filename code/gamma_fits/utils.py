@@ -25,19 +25,19 @@ def conv_cols(df):
 
 def prep_data(df):
     # check column names because old version used gene name
-    if "gene" in df.columns:
-        df = df.rename(columns = {"gene" : "gene_name"})
+    if "gene_name" in df.columns:
+        df = df.rename(columns={"gene_name": "gene"})
 
-    df_err = df[["cell_type", "gene_name", "time", "SD"]]
+    df_err = df[["cell_type", "gene", "time", "SD"]]
     df_err = df_err.drop_duplicates()
 
-    df_val = df[["cell_type", "gene_name", "time", "avg_norm_rtm2"]]
+    df_val = df[["cell_type", "gene", "time", "avg_norm_rtm2"]]
     df_val = df_val.drop_duplicates()
 
     # need to make wide again for fit
     df_list = [df_val, df_err]
     df_list = [pd.pivot_table(data=df,
-                              index=["cell_type", "gene_name"],
+                              index=["cell_type", "gene"],
                               columns="time") for df in df_list]
     df_list = [conv_cols(df) for df in df_list]
 
@@ -45,14 +45,14 @@ def prep_data(df):
     timepoints = df.time.drop_duplicates().values
     n_timepoints = len(timepoints)
 
-    genes = df_list[0].gene_name.values
+    genes = df_list[0].gene.values
     vals = df_list[0].iloc[:, -n_timepoints:].values
     errs = df_list[1].iloc[:, -n_timepoints:].values
 
     return genes, vals, errs, timepoints
 
 
-def fit_kinetic(df, gamma_fun):
+def fit_kinetic(df, gamma_fun, bounds):
     genes, vals, errs, x = prep_data(df)
 
     fit_res = []
@@ -79,26 +79,24 @@ def fit_kinetic(df, gamma_fun):
                 sigma_abs = False
 
             # run fit and append output including gene name
-            out = fit_gamma(xdata, y, sigma, sigma_abs, gamma_fun)
+            out = fit_gamma(xdata, y, sigma, sigma_abs, gamma_fun, bounds)
             out = [gene] + out
             fit_res.append(out)
 
     # convert fit res to dataframe
     colnames = ["gene", "alpha", "beta", "rss", "alpha_err", "beta_err"]
-    df_fit_res = pd.DataFrame(fit_res, columns= colnames)
-    model_name = "gamma" if gamma_fun == gamma_cdf else "expo"
-    df_fit_res["model"] = model_name
+    df_fit_res = pd.DataFrame(fit_res, columns=colnames)
 
     return df_fit_res
 
 
-def fit_gamma(x, y, sigma, sigma_abs, gamma_fun):
+def fit_gamma(x, y, sigma, sigma_abs, gamma_fun, bounds):
     # dummy output in case fit does not work (e.g. gene kinetics are bimodal)
     out = [np.nan, np.nan, np.nan]
     try:
         # run fit catch runtime exception for bad fit
         fit_val, fit_err = curve_fit(f=gamma_fun, xdata=x, ydata=y, sigma=sigma,
-                                     absolute_sigma=sigma_abs, bounds=(0, np.inf))
+                                     absolute_sigma=sigma_abs, bounds=bounds)
 
         # error of fitted params (not used atm)
         err = np.sqrt(np.diag(fit_err))
@@ -137,44 +135,61 @@ def f_test(rss1, rss2, n_obs, f1=1, f2=2):
     return pval
 
 
+def get_pvals(fit1, fit2, n):
+    """
+    run f test for two fit results from function fit kinetic
+    """
+    # store comparison, this needs to be upfront
+    comp = fit1["model"][0] + "_" + fit2["model"][0]
+    # keep only those columns for merging and merge because some fits have nas generated
+    fit1 = fit1[["gene", "rss"]]
+    fit2 = fit2[["gene", "rss"]]
+
+    fit = fit1.merge(fit2, how = "inner", on = "gene")
+
+    # run f test on merged genes rss values after removing nans
+    fit = fit.dropna()
+    pvals = f_test(fit.rss_x.values, fit.rss_y.values, n_obs=n)
+
+    # perform fdr correction and gerate output dataframe
+    padj = fdrcorrection(pvals)[1]
+    df = pd.DataFrame({"gene": fit.gene.values, "p": pvals, "padj": padj})
+
+    # add some additional columns
+    df["comp"] = comp
+    df["f-test"] = "sig"
+    df["f-test"][df["padj"] > 0.05] = "ns"
+
+    return df
+
+
 def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
-    fit_res1 = fit_kinetic(df, gamma_1)
-    fit_res2 = fit_kinetic(df, gamma_2)
+    # edge casing for old col names
+    if "gene_name" in df.columns:
+        df = df.rename(columns={"gene_name": "gene"})
+    fit1 = fit_kinetic(df, gamma_1, bounds=(0, np.inf))  # expo fit
+    fit2 = fit_kinetic(df, gamma_2, bounds=([0, 0], np.inf))  # gamma fit a>1
+    #fit3 = fit_kinetic(df, gamma_2, bounds=(0, [1, np.inf]))  # gamma fit a<1
 
+    # add names to model fit
+    names = ["expo", "gamma"]
+    for f, n in zip([fit1, fit2], names):
+        f["model"] = n
 
-    # get genes were any fit did not work well
-    #genes_bimodal = np.isnan(df_fit_res[["alpha_x", "alpha_y"]]).any(axis=1)
-    #df_bimodal = df_fit_res.loc[genes_bimodal]
-    #df_fit_res = df_fit_res.loc[~genes_bimodal]
-
-    # run f test to compare gamma fits and perform multiple testing
+    # run f test to compare gamma and longtail fits vs exponential model
     timepoints = df.time.drop_duplicates().values
     n_timepoints = len(timepoints)
-    rss1 = fit_res1["rss"].values
-    rss2 = fit_res2["rss"].values
-    pvals = f_test(rss1, rss2, n_obs=n_timepoints)
-    padj = fdrcorrection(pvals)[1]
-
-    # add p values to original data frames
-    fit_res1["pval"] = pvals
-    fit_res1["padj"] = padj
-    fit_res2["pval"] = pvals
-    fit_res2["padj"] = padj
+    df12 = get_pvals(fit1, fit2, n_timepoints)
+    #df13 = get_pvals(fit1, fit3, n_timepoints)
+    #df_pvals = pd.concat([df12, df13])
 
     # combine dfs
-    df_fit_res = pd.concat([fit_res1, fit_res2])
+    #fit_res = pd.concat([fit1, fit2, fit3])
 
-    # get fdr, use only second element which are adjusted pvalues
-    df_fit_res["f-test"] = "sig"
-    df_fit_res["f-test"][df_fit_res["padj"]>0.05] = "ns"
+    return fit1, fit2, df12
 
-    # add genes for which fit did not work
-    #df_bimodal["pval"] = None
-    #df_bimodal["padj"] = None
-    #df_bimodal["sig"] = "other"
+df = pd.read_csv("../../data/data_rtm/peine_rtm_Th0_invitro.csv")
+fit1, fit2, pvals = run_f_test(df)
 
-    #df_fit_res = pd.concat([df_fit_res, df_bimodal])
-    return df_fit_res
-
-#df = pd.read_csv("../../output/rtm_data/peine_rtm_Th0_invitro.csv")
-#fit_res = run_f_test(df)
+#pvals2 = pvals.loc[pvals.comp == "expo_gamma"]
+print(np.sum(pvals["f-test"].values == "sig"))
