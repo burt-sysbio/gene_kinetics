@@ -28,9 +28,9 @@ for g in groups:
         if study == "proserpio":
             genes_na = df.gene[df.SD.isna()]
             df = df[~df.gene.isin(genes_na)]
+
         # kick out NAs, at least in properio there are some nas for some reason
         # I need to double check this
-
         a,b,c = run_f_test(df)
 
         dummy = study + "_" + g + "_" + act + ".csv"
