@@ -6,8 +6,7 @@ source("code/data_pipeline/utils.R")
 
 ### read data
 study <- "nir"
-file <- paste0("data/data_kinetic/", study, "_kinetic.csv")
-df <- read.csv("data/data_kinetic/nir_kinetic.csv")
+df <- read.csv(paste0("data/data_kinetic/", study, "_kinetic.csv"))
 
 # split into groups
 df_tidy <- make_tidy(df)
@@ -23,8 +22,8 @@ savedir <- "data/data_rtm/"
 
 for(i in seq_along(df_list_rtm)){
   group <- groups[i]
-  df <- df_list_rtm[[i]]
+  df_out <- df_list_rtm[[i]]
   file <- paste0(savedir, group, ".csv")
-  write_csv(df, file)
+  write_csv(df_out, file)
 }
 

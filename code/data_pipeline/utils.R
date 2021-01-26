@@ -97,7 +97,7 @@ norm_rtm <- function(df){
 norm_d0 <- function(df){
   df_d0 <- df %>% filter(time == min(time))
   df_d0 <- df_d0 %>% dplyr::select(-value, -time)
-  df_d0 <- rename(df_d0, "avgd0" = "avg")
+  df_d0 <- dplyr::rename(df_d0, "avgd0" = "avg")
   df_d0 <- distinct(df_d0)
   df <- left_join(df, df_d0)
   df <- df %>% mutate(avg_norm = avg/avgd0, val_norm = value/avgd0)  

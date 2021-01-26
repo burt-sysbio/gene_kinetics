@@ -59,6 +59,7 @@ def fit_kinetic(df, gamma_fun, bounds):
     # fit gamma dist for each gene
     for i, gene in zip(range(len(vals)), genes):
         y = vals[i, :]
+
         # check that there are no nans in y
         assert (~np.isnan(y).any())
         # check that data is normalized and keep array only until max is reached
@@ -72,7 +73,7 @@ def fit_kinetic(df, gamma_fun, bounds):
             if errs.size != 0:
                 sigma = errs[i, :]
                 # sigma = sigma[~np.isnan(sigma)]
-                sigma = sigma[:max_idx]
+                sigma = sigma[:(max_idx+1)]
                 sigma_abs = True
             else:
                 sigma = None
@@ -115,7 +116,8 @@ def fit_gamma(x, y, sigma, sigma_abs, gamma_fun, bounds):
         # need to change pipeline function in R to write sigma as 1 instead of NA
         nexp = gamma_fun(x, *fit_val)
         r = y - nexp
-        if sigma is None: sigma = 1
+        if sigma is None:
+            sigma = 1
         rss = np.sum((r / sigma) ** 2)
 
         out = [alpha_fit, beta_fit, rss, alpha_err, beta_err]
@@ -188,8 +190,8 @@ def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
 
     return fit1, fit2, df12
 
-df = pd.read_csv("../../data/data_rtm/peine_rtm_Th0_invitro.csv")
-fit1, fit2, pvals = run_f_test(df)
+#df = pd.read_csv("../../data/data_rtm/peine_rtm_Th0_invitro.csv")
+#fit1, fit2, pvals = run_f_test(df)
 
 #pvals2 = pvals.loc[pvals.comp == "expo_gamma"]
-print(np.sum(pvals["f-test"].values == "sig"))
+#print(np.sum(pvals["f-test"].values == "sig"))

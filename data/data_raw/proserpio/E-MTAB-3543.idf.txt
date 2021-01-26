@@ -1,0 +1,36 @@
+Comment[ArrayExpressAccession]	E-MTAB-3543
+MAGE-TAB Version	1.1																																											
+Investigation Title	Th2 differentiation in a time course experiment and at single generation resolution																																											
+Comment[Submitted Name]	Th2 differentiation in a time course experiment and at single generation resolution
+Experiment Description	Mouse splenic naïve T cells were activated (with anti-CD3/CD28)and polarized towards the Th2 subtype with IL4 .  Cells were collected at different time points during the differentiation and, at day 3 .5,were collected according to number of cell divisions and expression or absence of a specific differentiation marker.																																											
+Experimental Design	cell type comparison design																																											
+Experimental Design Term Source REF	EFO																																											
+Experimental Design Term Accession Number	EFO_0001745																																											
+Experimental Factor Name	generation	cell type	stimulus	differentiated	time																																							
+Experimental Factor Type	generation	cell type	stimulus	differentiated	time																																							
+Experimental Factor Term Source REF		EFO																																										
+Experimental Factor Term Accession Number		EFO_0000324																																										
+Person Last Name	Kar	Proserpio																																										
+Person First Name	Gozde	Valentina																																										
+Person Mid Initials																																												
+Person Email	gkar@ebi.ac.uk	valentina.proserpio@gmail.com																																										
+Person Phone																																												
+Person Fax																																												
+Person Address	EMBL-EBI, Wellcome Trust Genome Campus, Hinxton, Cambridge, UK																																											
+Person Affiliation	EMBL-EBI																																											
+Person Roles	submitter	experiment performer																																										
+Public Release Date	2016-05-01																																											
+Protocol Name	P-MTAB-44548	P-MTAB-44549	P-MTAB-44550	P-MTAB-44551	P-MTAB-44552	P-MTAB-44553	P-MTAB-44554	P-MTAB-44555
+Protocol Type	sample collection protocol	sample collection protocol	growth protocol	nucleic acid library construction protocol	dissection protocol	nucleic acid sequencing protocol	high throughput sequence alignment protocol	normalization data transformation protocol																																				
+Protocol Term Source REF	EFO	EFO	EFO	EFO	EFO	EFO	EFO	EFO																																				
+Protocol Term Accession Number	EFO_0005518	EFO_0005518	EFO_0003789	EFO_0004184	EFO_0005519	EFO_0004170	EFO_0004917	EFO_0003816																																				
+Protocol Description	Spleens were collected from mice between 6-12 weeks old	Untouched naive cells were purified from the spleen with negative selection protocol.	Cells were grown in complete IMDM 10% FBS, in presence of IL4 (10ng/ml)	Libraries were prepared according to Illumina Paired End sequencing Protocl	Spleens were mashed through a 70nm strainer to obtain single cell suspension	Illumina Hi-seq 2000 was used to sequence the libraries	For each sample, reads were aligned to the Mus musculus genome (GRCm38) using GSNAP with default options (Wu and Nacu, 2010).	Only reads uniquely mapped to the genome were counted for each gene using htseq-count. Samples are normalised with size factors calculated from DESeq. 																																				
+Protocol Hardware						Illumina HiSeq 2000																																						
+Protocol Software																																												
+Term Source Name	EFO
+Term Source File	http://www.ebi.ac.uk/efo/																																											
+Term Source Version																																												
+Comment[AEExperimentType]	RNA-seq of coding RNA																																											
+Comment[SecondaryAccession]	ERP010398																																											
+Comment[SequenceDataURI]	http://www.ebi.ac.uk/ena/data/view/ERR873424-ERR873443																																											
+SDRF File	E-MTAB-3543.sdrf.txt

@@ -4,7 +4,8 @@ require(dplyr)
 require(maSigPro)
 source("code/data_pipeline/utils.R")
 
-df <- read_csv("data/data_processed/nir_processed.csv")
+study <- "proserpio"
+df <- read_csv(paste0("data/data_processed/", study, "_processed.csv"))
 df <- prep_data(df)
 des_mat <- get_des_mat(df)
 
@@ -22,4 +23,4 @@ genes <- sigs$summary
 df_kinetic <- df[rownames(df) %in% genes,]
 
 df_kinetic$gene <- rownames(df_kinetic)
-write_csv(df_kinetic, "data/data_kinetic/nir_kinetic.csv")
+write_csv(df_kinetic, paste0("data/data_kinetic/", study, "_kinetic.csv"))
