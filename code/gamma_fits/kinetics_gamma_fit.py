@@ -9,37 +9,37 @@ fit gamma dist for output generated from R should work on all kinetic data toget
 
 import pandas as pd
 from utils import run_f_test
+import os
 
-study = "powrie"
-groups = ["innate"]
-activations = ["colitis"]
 month = "jan2021"
-
 readdir = "../../data/data_rtm/"
 savedir = "../../output/gamma_fits/" + month + "/"
 
-for g in groups:
-    for act in activations:
+# load all files
+filenames = os.listdir(readdir)
 
-        file = readdir+study + "_rtm_" + g + "_" + act + ".csv"
-        df = pd.read_csv(file)
+# grab rtm files
+pattern = "_rtm_"
+filenames = [f for f in filenames if pattern in f]
 
-        # if rna seq data, kick out nans generated through rlog trafo
-        if study == "proserpio":
-            genes_na = df.gene[df.SD.isna()]
-            df = df[~df.gene.isin(genes_na)]
-
-        # kick out NAs, at least in properio there are some nas for some reason
-        # I need to double check this
-        a,b,c = run_f_test(df)
-
-        dummy = study + "_" + g + "_" + act + ".csv"
-        file_a = savedir + "fit_expo_" + dummy
-        file_b = savedir + "fit_gamma_" + dummy
-        file_c = savedir + "ftest_" + dummy
-
-        a.to_csv(file_a)
-        b.to_csv(file_b)
-        c.to_csv(file_c)
+# use only 1 file for testing?
+#filenames = [filenames[0]]
 
 
+# run gamma and expo fit, then compute f test statistic
+for filename in filenames:
+    df = pd.read_csv(readdir + filename)
+
+    # if rna seq data, kick out nans generated through rlog trafo
+    if "proserpio" in filename:
+        genes_na = df.gene[df.SD.isna()]
+        df = df[~df.gene.isin(genes_na)]
+
+    # kick out NAs, at least in properio there are some nas for some reason
+    # I need to double check this
+    output = run_f_test(df)
+
+    # save output
+    out_names = ["fit_expo_", "fit_gamma_", "ftest_"]
+    for df, n in zip(output, out_names):
+        df.to_csv(savedir+n+filename)

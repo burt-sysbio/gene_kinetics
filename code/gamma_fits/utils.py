@@ -154,13 +154,13 @@ def get_pvals(fit1, fit2, n):
     pvals = f_test(fit.rss_x.values, fit.rss_y.values, n_obs=n)
 
     # perform fdr correction and gerate output dataframe
-    padj = fdrcorrection(pvals)[1]
-    df = pd.DataFrame({"gene": fit.gene.values, "p": pvals, "padj": padj})
+    #padj = fdrcorrection(pvals)[1]
+    df = pd.DataFrame({"gene": fit.gene.values, "p": pvals})
 
     # add some additional columns
     df["comp"] = comp
-    df["f-test"] = "sig"
-    df["f-test"][df["padj"] > 0.05] = "ns"
+    df["f-test"] = "ns"
+    df["f-test"][df["p"] <= 0.05] = "sig"
 
     return df
 
