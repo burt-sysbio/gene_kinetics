@@ -7,9 +7,10 @@ import glob
 import pandas as pd
 import matplotlib.pyplot as plt
 
-sns.set(style = "ticks", context = "paper")
+sns.set(style = "ticks", context = "talk")
 
-month = "jan2021"
+
+month = "feb2021"
 readdir = "../../output/gamma_fits/" + month + "/"
 
 filenames = os.listdir(readdir)
@@ -28,10 +29,10 @@ for f,n in zip(filepaths,filenames):
 df_fits = pd.concat(fits)
 
 
-order = ["crawford_CD4_arm",
-         "crawford_CD8_arm",
-         "crawford_CD4_cl13",
-         "crawford_CD8_cl13",
+order = ["crawford_CD4.arm",
+         "crawford_CD4.cl13",
+         "crawford_CD8.arm",
+         "crawford_CD8.cl13",
          "powrie_innate_colitis",
          "proserpio_Th2_parasite",
          "peine_Th0_invitro",
@@ -42,47 +43,63 @@ order = ["crawford_CD4_arm",
          "nir_Th17_invitro"
          ]
 
-use_fdr = False
-if use_fdr:
-    col = "sig_delay"
-    val1 = True
-    val2 = False
-else:
-    col = "f-test"
-    val1 = "sig"
-    val2 = "ns"
+#xlabels = ["[1]CD4-Arm", "[1]CD4-Cl13", "[1]CD8-Arm", "[1]CD8-Cl13",
+#           "[2]Th0", "[2]Th17",
+#           "[3]Th0", "[3]Th1", "[3]Th2", "[3]Th1/2",
+#           "[4]Innate",
+#           "[5]Th2"]
+
+xlabels = ["Craw. 1", "Craw. 2", "Craw. 3", "Craw. 4",
+           "Nir 1", "Nir 2",
+           "Peine 1", "Peine 2", "Peine 3", "Peine 4",
+           "Ilott 1",
+           "Pros. 1"]
 
 # get total number of kinetic genes
-n_kin = df_fits.groupby(["study"])["gene"].count()
+df = df_fits.groupby(["study", "best_fit"])["gene"].count()
+df = df.reset_index()
+df = df.pivot(index = "study", columns = "best_fit", values = "gene")
 
-# get number of genes where fit was good
-df_good_fit = df_fits.loc[df_fits["keep_fit"] == True]
-n_good_fit = df_good_fit.groupby(["study"])["gene"].count()
+total = df.sum(axis = 1)
+df_norm = df.values / np.reshape(total.values, (df.shape[0],1))
 
-# get number of genes where delay was significant (with fdr correction)
-df_sig_del = df_good_fit.loc[df_good_fit[col] == val1]
-n_sig_del = df_sig_del.groupby(["study"])["gene"].count()
+df_norm = pd.DataFrame(df_norm, columns = df.columns)
+df_norm.index = df.index
 
-# get n genes where delay was not
-df_ns_del = df_good_fit.loc[df_good_fit[col] == val2]
-n_ns_del = df_ns_del.groupby(["study"])["gene"].count()
 
-df_sum = pd.concat([n_kin, n_good_fit, n_sig_del, n_ns_del], axis = 1)
-df_sum.columns = ["kinetic_genes", "good_fits", "sig_delay", "ns_delay"]
-df_sum["bad_fits"] = df_sum.kinetic_genes - df_sum.good_fits
-
-df_sum = df_sum.drop(columns = ["kinetic_genes", "good_fits"])
-ax = df_sum.plot.bar(stacked = True)
+ax = df.plot.bar(stacked = True)
+ax.set_ylabel("n kinetic genes fitted")
+ax.set_xticklabels(xlabels)
 plt.show()
 
-# normalize data frame to sum everything up to 1, to do this divide by all kinetic genes
-df_norm = df_sum.values / np.reshape(n_kin.values, (n_kin.shape[0],1))
-df_norm = pd.DataFrame(df_norm, columns = df_sum.columns)
-df_norm.index = df_sum.index
+df_norm = df_norm * 100
 
-ax = df_norm.plot.bar(stacked = True)
+colors = sns.color_palette()
+colors_reordered = [colors[2], colors[0], colors[1], "tab:grey"]
+
+
+df_norm.loc[:,"other"] = df_norm.longtail + df_norm.other
+
+plot_longtail = False
+if not plot_longtail:
+    print("longtail dist not shown?")
+    df_norm = df_norm[["expo", "gamma", "other"]]
+    savename = "fit_assignment_reduced"
+    colors_reordered = [colors[2], colors[0], "tab:grey"]
+else:
+    savename = "fit_assignment"
+
+ax = df_norm.plot.bar(stacked = True, color = colors_reordered)
+ax.set_ylabel("fit assignment (% kinetic genes)")
+ax.set_xticklabels(xlabels)
+ax.set_ylim(0,100)
+ax.set_xlabel("")
 plt.show()
 
-#fig.savefig("../../figures/fit_summary_datasets.pdf")
+fig = ax.get_figure()
+fig.savefig("../../figures/"+ savename + ".pdf")
+fig.savefig("../../figures/"+ savename + ".svg")
 
-df_fits.to_csv(readdir + "fit_summary_all.csv")
+
+# save the fit summary
+df_fits.to_csv("../../output/gamma_fits/feb2021/fit_summary_all.csv")

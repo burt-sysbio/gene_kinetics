@@ -11,7 +11,7 @@ import pandas as pd
 from utils import run_f_test
 import os
 
-month = "jan2021"
+month = "feb2021"
 readdir = "../../data/data_rtm/"
 savedir = "../../output/gamma_fits/" + month + "/"
 
@@ -19,7 +19,7 @@ savedir = "../../output/gamma_fits/" + month + "/"
 filenames = os.listdir(readdir)
 
 # grab rtm files
-pattern = "_rtm_"
+pattern = "Proserpio_rtm_"
 filenames = [f for f in filenames if pattern in f]
 
 # use only 1 file for testing?
@@ -31,7 +31,7 @@ for filename in filenames:
     df = pd.read_csv(readdir + filename)
 
     # if rna seq data, kick out nans generated through rlog trafo
-    if "proserpio" in filename:
+    if "Proserpio" in filename:
         genes_na = df.gene[df.SD.isna()]
         df = df[~df.gene.isin(genes_na)]
 
@@ -40,6 +40,6 @@ for filename in filenames:
     output = run_f_test(df)
 
     # save output
-    out_names = ["fit_expo_", "fit_gamma_", "ftest_"]
+    out_names = ["fit_res_", "ftest_"]
     for df, n in zip(output, out_names):
         df.to_csv(savedir+n+filename)

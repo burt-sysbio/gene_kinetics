@@ -17,7 +17,7 @@ def gamma_cdf1(t, beta):
 
 
 def conv_cols(df):
-    df.columns = df.columns.droplevel()
+    #df.columns = df.columns.droplevel()
     df.columns = [str(col) for col in df.columns]
     df = df.reset_index()
     return (df)
@@ -36,14 +36,19 @@ def prep_data(df):
 
     # need to make wide again for fit
     df_list = [df_val, df_err]
-    df_list = [pd.pivot_table(data=df,
+
+    cols = ["avg_norm_rtm2", "SD"]
+    df_list = [pd.pivot(data=df,
                               index=["cell_type", "gene"],
-                              columns="time") for df in df_list]
-    df_list = [conv_cols(df) for df in df_list]
+                              columns="time", values = col) for col, df in zip(cols,df_list)]
+
 
     # extract data and errors
-    timepoints = df.time.drop_duplicates().values
+    timepoints = np.asarray(df_list[0].columns)
     n_timepoints = len(timepoints)
+
+    # convert cols to str and reset the index
+    df_list = [conv_cols(df) for df in df_list]
 
     genes = df_list[0].gene.values
     vals = df_list[0].iloc[:, -n_timepoints:].values
@@ -70,7 +75,7 @@ def fit_kinetic(df, gamma_fun, bounds):
         # only focus on arrays where y has 4 time points
         if len(y) > 3:
             xdata = x[:len(y)]
-            if errs.size != 0:
+            if not np.isnan(errs).all():
                 sigma = errs[i, :]
                 # sigma = sigma[~np.isnan(sigma)]
                 sigma = sigma[:(max_idx+1)]
@@ -85,7 +90,7 @@ def fit_kinetic(df, gamma_fun, bounds):
             fit_res.append(out)
 
     # convert fit res to dataframe
-    colnames = ["gene", "alpha", "beta", "rss", "alpha_err", "beta_err"]
+    colnames = ["gene", "alpha", "beta", "rss", "rmse", "alpha_err", "beta_err"]
     df_fit_res = pd.DataFrame(fit_res, columns=colnames)
 
     return df_fit_res
@@ -115,12 +120,11 @@ def fit_gamma(x, y, sigma, sigma_abs, gamma_fun, bounds):
         # compute chi sqr and get residuals
         # need to change pipeline function in R to write sigma as 1 instead of NA
         nexp = gamma_fun(x, *fit_val)
-        r = y - nexp
-        if sigma is None:
-            sigma = 1
-        rss = np.sum((r / sigma) ** 2)
+        rss = np.sum((y-nexp)**2)
+        # root mean squared
+        rmse = np.sqrt(rss/len(y))
 
-        out = [alpha_fit, beta_fit, rss, alpha_err, beta_err]
+        out = [alpha_fit, beta_fit, rss, rmse, alpha_err, beta_err]
 
     except RuntimeError:
         print("max calls reached no good fit")
@@ -151,6 +155,7 @@ def get_pvals(fit1, fit2, n):
 
     # run f test on merged genes rss values after removing nans
     fit = fit.dropna()
+    #fit.fillna(1e30)
     pvals = f_test(fit.rss_x.values, fit.rss_y.values, n_obs=n)
 
     # perform fdr correction and gerate output dataframe
@@ -169,29 +174,27 @@ def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
     # edge casing for old col names
     if "gene_name" in df.columns:
         df = df.rename(columns={"gene_name": "gene"})
+
+    print("expo fit...")
     fit1 = fit_kinetic(df, gamma_1, bounds=(0, np.inf))  # expo fit
-    fit2 = fit_kinetic(df, gamma_2, bounds=([0, 0], np.inf))  # gamma fit a>1
-    #fit3 = fit_kinetic(df, gamma_2, bounds=(0, [1, np.inf]))  # gamma fit a<1
+    print("gamma fit...")
+    fit2 = fit_kinetic(df, gamma_2, bounds=([1, 0], [np.inf, np.inf]))  # gamma fit a>1
+    print("longtail fit...")
+    fit3 = fit_kinetic(df, gamma_2, bounds=([0, 0], [1, np.inf]))  # gamma fit a<1
 
     # add names to model fit
-    names = ["expo", "gamma"]
-    for f, n in zip([fit1, fit2], names):
+    fits = [fit1, fit2, fit3]
+    names = ["expo", "gamma", "longtail"]
+    assert (len(fits) == len(names))
+    for f, n in zip(fits, names):
         f["model"] = n
 
     # run f test to compare gamma and longtail fits vs exponential model
     timepoints = df.time.drop_duplicates().values
     n_timepoints = len(timepoints)
-    df12 = get_pvals(fit1, fit2, n_timepoints)
-    #df13 = get_pvals(fit1, fit3, n_timepoints)
-    #df_pvals = pd.concat([df12, df13])
+    ftest_gamma = get_pvals(fit1, fit2, n_timepoints)
+    ftest_longtail = get_pvals(fit1, fit3, n_timepoints)
 
-    # combine dfs
-    #fit_res = pd.concat([fit1, fit2, fit3])
-
-    return fit1, fit2, df12
-
-#df = pd.read_csv("../../data/data_rtm/peine_rtm_Th0_invitro.csv")
-#fit1, fit2, pvals = run_f_test(df)
-
-#pvals2 = pvals.loc[pvals.comp == "expo_gamma"]
-#print(np.sum(pvals["f-test"].values == "sig"))
+    df1 = pd.concat(fits)
+    df2 = pd.concat([ftest_gamma, ftest_longtail])
+    return df1, df2

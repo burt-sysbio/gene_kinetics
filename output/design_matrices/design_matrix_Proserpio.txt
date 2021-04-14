@@ -1,0 +1,13 @@
+"Time" "Replicate" "Th2"
+"Proserpio_Th2_0_A" 0 1 1
+"Proserpio_Th2_0_B" 0 1 1
+"Proserpio_Th2_6_A" 6 2 1
+"Proserpio_Th2_6_B" 6 2 1
+"Proserpio_Th2_18_A" 18 3 1
+"Proserpio_Th2_18_B" 18 3 1
+"Proserpio_Th2_24_A" 24 4 1
+"Proserpio_Th2_24_B" 24 4 1
+"Proserpio_Th2_48_A" 48 5 1
+"Proserpio_Th2_48_B" 48 5 1
+"Proserpio_Th2_84_A" 84 6 1
+"Proserpio_Th2_84_B" 84 6 1

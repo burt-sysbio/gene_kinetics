@@ -8,55 +8,10 @@ Created on Mon Nov  9 15:46:15 2020
 import seaborn as sns
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-sns.set(context = "poster", style = "ticks")
-savedir = "../../figures/gamma_fits/"
-
-from scipy.special import gammainc
-from utils import *
+from utils import gamma_cdf
 
 
-def plot_rtm_genes(df, n_genes, alpha, savename):
-    
-    # check that df is only from one study and add corresponding timepoints
-    study = df.study.unique()[0]
-
-    assert((study == "crawford") | (study == "peine"))
-    if study == "peine":
-        timepoints = [0,3,6,12,24,35,48,73,96,120]
-    else: 
-        timepoints = [0,6,8,15,30]
-        
-    timepoints = [str(val) for val in timepoints]
-
-    df = tidy_df(df, timepoints, alpha = alpha, n_genes = n_genes)
-    
-    # plot data
-    g = sns.relplot(data = df, x = "time", y = "exp_data", col = "gene_name",
-                    kind = "scatter")
-    
-    # get unique genes and add model fits
-    genes = df.gene_name.drop_duplicates()
-    genes = genes.values
-    for (ax, gene) in zip(g.axes.flat, genes):
-        p = df.loc[df.gene_name == gene]
-        betas = ["beta_1", "beta_10"]
-        alphas = [1, 10]
-        colors = ["tab:blue", "tab:red"]
-        for alpha, beta, c in zip(alphas, betas, colors):
-            # create x array spanning experiment time
-            x = np.linspace(p.time.min(), p.time.max(), 100)
-            # get one beta value, should all be the same
-            b = p[beta].values[0]
-    
-            y = gamma_cdf(x, alpha, b)
-            ax.plot(x,y, ls = "--", color = c)
-    
-    savedir = "../../figures/gamma_fits/"
-    g.savefig(savedir+savename+".pdf")
-
-
-def plot_fit(gene : str, data, fit):
+def prep_fit(gene : str, data, fit_res):
     """
     purpose: plot gene expression time course from data with corresponding fits
     data: df from data_rtm processed data
@@ -68,19 +23,45 @@ def plot_fit(gene : str, data, fit):
     x_idx = np.where(x_idx == 1)[0][0]
     exp = exp.iloc[:(x_idx+1), :]
 
-    alpha_2 = fit.loc[gene].alpha_y
-    beta_1 = fit.loc[gene].beta_x
-    beta_2 = fit.loc[gene].beta_y
+    alphas = fit_res.loc[gene].alpha.values
+    betas = fit_res.loc[gene].beta.values
 
     # get gamma cdf vals
     x_sim = exp.time.values
-    x_sim = np.linspace(min(x_sim), max(x_sim), 100)
-    y_sim1 = gamma_cdf1(x_sim, beta_1)
-    y_sim2 = gamma_cdf(x_sim, alpha_2, beta_2)
+    x_sim = np.linspace(0, max(x_sim)+20, 100)
+    y_sim = [gamma_cdf(x_sim, alpha, beta) for alpha, beta in zip(alphas, betas)]
 
-    fig, ax = plt.subplots()
-    sns.scatterplot(data = exp, x = "time", y = "val_norm_rtm2", ax = ax)
-    ax.plot(x_sim, y_sim1)
-    ax.plot(x_sim, y_sim2)
-    plt.tight_layout()
-    plt.show()
+    df_sim = pd.DataFrame({"time" : x_sim, "fit1" : y_sim[0], "fit2" : y_sim[1], "fit3" : y_sim[2]})
+    return df_sim, exp
+
+
+def plot_single_fit(gene, data, fit_res, ax, show_rmse = True, show_title = False, capsize = 10):
+    # get simulation values for the gene
+    df1, df2 = prep_fit(gene, data, fit_res)
+
+    # plot data and fim values
+    palette = sns.color_palette()
+    palette_reordered = [palette[1], palette[0], palette[2]]
+    sns.scatterplot(data = df2, x = "time", y = "avg_norm_rtm2", ax = ax, color = "k")
+    # add some error bars if available
+    if not np.isnan(df2.SD).any():
+        ax.errorbar(df2.time, df2.avg_norm_rtm2, yerr = df2.SD, ecolor = "k", fmt = "none", capsize = capsize)
+
+
+    sns.lineplot(data = df1, x = "time", y = "fit1", ax = ax, color = palette[1])
+    sns.lineplot(data = df1, x = "time", y = "fit2", ax = ax, color = palette[0])
+    sns.lineplot(data = df1, x = "time", y = "fit3", ax = ax, color = palette[2])
+
+    ax.set_ylabel("expr. norm.")
+    ax.set_xlabel("time (h)")
+
+    if show_rmse:
+        rmse = fit_res.loc[gene]["rmse"]
+        names = ["exp", "del", "fat"]
+        rmse = [str(np.round(val,2))+n for val, n in zip(rmse, names)]
+        title = gene + " " + " ".join(rmse)
+        ax.set_title(title)
+
+    if show_title:
+        assert show_rmse == False
+        ax.set_title(gene)
