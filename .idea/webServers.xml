@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="e795e291-b913-44a9-b6fe-20d27eae8bdc" name="itb">
+        <fileTransfer rootFolder="/home/burt" accessType="SFTP" host="gate.biologie.hu-berlin.de" port="22" sshConfigId="86c1a053-b74b-4a16-9ce7-ba82e4ab433e" sshConfig="burt@gate.biologie.hu-berlin.de:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

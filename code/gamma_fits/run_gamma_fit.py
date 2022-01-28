@@ -5,6 +5,7 @@ Created on Mon Nov  9 13:24:52 2020
 
 @author: burt
 fit gamma dist for output generated from R should work on all kinetic data together
+also performs f test
 """
 
 import pandas as pd
@@ -19,7 +20,7 @@ savedir = "../../output/gamma_fits/" + month + "/"
 filenames = os.listdir(readdir)
 
 # grab rtm files
-pattern = "Proserpio_rtm_"
+pattern = "_rtm_"
 filenames = [f for f in filenames if pattern in f]
 
 # use only 1 file for testing?

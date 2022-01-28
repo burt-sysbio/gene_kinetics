@@ -5,9 +5,9 @@ source("code/data_pipeline/utils.R")
 
 
 ### read data
-study <- "Proserpio"
+study <- "Powrie"
 
-infection <- "parasite"
+infection <- "colitis"
 
 df <- read.csv(paste0("data/data_kinetic/", study, "_kinetic.csv"))
 
@@ -28,6 +28,7 @@ if(study == "Crawford"){
   df_tidy <- bind_rows(d0_cd4_cl13, d0_cd8_cl13, df_tidy)
 }
 
+# split into different cell types
 df_list <- split(df_tidy, df_tidy$cell_type)
 
 # transform for RTM

@@ -2,8 +2,6 @@ require(dplyr)
 require(tidyr)
 require(stringr)
 
-
-
 # take output from masigpro kinetic genes and make tidy
 make_tidy <- function(df){
   df <- df %>% pivot_longer(-gene)
@@ -23,10 +21,10 @@ norm_rtm <- function(df){
   df <- norm_d0(df)
   
   # change to response time dist and get log
-  df <- df %>% mutate(val_norm_rtm = log2(val_norm), 
-                      avg_norm_rtm = log2(avg_norm))
+  df <- df %>% mutate(val_norm_rtm = val_norm, 
+                      avg_norm_rtm = avg_norm)
   
-  # get maximum or minimum (new) to include downreg val per gene over all times and divide by it
+  # get max(|avg|) (could be minimum) to include downreg val per gene over all times and divide by it
   df <- df %>% group_by(gene) %>%  
     mutate(max_gene = ifelse(max(avg_norm_rtm) > abs(min(avg_norm_rtm)), max(avg_norm_rtm), min(avg_norm_rtm))) %>% 
     ungroup() 
@@ -36,8 +34,8 @@ norm_rtm <- function(df){
   
   # compute standard deviation and select columns needed for rtm
   df <- df %>% group_by(gene, time) %>% 
-    mutate(SD = sd(val_norm_rtm2)) %>% ungroup() %>%
-    dplyr::select(gene, time, cell_type, SD, avg_norm_rtm2, val_norm_rtm2)
+    mutate(SD = sd(val_norm_rtm2)) %>% ungroup() #%>%
+    #dplyr::select(gene, time, cell_type, SD, avg_norm_rtm2, val_norm_rtm2, value)
   
   return(df)
 }
@@ -49,6 +47,7 @@ norm_d0 <- function(df){
   df_d0 <- dplyr::rename(df_d0, "avgd0" = "avg")
   df_d0 <- distinct(df_d0)
   df <- left_join(df, df_d0)
-  df <- df %>% mutate(avg_norm = avg/avgd0, val_norm = value/avgd0)  
+  print("trafo was changed because division in logspace equals subtraction")
+  df <- df %>% mutate(avg_norm = avg - avgd0, val_norm = value - avgd0)  
   return(df)
 }

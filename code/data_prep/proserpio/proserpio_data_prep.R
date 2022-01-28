@@ -1,8 +1,11 @@
 require(dplyr)
 require(stringr)
 require(DESeq2)
-library("biomaRt")
+require(biomaRt)
+require(ggplot2)
+require(tidyr)
 
+print("DESeq2 and biomart not installed at ITB computers")
 
 # load files
 data_dir <- "data/data_raw/proserpio/E-MTAB-3543.processed.1/"
@@ -36,9 +39,24 @@ print(dim(countmat))
 
 genes_filtered <- rownames(countmat)
 
-# variance transform for rnaseq data
-vst_data <- rlog(countmat)
 
+counts_tidy <- pivot_longer(as.data.frame(countmat), cols = everything())
+counts_tidy <- counts_tidy %>% mutate(val_norm = log2(value+1))
+g <- ggplot(data = counts_tidy, aes(x = name, y = val_norm)) +
+  geom_boxplot() + labs(x = "", y = "expression")
+print(g)
+
+# variance transform for rnaseq data
+
+trafo <- "log2"
+
+if(trafo == "log2"){
+  vst_data = log2(countmat + 1)
+  sname <- "log2trafo"
+} else {
+  vst_data <- rlog(countmat)  
+  sname <- "rlogtrafo"
+}
 
 # annotation
 mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
@@ -53,4 +71,6 @@ df_proc <- df_proc %>% dplyr::select(-ensembl_id)
 df_proc <- na.omit(df_proc)
 
 df_proc <- df_proc %>% dplyr::select(gene, everything())
-write.csv(df_proc, file = "data/data_processed/proserpio_processed.csv", row.names = F)
+
+savename <- paste0("data/data_processed/Proserpio_processed_", sname, ".csv")
+write.csv(df_proc, file = savename, row.names = F)

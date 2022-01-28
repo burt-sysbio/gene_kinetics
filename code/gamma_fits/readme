@@ -1,0 +1,4 @@
+1 run_gamma_fit.py
+2 proc_gamma_fit.py
+3 run_gaussian_mixture.py
+4 plot_fit_categories.py

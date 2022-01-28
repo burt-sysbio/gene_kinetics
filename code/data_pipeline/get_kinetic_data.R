@@ -17,15 +17,20 @@ prep_data <- function(df){
   df <- df %>% dplyr::select(-gene)
   
   rownames(df) <- genes
-  df
+  return(df)
 }
 
+# read data
+study <- "Proserpio"
+use_logtrafo <- TRUE
 
-study <- "Crawford"
+if((study == "Proserpio") & use_logtrafo){
+  df <- read_csv(paste0("data/data_processed/", study, "_processed_log2trafo.csv"))
+} else {
+  df <- read_csv(paste0("data/data_processed/", study, "_processed.csv"))
+}
 
-df <- read_csv(paste0("data/data_processed/", study, "_processed.csv"))
 des_mat <- read.table(paste0("output/design_matrices/design_matrix_", study, ".txt"))
-
 df2 <- prep_data(df)
 
 stopifnot(length(rownames(des_mat) %in% colnames(df2))==ncol(df2))
@@ -39,14 +44,3 @@ genes <- rownames(fit$SELEC)
 df_kinetic <- df2[rownames(df2) %in% genes,]
 df_kinetic$gene <- rownames(df_kinetic)
 write_csv(df_kinetic, paste0("data/data_kinetic/", study, "_kinetic.csv"))
-
-#t <- T.fit(fit, step.method = "backward", alfa = 0.05)
-
-# get signif genes and subset df
-#sigs <- get.siggenes(t, vars = "all")
-#genes <- sigs$summary
-
-# subset
-
-### using pvector output as kinetic genes now!!! date 03.02.2021
-

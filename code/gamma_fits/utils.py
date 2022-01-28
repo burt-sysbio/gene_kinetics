@@ -5,8 +5,6 @@ from scipy.optimize import curve_fit
 from scipy.special import gammainc
 from scipy import stats
 from statsmodels.stats.multitest import fdrcorrection
-
-
 def gamma_cdf(t, alpha, beta):
     dummy = t * beta
     return gammainc(alpha, dummy)
@@ -14,6 +12,12 @@ def gamma_cdf(t, alpha, beta):
 
 def gamma_cdf1(t, beta):
     return gamma_cdf(t, 1, beta)
+
+
+def gmm_cdf(x, mean1, mean2, SD, w1 = 0.5, w2 = 0.5):
+    gmm1 = w1 * stats.norm.cdf(x, loc = mean1, scale = SD)
+    gmm2 = w2 * stats.norm.cdf(x, loc = mean2, scale = SD)
+    return gmm1 + gmm2
 
 
 def conv_cols(df):
@@ -61,23 +65,32 @@ def fit_kinetic(df, gamma_fun, bounds):
     genes, vals, errs, x = prep_data(df)
 
     fit_res = []
+
     # fit gamma dist for each gene
     for i, gene in zip(range(len(vals)), genes):
         y = vals[i, :]
+        sigma = errs[i, :]
 
         # check that there are no nans in y
-        assert (~np.isnan(y).any())
         # check that data is normalized and keep array only until max is reached
-        assert np.max(y) == 1.0
-        max_idx = np.where(y == 1.0)[0][0]
+        assert (~np.isnan(y).any()), gene
+        assert np.abs((np.max(y) - 1) < 1e-8), y
+        assert np.abs((y[0] - 0) < 1e-8), y
+
+        max_idx = np.where(y == np.max(y))[0][0]
         y = y[:(max_idx + 1)]
 
         # only focus on arrays where y has 4 time points
         if len(y) > 3:
             xdata = x[:len(y)]
-            if not np.isnan(errs).all():
-                sigma = errs[i, :]
-                # sigma = sigma[~np.isnan(sigma)]
+
+            # check if there are nans or if all vals are 0 in SD array
+            if (not np.isnan(sigma).any()) and (sigma != 0).any():
+
+                # in readcount data SD can be 0 if two readcounts are identical
+                # in this case, I set SD to the average sigma
+                sigma[sigma == 0] = np.mean(sigma[sigma != 0])
+
                 sigma = sigma[:(max_idx+1)]
                 sigma_abs = True
             else:
@@ -182,19 +195,23 @@ def run_f_test(df, gamma_1=gamma_cdf1, gamma_2=gamma_cdf):
     print("longtail fit...")
     fit3 = fit_kinetic(df, gamma_2, bounds=([0, 0], [1, np.inf]))  # gamma fit a<1
 
-    # add names to model fit
-    fits = [fit1, fit2, fit3]
-    names = ["expo", "gamma", "longtail"]
-    assert (len(fits) == len(names))
-    for f, n in zip(fits, names):
-        f["model"] = n
+    if (fit1.empty or fit2.empty or fit3.empty):
+        return pd.DataFrame(), pd.DataFrame()
 
-    # run f test to compare gamma and longtail fits vs exponential model
-    timepoints = df.time.drop_duplicates().values
-    n_timepoints = len(timepoints)
-    ftest_gamma = get_pvals(fit1, fit2, n_timepoints)
-    ftest_longtail = get_pvals(fit1, fit3, n_timepoints)
+    else:
+        # add names to model fit
+        fits = [fit1, fit2, fit3]
+        names = ["expo", "gamma", "longtail"]
+        assert (len(fits) == len(names))
+        for f, n in zip(fits, names):
+            f["model"] = n
 
-    df1 = pd.concat(fits)
-    df2 = pd.concat([ftest_gamma, ftest_longtail])
-    return df1, df2
+        # run f test to compare gamma and longtail fits vs exponential model
+        timepoints = df.time.drop_duplicates().values
+        n_timepoints = len(timepoints)
+        ftest_gamma = get_pvals(fit1, fit2, n_timepoints)
+        ftest_longtail = get_pvals(fit1, fit3, n_timepoints)
+
+        df1 = pd.concat(fits)
+        df2 = pd.concat([ftest_gamma, ftest_longtail])
+        return df1, df2

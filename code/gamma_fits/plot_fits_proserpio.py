@@ -4,21 +4,28 @@ import pandas as pd
 import numpy as np
 from utils_plot import plot_single_fit
 import matplotlib.pyplot as plt
-sns.set(context = "poster", style = "ticks")
 
 
-# load tfs, cytos, cytoR, th2 th1 genes
-cells_dir = "../../gene_sets/references/effector_states/"
-sign_dir = "../../gene_sets/references/signaling/"
+def plot_multi_genes(genes, savename, data , fit_res_gamma , fit_res_gmm, ncol = 2, nrow =3, figsize = (4, 5),
+                     style = "ticks", context = "paper", make_tight = False, **kwargs):
+    sns.set(context=context, style=style)
+    fig, axes = plt.subplots(nrow, ncol, figsize= figsize)
+    axes = axes.flatten()
+    for i in range(len(genes)):
+        gene = genes[i]
+        ax = axes[i]
+        plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, **kwargs)
+        ax.set_xticks([0,50,100])
+        #ax.set_yticks([0, 0.5, 1.0])
+        if make_tight:
+            if i != 0:
+                ax.set_ylabel("")
+                ax.set_yticklabels([])
 
-th2_genes = list(pd.read_csv(cells_dir + "stubbington_th2.txt", sep=" ", header=None).values.flatten())
-th1_genes = list(pd.read_csv(cells_dir + "stubbington_th1.txt", sep=" ", header=None).values.flatten())
-th17_genes = list(pd.read_csv(cells_dir + "stubbington_th17.txt", sep=" ", header=None).values.flatten())
-
-cyto_genes = list(pd.read_csv(sign_dir + "stubbington_cyto.csv").values.flatten())
-cytor_genes = list(pd.read_csv(sign_dir + "stubbington_cytor.csv").values.flatten())
-tf_genes = list(pd.read_csv(sign_dir + "stubbington_tf.csv").values.flatten())
-
+    plt.tight_layout()
+    plt.show()
+    fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_" + savename +".pdf")
+    fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_" + savename + ".svg")
 
 # read in all files
 month = "feb2021"
@@ -26,67 +33,66 @@ fitdir = "../../output/gamma_fits/" + month + "/"
 datadir = "../../data/data_rtm/"
 
 study = "Proserpio_rtm_Th2_parasite.csv"
-fFit = "fit_res_" + study
-fTest = "ftest_" + study
-fGenes = "fit_summary_" + study
+study2 = study[:-4]
 
-fit_res = pd.read_csv(fitdir + fFit)
 data = pd.read_csv(datadir + study)
-ftest = pd.read_csv(fitdir + fTest)
-df_genes = pd.read_csv(fitdir + fGenes)
+fit_res_gmm = pd.read_csv(fitdir + "fit_GMM_" + study)
+fit_res_gamma = pd.read_csv(fitdir + "fit_res_" + study)
+df_categories = pd.read_csv("../../output/fit_summary/category_assignment.csv")
 
+fit_res_gamma["study"] = study2
+fit_res_gamma = pd.merge(fit_res_gamma, df_categories, on = ["gene", "study"], how = "left")
 
-#if "peine" in study:
-#    data = data.rename(columns={"gene_name": "gene"})
-
-fit_res = fit_res.set_index(["gene", "model"])
+fit_res_gamma = fit_res_gamma.set_index(["gene", "model"])
+fit_res_gmm = fit_res_gmm.set_index("gene")
 data = data.set_index("gene")
 
-show_fit = "other"
-genes = df_genes.loc[df_genes["best_fit"] == show_fit, ["gene"]].values
-genes = genes.flatten()
-
-genes = np.random.choice(genes, 9)
-
-fig, axes = plt.subplots(3,3, figsize = (12,10))
-axes = axes.flatten()
-for gene, ax in zip(genes,axes):
-    plot_single_fit(gene, data, fit_res, ax, capsize = 10)
-
-plt.tight_layout()
-plt.show()
-
-
 # check if I have anything to show in each category
-
-th2_sig = df_genes.loc[df_genes.gene.isin(cyto_genes)]
-
-
-genes = ["Tnfsf4", "Socs2", "Cntf", "Il4"]
-fig, axes = plt.subplots(1,4, figsize = (20,4))
+#genes = ["Tnfsf4", "Socs2", "Cntf", "Il4"]
+#genes = ["Sdf2l1", "Alox12", "Olfr56", "Ktn1", "Upp1"]
+genes = ["Ifng", "Tbx21", "Eomes", "Gata3", "Il4"]
+candidate_categories = [["expo"], ["gamma"], ["longtail"], ["bimodal"], ["expo"]]
+# other expo candidates: "Gm15558"
+fig, axes = plt.subplots(1,5,figsize = (8,2))
 axes = axes.flatten()
-for gene, ax in zip(genes,axes):
-    plot_single_fit(gene, data, fit_res, ax, show_rmse = False)
+for i in range(len(genes)):
+    gene = genes[i]
+    ax = axes[i]
+    my_cats = candidate_categories[i]
+    plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, my_categories= my_cats, show_rmse=False, lw = 3)
+    ax.set_xticks([0,50,100])
+    ax.set_yticks([0, 0.5, 1.0])
+
+    if i != 0:
+        ax.set_ylabel("")
+        ax.set_yticklabels([])
 
 plt.tight_layout()
 plt.show()
+#fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.pdf")
+#fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.svg")
+
+# plot some genes from the other category
+fittypes = ["bimodal", "gamma", "expo", "longtail", "other"]
+
+# sample some genes for each category and plot it
+# for fit in fittypes:
+#     df = df_categories.loc[(df_categories["best_fit"] == fit) & (df_categories["study"] == study2), :]
+#     n_genes = 6
+#     genes = df["gene"].drop_duplicates().sample(n_genes).tolist()
+#
+#     l1 = fit_res_gmm.index.get_level_values(0).tolist()
+#     l2 = fit_res_gamma.index.get_level_values(0).tolist()
+#
+#     genes = [x for x in genes if (x in l1) & (x in l2)]
+#     plot_multi_genes(genes, fit, data, fit_res_gamma, fit_res_gmm, my_categories = ["gamma", "expo", "longtail", "bimodal"],
+#                      show_rmse = False, lw = 2)
 
 
-for gene in genes:
-    fig, ax = plt.subplots()
-    plot_single_fit(gene, data, fit_res, ax, capsize = 10, show_rmse = False, show_title = True)
-    plt.tight_layout()
-    plt.show()
-#fig.savefig("../../figures/example_fits_proserpio.pdf")
-#fig.savefig("../../figures/example_fits_proserpio.svg")
+#genes_bad = ["1700016C15Rik", "Akap6", "Aqp4", "Ccl7", "Cda", "Mok", "Pkp1", "Osbpl10"]
+#genes_no_success = ["Parp12", "Pgls", "Rpl9", "Ass1", "Zfp131", "Poglut2"]
+#genes_bimodal = ["Pam16", "Gatb", "Psrc1", "Hey1", "Jag1", "Pja1", "Lpar1"]
 
-# double-check f-test for specific gene
-#gene = "Bub1b"
-#n = len(df2.time)
-#rss1 = fit_res.loc[gene, "expo"].rss
-#rss2 = fit_res.loc[gene, "gamma"].rss
-
-#pval = f_test(rss1, rss2, n)
-
-
-test = data.loc["Emb"]
+#plot_multi_genes(genes_bad, "high_error", data , fit_res_gamma , fit_res_gmm)
+#plot_multi_genes(genes_no_success, "fit_unsuccessful", data , fit_res_gamma , fit_res_gmm)
+#plot_multi_genes(genes_bimodal, "bimodal_pos", data , fit_res_gamma , fit_res_gmm)

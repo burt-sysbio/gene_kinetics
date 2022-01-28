@@ -1,0 +1,358 @@
+MGI Gene/Marker ID	Symbol	Name	Chr	Qualifier	Annotated Term	Context	Proteoform	Evidence	Inferred From	Reference(s)
+MGI:87859	Abl1	c-abl oncogene 1, non-receptor tyrosine kinase	2		activated T cell proliferation			IMP	MGI:3525886 	J:154821 	
+MGI:87930	Adk	adenosine kinase	14		positive regulation of T cell proliferation			ISO	RGD:2046 	J:155856 	
+MGI:893592	Ager	advanced glycosylation end product-specific receptor	17		positive regulation of activated T cell proliferation			ISO	Q15109 	J:164563 	
+MGI:1343098	Aif1	allograft inflammatory factor 1	17		positive regulation of T cell proliferation			ISO	P55008 	J:164563 	
+MGI:96819	Anxa1	annexin A1	19		positive regulation of T cell proliferation			IBA	PTN002574794 	J:265628 	
+MGI:96819	Anxa1	annexin A1	19		positive regulation of T cell proliferation			ISO	P04083 	J:164563 	
+MGI:88070	Arg1	arginase, liver	10		negative regulation of activated T cell proliferation			IMP		J:243399 	
+MGI:88070	Arg1	arginase, liver	10		negative regulation of T cell proliferation			ISO	P05089 	J:164563 	
+MGI:1330806	Arg2	arginase type II	12		negative regulation of CD4-positive, alpha-beta T cell proliferation			IMP		J:243479 	
+MGI:2384586	Armc5	armadillo repeat containing 5	7		T cell proliferation	happens in CD4-positive, alpha-beta T cell,results in the development of T-helper 1 cell|happens in CD4-positive, alpha-beta T cell,results in the development of T-helper 17 cell		IMP	MGI:6098706 	J:244662 	
+MGI:99702	Bax	BCL2-associated X protein	7		T cell homeostatic proliferation	affects a population of common lymphoid progenitor		IMP	MGI:1857429 	J:42051 	
+MGI:99702	Bax	BCL2-associated X protein	7		T cell homeostatic proliferation			IMP	MGI:1857429 	J:29253 	
+MGI:1328362	Blm	Bloom syndrome, RecQ like helicase	7		positive regulation of alpha-beta T cell proliferation	regulates a function/process that happens in thymus,regulates the proliferation of DN4 thymocyte|regulates a function/process that happens in thymus,regulates the proliferation of DN3 thymocyte		IMP	MGI:3053044 MGI:3663359 	J:118992 	
+MGI:88174	Bmi1	Bmi1 polycomb ring finger oncogene	2		positive regulation of immature T cell proliferation in thymus			IMP		J:105559 	
+MGI:88180	Bmp4	bone morphogenetic protein 4	14		negative regulation of immature T cell proliferation in thymus			ISO	P12644 	J:164563 	
+MGI:2658978	Btla	B and T lymphocyte associated	16		negative regulation of alpha-beta T cell proliferation			IMP	MGI:3027713 	J:94873 	
+MGI:2658978	Btla	B and T lymphocyte associated	16		negative regulation of T cell proliferation			IMP	MGI:3027713 	J:84084 	
+MGI:103118	Btn1a1	butyrophilin, subfamily 1, member A1	13		negative regulation of activated T cell proliferation			IDA		J:160063 	
+MGI:3606486	Btn2a2	butyrophilin, subfamily 2, member A2	13		negative regulation of activated T cell proliferation			IDA		J:160063 J:202549 	
+MGI:1859549	Btnl2	butyrophilin-like 2	17		positive regulation of T cell proliferation			IMP		J:132222 	
+MGI:1916978	Card11	caspase recruitment domain family, member 11	5		positive regulation of T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:3039682 	J:89322 	
+MGI:2685431	Carmil2	capping protein regulator and myosin 1 linker 2	8		positive regulation of T cell proliferation			IMP	MGI:5547539 	J:205441 	
+MGI:107739	Casp3	caspase 3	8		negative regulation of activated T cell proliferation			IMP	MGI:2178778 	J:85809 	
+MGI:2146430	Cblb	Casitas B-lineage lymphoma b	16		negative regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:2180572 	J:89097 	
+MGI:1925567	Ccdc88b	coiled-coil domain containing 88B	19		positive regulation of T cell proliferation			IMP		J:230618 	
+MGI:98262	Ccl5	chemokine (C-C motif) ligand 5	11		positive regulation of T cell proliferation			ISO	P13501 	J:164563 	
+MGI:1346316	Ccl19	chemokine (C-C motif) ligand 19	4		positive regulation of T cell proliferation			IDA		J:97971 	
+MGI:88315	Ccnd3	cyclin D3	17		T cell proliferation			IMP	MGI:2448172 	J:88120 	
+MGI:106185	Ccr2	chemokine (C-C motif) receptor 2	9		positive regulation of alpha-beta T cell proliferation			IMP		J:118487 	
+MGI:103011	Ccr7	chemokine (C-C motif) receptor 7	11		positive regulation of T cell proliferation			IC	GO:0016493 	J:97971 	
+MGI:107674	Cd1d1	CD1d1 antigen	3		positive regulation of T cell proliferation			ISO	P15813 	J:164563 	
+MGI:107674	Cd1d1	CD1d1 antigen	3		regulation of immature T cell proliferation in thymus			IMP		J:125679 	
+MGI:88332	Cd3e	CD3 antigen, epsilon polypeptide	9		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of T-helper 1 cell		IDA		J:89097 	
+MGI:88332	Cd3e	CD3 antigen, epsilon polypeptide	9		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IDA		J:17350 J:75401 	
+MGI:88332	Cd3e	CD3 antigen, epsilon polypeptide	9		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:53400 J:92334 J:98326 J:142709 	
+MGI:88332	Cd3e	CD3 antigen, epsilon polypeptide	9		positive regulation of T cell proliferation			ISO	RGD:1309222 	J:155856 	
+MGI:88332	Cd3e	CD3 antigen, epsilon polypeptide	9		positive regulation of T cell proliferation			ISO	P07766 	J:164563 	
+MGI:88335	Cd4	CD4 antigen	6		positive regulation of T cell proliferation			ISO	RGD:2306 	J:155856 	
+MGI:103566	Cd6	CD6 antigen	19		positive regulation of T cell proliferation			ISO	P30203 	J:164563 	
+MGI:88323	Cd24a	CD24a antigen	10		negative regulation of T cell homeostatic proliferation			IMP	MGI:2179996 	J:124399 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of activated T cell proliferation			ISO	P25063 	J:164563 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of activated T cell proliferation			ISS	P25063 	J:125628 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IDA		J:17350 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of alpha-beta T cell proliferation			IDA		J:125135 J:125147 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:2179996 	J:93933 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of alpha-beta T cell proliferation			IMP	MGI:2179996 	J:125135 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of alpha-beta T cell proliferation			IMP		J:125143 J:125145 	
+MGI:88323	Cd24a	CD24a antigen	10		positive regulation of T cell homeostatic proliferation	regulates the proliferation of T cell		IMP	MGI:2179996 	J:93953 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of T-helper 1 cell		IDA		J:89097 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IDA		J:17350 J:125135 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:1857150 	J:125135 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of T cell proliferation			IBA	PTN000161013 	J:265628 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:84973 J:91914 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of T cell proliferation			IDA		J:89322 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:1857150 	J:14194 J:120498 	
+MGI:88327	Cd28	CD28 antigen	1		positive regulation of T cell proliferation			ISO	P10747 	J:164563 	
+MGI:88327	Cd28	CD28 antigen	1		regulation of T cell proliferation			IEA	IPR040216 	J:72247 	
+MGI:88337	Cd40lg	CD40 ligand	X		positive regulation of T cell proliferation			ISO	P29965 	J:164563 	
+MGI:88338	Cd44	CD44 antigen	2		negative regulation of CD4-positive, alpha-beta T cell proliferation			IMP		J:224716 	
+MGI:1203290	Cd46	CD46 antigen, complement regulatory protein	1		positive regulation of T cell proliferation			ISO	P15529 	J:164563 	
+MGI:104850	Cd55	CD55 molecule, decay accelerating factor for complement	1		positive regulation of CD4-positive, alpha-beta T cell proliferation			ISO	P08174 	J:164563 	
+MGI:104849	Cd55b	CD55 molecule, decay accelerating factor for complement B	1		positive regulation of CD4-positive, alpha-beta T cell proliferation			ISO	P08174 	J:164563 	
+MGI:109177	Cd59a	CD59a antigen	2		positive regulation of T cell proliferation			ISO	RGD:2311 	J:155856 	
+MGI:1888996	Cd59b	CD59b antigen	2		positive regulation of T cell proliferation			ISO	RGD:2311 	J:155856 	
+MGI:101775	Cd80	CD80 antigen	16		negative regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:101775	Cd80	CD80 antigen	16		positive regulation of alpha-beta T cell proliferation			IDA		J:125145 	
+MGI:101775	Cd80	CD80 antigen	16		positive regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:101775	Cd80	CD80 antigen	16		positive regulation of T cell proliferation			IGI	MGI:101773 	J:205441 	
+MGI:101775	Cd80	CD80 antigen	16		positive regulation of T cell proliferation			ISO	RGD:2314 	J:155856 	
+MGI:1096398	Cd81	CD81 antigen	7		positive regulation of CD4-positive, alpha-beta T cell proliferation			ISO	P60033 	J:164563 	
+MGI:101773	Cd86	CD86 antigen	16		negative regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:101773	Cd86	CD86 antigen	16		positive regulation of activated T cell proliferation			ISO	RGD:628714 	J:155856 	
+MGI:101773	Cd86	CD86 antigen	16		positive regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:101773	Cd86	CD86 antigen	16		positive regulation of T cell proliferation			IGI	MGI:101775 	J:205441 	
+MGI:101773	Cd86	CD86 antigen	16		positive regulation of T cell proliferation			ISO	RGD:628714 	J:155856 	
+MGI:1096360	Cd151	CD151 antigen	7		T cell proliferation			IMP	MGI:3050539 	J:91605 	
+MGI:2157942	Cd209a	CD209a antigen	8		regulation of T cell proliferation			ISO	Q9NNX6 	J:73065 	
+MGI:109294	Cd244a	CD244 molecule A	1		positive regulation of CD8-positive, alpha-beta T cell proliferation			IMP		J:227396 	
+MGI:1926446	Cd274	CD274 antigen	19		negative regulation of activated T cell proliferation			ISO	Q9NZQ7 	J:164563 	
+MGI:1926446	Cd274	CD274 antigen	19		negative regulation of CD4-positive, alpha-beta T cell proliferation			ISO	Q9NZQ7 	J:164563 	
+MGI:1926446	Cd274	CD274 antigen	19		negative regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:1926446	Cd274	CD274 antigen	19		negative regulation of T cell proliferation			IDA		J:114496 	
+MGI:1926446	Cd274	CD274 antigen	19		positive regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:1926446	Cd274	CD274 antigen	19		positive regulation of T cell proliferation			ISO	RGD:1566211 	J:155856 	
+MGI:2183926	Cd276	CD276 antigen	9		negative regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:84973 	
+MGI:2183926	Cd276	CD276 antigen	9		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:3033707 	J:84973 	
+MGI:2183926	Cd276	CD276 antigen	9		positive regulation of T cell proliferation			IMP		J:132222 	
+MGI:2183926	Cd276	CD276 antigen	9		positive regulation of T cell proliferation			ISO	Q5ZPR3 	J:164563 	
+MGI:104738	Cdkn2a	cyclin dependent kinase inhibitor 2A	4		negative regulation of immature T cell proliferation in thymus			IMP		J:105559 	
+MGI:1347245	Ceacam1	carcinoembryonic antigen-related cell adhesion molecule 1	7		negative regulation of T cell proliferation		PR:000044463	IMP	MGI:3695215 	J:116136 	
+MGI:1347245	Ceacam1	carcinoembryonic antigen-related cell adhesion molecule 1	7		negative regulation of T cell proliferation	happens in T cell,happens in spleen	PR:000044463	IMP	MGI:3695215 	J:190980 	
+MGI:1347245	Ceacam1	carcinoembryonic antigen-related cell adhesion molecule 1	7		negative regulation of T cell proliferation	happens in T cell	PR:P31809-1	IMP		J:116136 	
+MGI:1347245	Ceacam1	carcinoembryonic antigen-related cell adhesion molecule 1	7		negative regulation of T cell proliferation	happens in T cell		IMP		J:116136 	
+MGI:1347245	Ceacam1	carcinoembryonic antigen-related cell adhesion molecule 1	7		positive regulation of CD4-positive, alpha-beta T cell proliferation	happens in effector memory CD4-positive, alpha-beta T cell,happens in spleen	PR:000044465	IMP	MGI:3053071 MGI:5609428 	J:190980 	
+MGI:1347245	Ceacam1	carcinoembryonic antigen-related cell adhesion molecule 1	7		positive regulation of T cell proliferation	happens in T cell,happens in spleen	PR:000044465	IMP	MGI:5609428 	J:190980 	
+MGI:88373	Cebpb	CCAAT/enhancer binding protein (C/EBP), beta	2		negative regulation of T cell proliferation			IDA		J:131157 	
+MGI:2136650	Clec2i	C-type lectin domain family 2, member i	6		regulation of T cell proliferation			IMP		J:107956 	
+MGI:1923113	Clec4g	C-type lectin domain family 4, member g	8		negative regulation of T cell proliferation			IDA		J:200968 	
+MGI:1923113	Clec4g	C-type lectin domain family 4, member g	8		negative regulation of T cell proliferation	regulates the proliferation of CD8-positive, alpha-beta thymocyte		IMP	MGI:5510586 	J:194891 	
+MGI:1345961	Coro1a	coronin, actin binding protein 1A	7		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP		J:131363 	
+MGI:2152434	Crip3	cysteine-rich protein 3	17		T cell proliferation			IMP	MGI:2445952 	J:72942 	
+MGI:1859822	Crtam	cytotoxic and regulatory T cell molecule	9		negative regulation of activated T cell proliferation			IMP		J:145314 	
+MGI:88556	Ctla4	cytotoxic T-lymphocyte-associated protein 4	1		regulation of T cell proliferation			IEA	IPR040216 	J:72247 	
+MGI:88276	Ctnnb1	catenin (cadherin associated protein), beta 1	9		regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:2148594 MGI:2448686 	J:86605 	
+MGI:1858304	Ctps	cytidine 5'-triphosphate synthase	4		T cell proliferation			ISO	P17812 	J:164563 	
+MGI:103556	Cxcl12	chemokine (C-X-C motif) ligand 12	6		T cell proliferation	affects a population of T cell		IMP	MGI:1934384 	J:82996 	
+MGI:109563	Cxcr4	chemokine (C-X-C motif) receptor 4	1		T cell proliferation	affects a population of T cell		IMP	MGI:1934442 	J:82996 	
+MGI:2683592	Dhps	deoxyhypusine synthase	8		positive regulation of T cell proliferation			IMP		J:207229 	
+MGI:107231	Dlg1	discs large MAGUK scaffold protein 1	16		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:3699270 	J:129078 	
+MGI:1918478	Dlg5	discs large MAGUK scaffold protein 5	14		negative regulation of T cell proliferation			ISO	Q8TDM6 	J:164563 	
+MGI:1933786	Dnaja3	DnaJ heat shock protein family (Hsp40) member A3	16		positive regulation of T cell proliferation			IMP	MGI:2448686 MGI:3040717 	J:98985 	
+MGI:2149010	Dock2	dedicator of cyto-kinesis 2	11		alpha-beta T cell proliferation			IMP	MGI:2152031 	J:84581 	
+MGI:2149010	Dock2	dedicator of cyto-kinesis 2	11		T cell proliferation			IMP	MGI:2152031 	J:84581 	
+MGI:1921396	Dock8	dedicator of cytokinesis 8	19		memory T cell proliferation			ISO	Q8NF50 	J:73065 	
+MGI:1354171	Ebi3	Epstein-Barr virus induced gene 3	17		T cell proliferation			IDA		J:77522 	
+MGI:102708	Efnb1	ephrin B1	X		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:95036 	
+MGI:1928377	Elf4	E74-like factor 4 (ets domain transcription factor)	X		NK T cell proliferation			IDA		J:79568 	
+MGI:1096338	Ephb6	Eph receptor B6	6		activated T cell proliferation	happens in spleen		IMP	MGI:3522020 	J:94701 	
+MGI:95407	Epo	erythropoietin	5		positive regulation of activated T cell proliferation			ISO	RGD:2559 	J:155856 	
+MGI:95410	Erbb2	erb-b2 receptor tyrosine kinase 2	11		negative regulation of immature T cell proliferation in thymus	regulates a function/process that happens in thymus		IMP		J:116829 	
+MGI:109324	Fadd	Fas (TNFRSF6)-associated via death domain	7		positive regulation of activated T cell proliferation			IMP		J:176448 	
+MGI:95541	Fkbp1a	FK506 binding protein 1a	2		T cell proliferation			IMP	MGI:2158807 	J:86699 	
+MGI:1336205	Fkbp1b	FK506 binding protein 1b	12		T cell proliferation			IMP	MGI:2182644 	J:86699 	
+MGI:1347474	Foxj1	forkhead box J1	11		negative regulation of T cell proliferation			IMP		J:90379 	
+MGI:1891436	Foxp3	forkhead box P3	X		negative regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:116306 	
+MGI:1891436	Foxp3	forkhead box P3	X		negative regulation of T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IDA		J:117627 	
+MGI:1891436	Foxp3	forkhead box P3	X		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:1857034 	J:102496 	
+MGI:1891436	Foxp3	forkhead box P3	X		negative regulation of T cell proliferation	regulates the proliferation of mature alpha-beta T cell		IMP	MGI:1857034 	J:115967 	
+MGI:1891436	Foxp3	forkhead box P3	X		negative regulation of T cell proliferation			ISO	Q9BZS1 	J:164563 	
+MGI:1891436	Foxp3	forkhead box P3	X		positive regulation of immature T cell proliferation in thymus	regulates a function/process that happens in thymus		IMP	MGI:1857034 	J:116829 	
+MGI:95602	Fyn	Fyn proto-oncogene	10		activated T cell proliferation			IMP	MGI:2179145 	J:70886 	
+MGI:95713	Gja1	gap junction protein, alpha 1	10		T cell proliferation			IMP		J:269549 	
+MGI:2141180	Glmn	glomulin, FKBP associated protein	5		negative regulation of T cell proliferation			ISO	Q92990 	J:164563 	
+MGI:95789	Gnrh1	gonadotropin releasing hormone 1	14		negative regulation of immature T cell proliferation			ISO	RGD:2720 	J:155856 	
+MGI:109162	Gpam	glycerol-3-phosphate acyltransferase, mitochondrial	19		positive regulation of activated T cell proliferation	regulates a function/process that happens in spleen,regulates the proliferation of T cell		IMP	MGI:2669956 	J:143259 	
+MGI:1934765	Gpnmb	glycoprotein (transmembrane) nmb	6		negative regulation of T cell proliferation			ISO	Q14956 	J:164563 	
+MGI:95895	H2-Aa	histocompatibility 2, class II antigen A, alpha	17		negative regulation of T cell proliferation			ISO	RGD:1595867 	J:155856 	
+MGI:103070	H2-Ab1	histocompatibility 2, class II antigen A, beta 1	17		negative regulation of T cell proliferation			ISO	RGD:3469 	J:155856 	
+MGI:95922	H2-DMb1	histocompatibility 2, class II, locus Mb1	17		positive regulation of T cell proliferation			ISO	P28068 	J:164563 	
+MGI:95923	H2-DMb2	histocompatibility 2, class II, locus Mb2	17		positive regulation of T cell proliferation			ISO	P28068 	J:164563 	
+MGI:2159682	Havcr2	hepatitis A virus cellular receptor 2	11		negative regulation of T cell proliferation			IMP		J:86226 	
+MGI:2159682	Havcr2	hepatitis A virus cellular receptor 2	11		positive regulation of T cell proliferation			IMP		J:209885 	
+MGI:104853	Hes1	hes family bHLH transcription factor 1	16		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:2149672 	J:98892 	
+MGI:96113	Hmgb1	high mobility group box 1	5		positive regulation of activated T cell proliferation			ISO	P09429 	J:164563 	
+MGI:1354701	Icosl	icos ligand	10		positive regulation of activated T cell proliferation			TAS		J:114030 	
+MGI:96416	Ido1	indoleamine 2,3-dioxygenase 1	8		negative regulation of activated T cell proliferation			IMP	MGI:3505776 	J:132719 	
+MGI:96416	Ido1	indoleamine 2,3-dioxygenase 1	8		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:3505776 	J:132719 	
+MGI:107656	Ifng	interferon gamma	10		positive regulation of T cell proliferation	regulates the proliferation of peritoneal macrophage		IDA		J:107465 	
+MGI:96432	Igf1	insulin-like growth factor 1	10		positive regulation of activated T cell proliferation			ISO	P05019 	J:164563 	
+MGI:96434	Igf2	insulin-like growth factor 2	7		positive regulation of activated T cell proliferation			IBA	PTN005325037 	J:265628 	
+MGI:96434	Igf2	insulin-like growth factor 2	7		positive regulation of activated T cell proliferation			ISO	P01344 	J:164563 	
+MGI:96437	Igfbp2	insulin-like growth factor binding protein 2	1		positive regulation of activated T cell proliferation			ISO	P18065 	J:164563 	
+MGI:96533	Ihh	Indian hedgehog	1		negative regulation of immature T cell proliferation in thymus			IMP		J:145997 	
+MGI:96542	Il1a	interleukin 1 alpha	2		positive regulation of immature T cell proliferation in thymus			IBA	PTN000008680 	J:265628 	
+MGI:96543	Il1b	interleukin 1 beta	2		positive regulation of immature T cell proliferation in thymus			IBA	PTN000008680 	J:265628 	
+MGI:96543	Il1b	interleukin 1 beta	2		positive regulation of immature T cell proliferation in thymus			ISO	RGD:2891 	J:155856 	
+MGI:96543	Il1b	interleukin 1 beta	2		positive regulation of T cell proliferation			ISO	P01584 	J:164563 	
+MGI:96548	Il2	interleukin 2	3		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IDA		J:64279 J:98326 	
+MGI:96548	Il2	interleukin 2	3		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IMP	MGI:1857191 	J:39989 	
+MGI:96548	Il2	interleukin 2	3		positive regulation of activated T cell proliferation			ISO	P60568 	J:73065 	
+MGI:96548	Il2	interleukin 2	3		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:1013 	
+MGI:96548	Il2	interleukin 2	3		positive regulation of T cell proliferation			IMP	MGI:1857191 	J:191418 	
+MGI:96548	Il2	interleukin 2	3		positive regulation of T cell proliferation			ISO	RGD:620047 	J:155856 	
+MGI:96548	Il2	interleukin 2	3		regulation of T cell homeostatic proliferation	regulates the proliferation of CD4-positive, CD25-positive, alpha-beta regulatory T cell		IMP	MGI:1857191 	J:112602 	
+MGI:96549	Il2ra	interleukin 2 receptor, alpha chain	2		negative regulation of T cell proliferation			IMP	MGI:1857192 	J:84826 	
+MGI:96549	Il2ra	interleukin 2 receptor, alpha chain	2		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IMP	MGI:1857192 	J:64279 	
+MGI:96549	Il2ra	interleukin 2 receptor, alpha chain	2		positive regulation of T cell proliferation			ISO	RGD:2895 	J:155856 	
+MGI:96549	Il2ra	interleukin 2 receptor, alpha chain	2		regulation of T cell homeostatic proliferation	regulates the proliferation of CD4-positive, CD25-positive, alpha-beta regulatory T cell		IMP	MGI:1857192 	J:112602 	
+MGI:96556	Il4	interleukin 4	11		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IDA		J:98326 J:112035 	
+MGI:96556	Il4	interleukin 4	11		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:1013 	
+MGI:96556	Il4	interleukin 4	11		positive regulation of T cell proliferation			IDA		J:143168 	
+MGI:109552	Il4i1	interleukin 4 induced 1	7		negative regulation of T cell proliferation			ISO	Q96RQ9 	J:164563 	
+MGI:5439399	Il4i1b	interleukin 4 induced 1B	7		negative regulation of T cell proliferation			ISO	Q96RQ9 	J:164563 	
+MGI:96559	Il6	interleukin 6	5		positive regulation of T cell proliferation			ISO	P05231 	J:164563 	
+MGI:96560	Il6st	interleukin 6 signal transducer	13		positive regulation of T cell proliferation			ISO	P40189 	J:164563 	
+MGI:96539	Il12a	interleukin 12a	3		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:65439 	
+MGI:96540	Il12b	interleukin 12b	11		positive regulation of activated T cell proliferation			ISO	P29460 	J:164563 	
+MGI:96540	Il12b	interleukin 12b	11		positive regulation of NK T cell proliferation			ISO	P29460 	J:164563 	
+MGI:96540	Il12b	interleukin 12b	11		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:65439 	
+MGI:96540	Il12b	interleukin 12b	11		positive regulation of T cell proliferation			ISO	P29460 	J:164563 	
+MGI:104579	Il12rb1	interleukin 12 receptor, beta 1	8		positive regulation of activated T cell proliferation			IBA	PTN002745680 	J:265628 	
+MGI:104579	Il12rb1	interleukin 12 receptor, beta 1	8		positive regulation of activated T cell proliferation			ISO	P42701 	J:164563 	
+MGI:103014	Il15	interleukin 15	8		NK T cell proliferation			IMP	MGI:2136897 	J:60915 	
+MGI:103014	Il15	interleukin 15	8		positive regulation of T cell proliferation			IBA	PTN002682897 	J:265628 	
+MGI:103014	Il15	interleukin 15	8		positive regulation of T cell proliferation			IMP	MGI:2136897 	J:60915 	
+MGI:107936	Il18	interleukin 18	9		positive regulation of activated T cell proliferation			ISO	Q14116 	J:164563 	
+MGI:107936	Il18	interleukin 18	9		positive regulation of activated T cell proliferation			ISS	Q14116 	J:115169 	
+MGI:107936	Il18	interleukin 18	9		positive regulation of NK T cell proliferation			ISO	Q14116 	J:164563 	
+MGI:2143266	Il20rb	interleukin 20 receptor beta	9		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:3830304 	J:143497 	
+MGI:1890474	Il21	interleukin 21	3		positive regulation of T cell proliferation			ISO	Q9HBE4 	J:73065 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		positive regulation of activated T cell proliferation			ISO	Q9NPF7 	J:164563 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		positive regulation of NK T cell proliferation			ISO	Q9NPF7 	J:164563 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		positive regulation of T cell proliferation			IBA	PTN000409283 	J:265628 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		positive regulation of T cell proliferation			ISO	Q9NPF7 	J:164563 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		T cell proliferation			IDA		J:124638 	
+MGI:2384409	Il27	interleukin 27	7		regulation of T cell proliferation			IBA	PTN000466839 	J:265628 	
+MGI:2384409	Il27	interleukin 27	7		regulation of T cell proliferation			IDA		J:77522 	
+MGI:1355318	Il27ra	interleukin 27 receptor, alpha	8		positive regulation of activated T cell proliferation			IBA	PTN002745680 	J:265628 	
+MGI:96590	Irf1	interferon regulatory factor 1	11		regulation of CD8-positive, alpha-beta T cell proliferation			IMP		J:183131 	
+MGI:1202301	Itch	itchy, E3 ubiquitin protein ligase	2		negative regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:1856404 	J:89097 	
+MGI:3578624	Itgad	integrin, alpha D	7		activated T cell proliferation			IMP	MGI:3579559 	J:90954 	
+MGI:96606	Itgal	integrin alpha L	7		activated T cell proliferation			IMP	MGI:2661083 	J:90954 	
+MGI:96606	Itgal	integrin alpha L	7		positive regulation of T cell proliferation			IMP		J:125147 	
+MGI:96607	Itgam	integrin alpha M	7		activated T cell proliferation			IMP	MGI:2157556 	J:90954 	
+MGI:96609	Itgax	integrin alpha X	7	NOT	activated T cell proliferation			IMP	MGI:3579560 	J:90954 	
+MGI:96611	Itgb2	integrin beta 2	10		activated T cell proliferation			IMP	MGI:1861705 	J:90954 	
+MGI:99928	Jak3	Janus kinase 3	8		positive regulation of activated T cell proliferation			ISO	RGD:2940 	J:155856 	
+MGI:99928	Jak3	Janus kinase 3	8		positive regulation of T cell proliferation			IBA	PTN000700628 	J:265628 	
+MGI:99928	Jak3	Janus kinase 3	8		positive regulation of T cell proliferation			ISO	RGD:2940 	J:155856 	
+MGI:108046	Laptm5	lysosomal-associated protein transmembrane 5	4		negative regulation of activated T cell proliferation	happens in spleen		IMP		J:137841 	
+MGI:104663	Lep	leptin	6		positive regulation of T cell proliferation			ISO	P41159 	J:164563 	
+MGI:96778	Lgals3	lectin, galactose binding, soluble 3	14		regulation of T cell proliferation			ISO	P17931 	J:164563 	
+MGI:1316742	Lgals7	lectin, galactose binding, soluble 7	7		negative regulation of CD4-positive, alpha-beta T cell proliferation			IBA	PTN002602624 	J:265628 	
+MGI:109496	Lgals9	lectin, galactose binding, soluble 9	11		negative regulation of CD4-positive, alpha-beta T cell proliferation			IBA	PTN002602624 	J:265628 	
+MGI:109496	Lgals9	lectin, galactose binding, soluble 9	11		negative regulation of CD4-positive, alpha-beta T cell proliferation	happens in spleen,happens in UBERON:0004780,happens in regulatory T cell,affects a population of effector CD4-positive, alpha-beta T cell		IMP		J:224716 	
+MGI:102701	Lilrb4a	leukocyte immunoglobulin-like receptor, subfamily B, member 4A	10		CD4-positive, alpha-beta T cell proliferation			IMP	MGI:3818260 	J:141234 	
+MGI:102701	Lilrb4a	leukocyte immunoglobulin-like receptor, subfamily B, member 4A	10		CD8-positive, alpha-beta T cell proliferation			IMP	MGI:3818260 	J:141234 	
+MGI:102701	Lilrb4a	leukocyte immunoglobulin-like receptor, subfamily B, member 4A	10		negative regulation of activated T cell proliferation			ISO	Q8NHJ6 	J:164563 	
+MGI:102701	Lilrb4a	leukocyte immunoglobulin-like receptor, subfamily B, member 4A	10		negative regulation of T cell proliferation			ISO	Q8NHJ6 	J:164563 	
+MGI:102702	Lilrb4b	leukocyte immunoglobulin-like receptor, subfamily B, member 4B	10		negative regulation of activated T cell proliferation			ISO	Q8NHJ6 	J:164563 	
+MGI:102702	Lilrb4b	leukocyte immunoglobulin-like receptor, subfamily B, member 4B	10		negative regulation of T cell proliferation			ISO	Q8NHJ6 	J:164563 	
+MGI:1289247	Lmbr1l	limb region 1 like	15		T cell proliferation			IMP		J:274568 	
+MGI:102812	Lmo1	LIM domain only 1	7		regulation of T cell homeostatic proliferation			IDA		J:2066 	
+MGI:93882	Lrrc32	leucine rich repeat containing 32	7		negative regulation of activated T cell proliferation			IDA		J:139262 	
+MGI:1341857	Mad1l1	MAD1 mitotic arrest deficient 1-like 1	5		negative regulation of T cell proliferation			IDA		J:68141 	
+MGI:2445027	Malt1	MALT1 paracaspase	18		T cell proliferation			IMP	MGI:2684761 	J:86770 	
+MGI:1309464	Mapk8ip1	mitogen-activated protein kinase 8 interacting protein 1	2		regulation of CD8-positive, alpha-beta T cell proliferation			IMP		J:205863 	
+MGI:1931053	Marchf7	membrane associated ring-CH-type finger 7	2		negative regulation of T cell proliferation			IMP	MGI:3530008 	J:96167 	
+MGI:97167	Msn	moesin	X		T cell proliferation			ISO	P26038 	J:164563 	
+MGI:109601	Nck1	non-catalytic region of tyrosine kinase adaptor protein 1	9		positive regulation of T cell proliferation			ISO	P16333 	J:164563 	
+MGI:1306821	Nck2	non-catalytic region of tyrosine kinase adaptor protein 2	1		positive regulation of T cell proliferation			ISO	O43639 	J:164563 	
+MGI:1926063	Nckap1l	NCK associated protein 1 like	15		positive regulation of T cell proliferation			IMP		J:141377 	
+MGI:1926063	Nckap1l	NCK associated protein 1 like	15		positive regulation of T cell proliferation			ISO	P55160 	J:164563 	
+MGI:1891700	Ncstn	nicastrin	1		T cell proliferation			IMP	MGI:2667524 	J:125592 	
+MGI:1929601	Ndfip1	Nedd4 family interacting protein 1	18		negative regulation of T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:3695433 	J:116617 	
+MGI:1339957	P2rx7	purinergic receptor P2X, ligand-gated ion channel, 7	5		T cell proliferation	happens in spleen,affects a population of T cell		IMP	MGI:2386080 	J:118862 	
+MGI:2149961	Pawr	PRKC, apoptosis, WT1, regulator	10		negative regulation of T cell proliferation			IMP	MGI:2678021 	J:85495 	
+MGI:1930125	Pdcd1lg2	programmed cell death 1 ligand 2	19		negative regulation of activated T cell proliferation			ISO	Q9BQ51 	J:164563 	
+MGI:1930125	Pdcd1lg2	programmed cell death 1 ligand 2	19		negative regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:1930125	Pdcd1lg2	programmed cell death 1 ligand 2	19		negative regulation of T cell proliferation			IDA		J:67842 J:114496 	
+MGI:1930125	Pdcd1lg2	programmed cell death 1 ligand 2	19		positive regulation of T cell proliferation			IBA	PTN002402215 	J:265628 	
+MGI:1930125	Pdcd1lg2	programmed cell death 1 ligand 2	19		positive regulation of T cell proliferation			IDA		J:68616 	
+MGI:2651499	Pde5a	phosphodiesterase 5A, cGMP-specific	3		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP		J:124590 	
+MGI:1914495	Peli1	pellino 1	11		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:4361448 	J:176455 	
+MGI:104642	Pla2g2a	phospholipase A2, group IIA (platelets, synovial fluid)	4	NOT	negative regulation of T cell proliferation			IDA		J:150812 	
+MGI:1341796	Pla2g2d	phospholipase A2, group IID	4		negative regulation of T cell proliferation			IBA	PTN000196980 	J:265628 	
+MGI:1341796	Pla2g2d	phospholipase A2, group IID	4		negative regulation of T cell proliferation			IDA		J:150812 	
+MGI:1349661	Pla2g2f	phospholipase A2, group IIF	4		negative regulation of T cell proliferation			IBA	PTN000196980 	J:265628 	
+MGI:1349661	Pla2g2f	phospholipase A2, group IIF	4		negative regulation of T cell proliferation			IDA		J:117280 	
+MGI:97365	Pnp	purine-nucleoside phosphorylase	14		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:2386195 	J:114541 	
+MGI:97365	Pnp	purine-nucleoside phosphorylase	14		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:3777967 MGI:3777968 MGI:3777975 	J:39328 	
+MGI:97365	Pnp	purine-nucleoside phosphorylase	14		positive regulation of T cell proliferation			ISO	P00491 	J:73065 	
+MGI:109486	Prdx2	peroxiredoxin 2	8		T cell proliferation	happens in thymus,affects a population of T cell		IMP	MGI:2668456 	J:91748 	
+MGI:104878	Prkar1a	protein kinase, cAMP dependent regulatory, type I, alpha	11		negative regulation of activated T cell proliferation			ISO	P10644 	J:164563 	
+MGI:97601	Prkcq	protein kinase C, theta	2		positive regulation of T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:2664379 	J:89322 	
+MGI:97769	Prnp	prion protein	2		negative regulation of activated T cell proliferation			IMP		J:169942 	
+MGI:1096380	Psmb10	proteasome (prosome, macropain) subunit, beta type 10	8		T cell proliferation			IMP	MGI:3723600 	J:91605 	
+MGI:96055	Ptpn6	protein tyrosine phosphatase, non-receptor type 6	6		negative regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:1856073 MGI:1856074 	J:35279 	
+MGI:107170	Ptpn22	protein tyrosine phosphatase, non-receptor type 22 (lymphoid)	3		positive regulation of CD8-positive, alpha-beta T cell proliferation			IBA	PTN000440270 	J:265628 	
+MGI:107170	Ptpn22	protein tyrosine phosphatase, non-receptor type 22 (lymphoid)	3		positive regulation of CD8-positive, alpha-beta T cell proliferation	happens at the same time as positive regulation of defense response to virus by host		IMP		J:208241 	
+MGI:97810	Ptprc	protein tyrosine phosphatase, receptor type, C	1		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of mature alpha-beta T cell		IMP	MGI:2181288 	J:25537 	
+MGI:97810	Ptprc	protein tyrosine phosphatase, receptor type, C	1		positive regulation of T cell proliferation			IMP		J:13163 	
+MGI:97810	Ptprc	protein tyrosine phosphatase, receptor type, C	1		T cell proliferation			IMP	MGI:1857277 	J:84808 	
+MGI:1931465	Pycard	PYD and CARD domain containing	7		positive regulation of activated T cell proliferation			IMP		J:176441 	
+MGI:97846	Rac2	Rac family small GTPase 2	15		regulation of T cell proliferation			IMP		J:119437 	
+MGI:2444128	Rasal3	RAS protein activator like 3	17		positive regulation of NK T cell proliferation			ISO	Q86YV0 	J:164563 	
+MGI:1314635	Rasgrp1	RAS guanyl releasing protein 1	2		T cell proliferation			ISO	O95267 	J:164563 	
+MGI:2685397	Rc3h1	RING CCCH (C3H) domains 1	1		negative regulation of activated T cell proliferation			IMP		J:175161 	
+MGI:2685397	Rc3h1	RING CCCH (C3H) domains 1	1		regulation of T cell proliferation			IEA	IPR032671 	J:72247 	
+MGI:2685397	Rc3h1	RING CCCH (C3H) domains 1	1		T cell proliferation			IGI	MGI:2442789 	J:196136 	
+MGI:2442789	Rc3h2	ring finger and CCCH-type zinc finger domains 2	2		T cell proliferation			IGI	MGI:2685397 	J:196136 	
+MGI:1891456	Ripk2	receptor (TNFRSF)-interacting serine-threonine kinase 2	4		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:2446070 	J:75401 	
+MGI:1891456	Ripk2	receptor (TNFRSF)-interacting serine-threonine kinase 2	4		positive regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IMP	MGI:2660793 	J:75400 	
+MGI:1891456	Ripk2	receptor (TNFRSF)-interacting serine-threonine kinase 2	4		positive regulation of immature T cell proliferation	regulates the proliferation of thymocyte		IMP	MGI:2660793 	J:75400 	
+MGI:1891456	Ripk2	receptor (TNFRSF)-interacting serine-threonine kinase 2	4		T cell proliferation			IMP	MGI:2446070 	J:87716 	
+MGI:2154952	Ripk3	receptor-interacting serine-threonine kinase 3	14		regulation of activated T cell proliferation			IGI	Q61160 	J:176448 	
+MGI:2444879	Ripor2	RHO family interacting cell polarization regulator 2	13		negative regulation of T cell proliferation			ISO	Q9Y4F9 	J:164563 	
+MGI:1350917	Rps3	ribosomal protein S3	7		positive regulation of activated T cell proliferation			ISO	P23396 	J:164563 	
+MGI:98159	Rps6	ribosomal protein S6	4		T cell proliferation involved in immune response			IGI	MGI:98834 	J:103921 	
+MGI:98159	Rps6	ribosomal protein S6	4		T cell proliferation involved in immune response			IMP	MGI:2387471 	J:103921 	
+MGI:1921381	Sash3	SAM and SH3 domain containing 3	X		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:3716944 	J:102171 	
+MGI:105084	Satb1	special AT-rich sequence binding protein 1	17		activated T cell proliferation	affects a population of CL:0000084		IMP	MGI:2386676 	J:98155 	
+MGI:98919	Scgb1a1	secretoglobin, family 1A, member 1 (uteroglobin)	19		negative regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:105523 	
+MGI:2145950	Scrib	scribbled planar cell polarity	15		negative regulation of activated T cell proliferation			IMP		J:145314 	
+MGI:1349164	Sdc4	syndecan 4	2		negative regulation of T cell proliferation			ISO	P31431 	J:164563 	
+MGI:1931466	Selenok	selenoprotein K	14		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:4941878 	J:169169 	
+MGI:109515	Sftpd	surfactant associated protein D	14		negative regulation of T cell proliferation			ISO	RGD:3667 	J:155856 	
+MGI:1913066	Sh3rf1	SH3 domain containing ring finger 1	8		regulation of CD8-positive, alpha-beta T cell proliferation			IMP		J:205863 	
+MGI:98297	Shh	sonic hedgehog	5		negative regulation of T cell proliferation	regulates a function/process that happens in thymus primordium,regulates the proliferation of pro-T cell		IMP		J:64180 	
+MGI:98297	Shh	sonic hedgehog	5		positive regulation of immature T cell proliferation in thymus			IMP		J:88047 J:148952 	
+MGI:1351314	Slamf1	signaling lymphocytic activation molecule family member 1	1		positive regulation of activated T cell proliferation			IDA		J:227465 	
+MGI:109393	Slc4a1	solute carrier family 4 (anion exchanger), member 1	11		positive regulation of T cell proliferation			ISO	RGD:3710 	J:155856 	
+MGI:88117	Slc7a1	solute carrier family 7 (cationic amino acid transporter, y+ system), member 1	5		positive regulation of T cell proliferation			ISO	P30825 	J:164563 	
+MGI:1345275	Slc11a1	solute carrier family 11 (proton-coupled divalent metal ion transporters), member 1	1		T cell proliferation involved in immune response			IMP	MGI:1857755 	J:39456 	
+MGI:1313259	Slfn1	schlafen 1	11		negative regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:138087 	
+MGI:98354	Sos1	SOS Ras/Rac guanine nucleotide exchange factor 1	17		regulation of T cell proliferation			IGI	MGI:98355 	J:206090 	
+MGI:98355	Sos2	SOS Ras/Rho guanine nucleotide exchange factor 2	12		regulation of T cell proliferation			IGI	MGI:98354 	J:206090 	
+MGI:98384	Spn	sialophorin	7		negative regulation of T cell proliferation			IMP	MGI:1857246 	J:29272 J:88252 J:94033 	
+MGI:98384	Spn	sialophorin	7		negative regulation of T cell proliferation			IMP		J:149128 	
+MGI:98384	Spn	sialophorin	7		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:88251 	
+MGI:98384	Spn	sialophorin	7		positive regulation of T cell proliferation			IDA		J:26220 	
+MGI:98385	Spta1	spectrin alpha, erythrocytic 1	1		positive regulation of T cell proliferation			IMP	MGI:1856181 	J:4748 	
+MGI:103036	Stat5a	signal transducer and activator of transcription 5A	11		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IDA		J:53400 	
+MGI:103036	Stat5a	signal transducer and activator of transcription 5A	11		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IGI	MGI:103035 	J:53400 J:98326 	
+MGI:103035	Stat5b	signal transducer and activator of transcription 5B	11		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IGI	MGI:103036 	J:53400 J:98326 	
+MGI:103035	Stat5b	signal transducer and activator of transcription 5B	11		positive regulation of activated T cell proliferation	regulates the proliferation of T cell		IMP	MGI:2181592 	J:112035 	
+MGI:99515	Syk	spleen tyrosine kinase	13		positive regulation of alpha-beta T cell proliferation			IBA	PTN002815343 	J:265628 	
+MGI:99515	Syk	spleen tyrosine kinase	13		positive regulation of alpha-beta T cell proliferation			IGI	MGI:99613 	J:42818 	
+MGI:2442280	Tarm1	T cell-interacting, activating receptor on myeloid cells 1	7		negative regulation of CD4-positive, alpha-beta T cell proliferation			IDA		J:243472 	
+MGI:98822	Tfrc	transferrin receptor	16		positive regulation of T cell proliferation			IDA		J:231935 	
+MGI:98822	Tfrc	transferrin receptor	16		positive regulation of T cell proliferation			ISO	P02786 	J:164563 	
+MGI:98725	Tgfb1	transforming growth factor, beta 1	7		negative regulation of T cell proliferation	regulates a function/process that happens in lymph node		IMP	MGI:3719583 	J:123547 	
+MGI:98729	Tgfbr2	transforming growth factor, beta receptor II	9		positive regulation of CD4-positive, alpha-beta T cell proliferation			ISO	P37173 	J:164563 	
+MGI:2443399	Tmem131l	transmembrane 131 like	3		negative regulation of immature T cell proliferation in thymus			ISO	A2VDJ0 	J:164563 	
+MGI:1314883	Tnfrsf1b	tumor necrosis factor receptor superfamily, member 1b	4		regulation of T cell proliferation			IBA	PTN002933906 	J:265628 	
+MGI:1314883	Tnfrsf1b	tumor necrosis factor receptor superfamily, member 1b	4		regulation of T cell proliferation	happens in microglial cell,happens in macrophage,regulates a function/process that happens in spleen		IMP		J:240627 	
+MGI:104512	Tnfrsf4	tumor necrosis factor receptor superfamily, member 4	4		T cell proliferation			ISO	RGD:3920 	J:155856 	
+MGI:1919299	Tnfrsf13c	tumor necrosis factor receptor superfamily, member 13c	15		positive regulation of T cell proliferation			IBA	PTN001073134 	J:265628 	
+MGI:1919299	Tnfrsf13c	tumor necrosis factor receptor superfamily, member 13c	15		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:91914 J:92334 	
+MGI:1919299	Tnfrsf13c	tumor necrosis factor receptor superfamily, member 13c	15		positive regulation of T cell proliferation	regulates the proliferation of T cell		IMP	MGI:2389403 	J:91914 J:92334 	
+MGI:2675303	Tnfrsf14	tumor necrosis factor receptor superfamily, member 14 (herpesvirus entry mediator)	4		negative regulation of alpha-beta T cell proliferation			IBA	PTN002929911 	J:265628 	
+MGI:2675303	Tnfrsf14	tumor necrosis factor receptor superfamily, member 14 (herpesvirus entry mediator)	4		negative regulation of alpha-beta T cell proliferation	regulates the proliferation of CD4-positive, alpha-beta T cell		IDA		J:94873 	
+MGI:2151075	Tnfrsf21	tumor necrosis factor receptor superfamily, member 21	17		negative regulation of T cell proliferation			IBA	PTN002930692 	J:265628 	
+MGI:2151075	Tnfrsf21	tumor necrosis factor receptor superfamily, member 21	17		negative regulation of T cell proliferation			IMP		J:70594 	
+MGI:104511	Tnfsf4	tumor necrosis factor (ligand) superfamily, member 4	1		positive regulation of activated T cell proliferation			ISO	RGD:619816 	J:155856 	
+MGI:104511	Tnfsf4	tumor necrosis factor (ligand) superfamily, member 4	1		positive regulation of alpha-beta T cell proliferation			IMP		J:131079 	
+MGI:104511	Tnfsf4	tumor necrosis factor (ligand) superfamily, member 4	1		positive regulation of T cell proliferation			IBA	PTN000426255 	J:265628 	
+MGI:104511	Tnfsf4	tumor necrosis factor (ligand) superfamily, member 4	1		T cell proliferation			ISO	RGD:619816 	J:155856 	
+MGI:1101058	Tnfsf9	tumor necrosis factor (ligand) superfamily, member 9	17		positive regulation of activated T cell proliferation			IBA	PTN000389106 	J:265628 	
+MGI:1101058	Tnfsf9	tumor necrosis factor (ligand) superfamily, member 9	17		positive regulation of activated T cell proliferation			ISO	RGD:727974 	J:155856 	
+MGI:1344376	Tnfsf13b	tumor necrosis factor (ligand) superfamily, member 13b	8		positive regulation of T cell proliferation	regulates the proliferation of T cell		IDA		J:91914 J:92334 	
+MGI:2673064	Tnfsf18	tumor necrosis factor (ligand) superfamily, member 18	1	NOT	activated CD4-positive, alpha-beta T cell proliferation			IMP		J:206613 	
+MGI:2673064	Tnfsf18	tumor necrosis factor (ligand) superfamily, member 18	1		regulation of T cell proliferation			IBA	PTN000392086 	J:265628 	
+MGI:2673064	Tnfsf18	tumor necrosis factor (ligand) superfamily, member 18	1		regulation of T cell proliferation			IDA		J:86980 	
+MGI:2673064	Tnfsf18	tumor necrosis factor (ligand) superfamily, member 18	1		T cell proliferation involved in immune response			IBA	PTN000392086 	J:265628 	
+MGI:2673064	Tnfsf18	tumor necrosis factor (ligand) superfamily, member 18	1		T cell proliferation involved in immune response			IDA		J:86980 	
+MGI:108072	Traf6	TNF receptor-associated factor 6	2		positive regulation of T cell proliferation			IMP		J:77453 	
+MGI:98834	Trp53	transformation related protein 53	11		T cell proliferation involved in immune response			IGI	MGI:98159 	J:103921 	
+MGI:2137520	Twsg1	twisted gastrulation BMP signaling modulator 1	17		negative regulation of CD4-positive, alpha-beta T cell proliferation			ISO	Q9GZX9 	J:164563 	
+MGI:98926	Vcam1	vascular cell adhesion molecule 1	3		positive regulation of T cell proliferation			ISO	P19320 	J:164563 	
+MGI:2679720	Vsig4	V-set and immunoglobulin domain containing 4	X		negative regulation of T cell proliferation			IBA	PTN001810319 	J:265628 	
+MGI:2679720	Vsig4	V-set and immunoglobulin domain containing 4	X		negative regulation of T cell proliferation			IDA		J:114496 	
+MGI:1921298	Vsir	V-set immunoregulatory receptor	10		negative regulation of CD4-positive, alpha-beta T cell proliferation			IDA		J:176836 	
+MGI:1921298	Vsir	V-set immunoregulatory receptor	10		negative regulation of CD4-positive, alpha-beta T cell proliferation			ISO	Q9H7M9 	J:164563 	
+MGI:1921298	Vsir	V-set immunoregulatory receptor	10		negative regulation of CD8-positive, alpha-beta T cell proliferation			ISO	Q9H7M9 	J:164563 	
+MGI:3039619	Vtcn1	V-set domain containing T cell activation inhibitor 1	3		negative regulation of T cell proliferation			ISO	Q7Z7D3 	J:164563 	
+MGI:3039619	Vtcn1	V-set domain containing T cell activation inhibitor 1	3		positive regulation of T cell proliferation			IMP		J:132222 	
+MGI:1916017	Washc1	WASH complex subunit 1	17		T cell proliferation			IMP		J:217269 	
+MGI:98957	Wnt4	wingless-type MMTV integration site family, member 4	4		immature T cell proliferation in thymus	happens in thymus		IMP	MGI:1857453 	J:137842 	
+MGI:104593	Xcl1	chemokine (C motif) ligand 1	1		positive regulation of CD4-positive, alpha-beta T cell proliferation			IDA		J:172916 	
+MGI:99613	Zap70	zeta-chain (TCR) associated protein kinase	1		positive regulation of alpha-beta T cell proliferation			IGI	MGI:99515 	J:42818 	
+MGI:102755	Zbtb7b	zinc finger and BTB domain containing 7B	3		negative regulation of NK T cell proliferation			IMP		J:190672 	
+MGI:1891838	Zbtb32	zinc finger and BTB domain containing 32	7		T cell proliferation			IMP	MGI:3527274 	J:95119 	
+MGI:3045313	Zc3h12d	zinc finger CCCH type containing 12D	10		negative regulation of T cell proliferation	regulates a function/process that happens in spleen		IMP	MGI:5588370 	J:209383 	
+MGI:1917353	Znhit1	zinc finger, HIT domain containing 1	5		regulation of T cell proliferation			IDA		J:150656 	
+MGI:99215	Zp3	zona pellucida glycoprotein 3	5		positive regulation of T cell proliferation			IDA		J:169908 	
+

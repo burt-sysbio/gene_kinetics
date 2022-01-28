@@ -1,0 +1,105 @@
+MGI Gene/Marker ID	Symbol	Name	Chr	Qualifier	Annotated Term	Context	Proteoform	Evidence	Inferred From	Reference(s)
+MGI:96819	Anxa1	annexin A1	19		negative regulation of T-helper 2 cell differentiation			IBA	PTN002574794 	J:265628 	
+MGI:96819	Anxa1	annexin A1	19		negative regulation of T-helper 2 cell differentiation			ISO	P04083 	J:164563 	
+MGI:96819	Anxa1	annexin A1	19		positive regulation of T-helper 1 cell differentiation			IBA	PTN002574794 	J:265628 	
+MGI:96819	Anxa1	annexin A1	19		positive regulation of T-helper 1 cell differentiation			ISO	P04083 	J:164563 	
+MGI:99400	Atp7a	ATPase, Cu++ transporting, alpha polypeptide	X		T-helper cell differentiation	results in the differentiation of CD4-positive helper T cell		IMP	MGI:1856466 	J:13154 	
+MGI:1859147	Batf	basic leucine zipper transcription factor, ATF-like	12		T-helper 17 cell differentiation			IMP		J:160935 J:172119 	
+MGI:1859147	Batf	basic leucine zipper transcription factor, ATF-like	12		T-helper 17 cell lineage commitment			IMP		J:150643 J:190118 	
+MGI:1859147	Batf	basic leucine zipper transcription factor, ATF-like	12		T-helper 2 cell differentiation			IMP		J:160935 J:172119 	
+MGI:88140	Bcl3	B cell leukemia/lymphoma 3	7		T-helper 2 cell differentiation	results in the differentiation of T-helper 2 cell		IMP	MGI:2158443 	J:107516 	
+MGI:107187	Bcl6	B cell leukemia/lymphoma 6	16		negative regulation of T-helper 2 cell differentiation	regulates the differentiation of T-helper 2 cell		IGI	MGI:96559 	J:81987 	
+MGI:1346316	Ccl19	chemokine (C-C motif) ligand 19	4		positive regulation of T-helper 1 cell differentiation			IDA		J:97971 	
+MGI:1329031	Ccl20	chemokine (C-C motif) ligand 20	1	NOT	regulation of T-helper 17 cell differentiation			IDA		J:142071 	
+MGI:106185	Ccr2	chemokine (C-C motif) receptor 2	9		positive regulation of T-helper 1 cell differentiation			IC	GO:0032729 	J:118487 	
+MGI:1333797	Ccr6	chemokine (C-C motif) receptor 6	17	NOT	regulation of T-helper 17 cell differentiation			IMP		J:142071 	
+MGI:103011	Ccr7	chemokine (C-C motif) receptor 7	11		positive regulation of T-helper 1 cell differentiation			IC	GO:0016493 	J:97971 	
+MGI:2685919	Cracr2a	calcium release activated channel regulator 2A	6		T-helper 1 cell differentiation			IBA	PTN002732243 	J:265628 	
+MGI:2685919	Cracr2a	calcium release activated channel regulator 2A	6		T-helper 1 cell differentiation			IMP		J:264324 	
+MGI:2685919	Cracr2a	calcium release activated channel regulator 2A	6		T-helper 1 cell differentiation			ISO	Q9BSW2 	J:164563 	
+MGI:2135885	Entpd7	ectonucleoside triphosphate diphosphohydrolase 7	19		T-helper 17 cell differentiation			IMP		J:191188 	
+MGI:1914004	Foxp1	forkhead box P1	6		T follicular helper cell differentiation			IDA		J:215934 	
+MGI:1891436	Foxp3	forkhead box P3	X		negative regulation of T-helper 17 cell differentiation			ISO	Q9BZS1 	J:164563 	
+MGI:1346325	Gadd45g	growth arrest and DNA-damage-inducible 45 gamma	13		T-helper 1 cell differentiation			TAS		J:79231 	
+MGI:95663	Gata3	GATA binding protein 3	2		T-helper 2 cell differentiation			IDA		J:165738 	
+MGI:2442034	Gpr183	G protein-coupled receptor 183	14		T follicular helper cell differentiation			IMP		J:233676 	
+MGI:96109	Hlx	H2.0-like homeobox	1		negative regulation of T-helper 2 cell differentiation	regulates the differentiation of T-helper 2 cell		IGI	MGI:105367 	J:126429 	
+MGI:96109	Hlx	H2.0-like homeobox	1		negative regulation of T-helper 2 cell differentiation	regulates the differentiation of T-helper 2 cell		IMP	MGI:2182089 	J:126429 	
+MGI:96109	Hlx	H2.0-like homeobox	1		positive regulation of T-helper 1 cell differentiation	regulates the differentiation of T-helper 1 cell		IGI	MGI:105367 	J:126429 	
+MGI:96109	Hlx	H2.0-like homeobox	1		positive regulation of T-helper 1 cell differentiation	regulates the differentiation of T-helper 1 cell		IMP	MGI:2182089 	J:126429 	
+MGI:96113	Hmgb1	high mobility group box 1	5		T-helper 1 cell differentiation			ISO	P09429 	J:164563 	
+MGI:96548	Il2	interleukin 2	3		negative regulation of T-helper 17 cell differentiation			IGI	URS000039ED8D_10090 	J:220376 	
+MGI:96556	Il4	interleukin 4	11		negative regulation of T-helper 17 cell differentiation			IBA	PTN002934025 	J:265628 	
+MGI:96556	Il4	interleukin 4	11		negative regulation of T-helper 17 cell differentiation			IDA		J:141227 	
+MGI:96556	Il4	interleukin 4	11		T-helper 1 cell lineage commitment			IGI	MGI:103034 	J:165738 	
+MGI:96556	Il4	interleukin 4	11		T-helper 2 cell differentiation			IBA	PTN002934025 	J:265628 	
+MGI:96556	Il4	interleukin 4	11		T-helper 2 cell differentiation			IDA		J:165738 	
+MGI:105367	Il4ra	interleukin 4 receptor, alpha	7		negative regulation of T-helper 1 cell differentiation	regulates the differentiation of CL:0000545		IGI	MGI:96109 	J:126429 	
+MGI:105367	Il4ra	interleukin 4 receptor, alpha	7		positive regulation of T-helper 2 cell differentiation	regulates the differentiation of CL:0000546		IGI	MGI:96109 	J:126429 	
+MGI:96559	Il6	interleukin 6	5		positive regulation of T-helper 2 cell differentiation	regulates the differentiation of T-helper 2 cell		IDA		J:81987 	
+MGI:96559	Il6	interleukin 6	5		T follicular helper cell differentiation			IMP		J:190912 	
+MGI:96559	Il6	interleukin 6	5		T-helper 17 cell lineage commitment			IDA		J:260609 	
+MGI:96559	Il6	interleukin 6	5		T-helper 17 cell lineage commitment			IMP		J:115922 	
+MGI:105304	Il6ra	interleukin 6 receptor, alpha	3		T-helper 17 cell lineage commitment			IDA		J:260609 	
+MGI:96540	Il12b	interleukin 12b	11		T-helper cell differentiation			ISO	P29460 	J:164563 	
+MGI:107936	Il18	interleukin 18	9		positive regulation of T-helper 2 cell differentiation			IMP		J:102800 	
+MGI:105383	Il18r1	interleukin 18 receptor 1	1		T-helper 1 cell differentiation	results in the differentiation of T-helper 1 cell		IMP	MGI:2136765 	J:70298 	
+MGI:1890474	Il21	interleukin 21	3		T follicular helper cell differentiation			IMP		J:190912 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		positive regulation of T-helper 17 cell lineage commitment			IBA	PTN000409283 	J:265628 	
+MGI:1932410	Il23a	interleukin 23, alpha subunit p19	10		positive regulation of T-helper 17 cell lineage commitment			IDA		J:150655 	
+MGI:2384409	Il27	interleukin 27	7		regulation of T-helper 1 cell differentiation			IBA	PTN000466839 	J:265628 	
+MGI:2384409	Il27	interleukin 27	7		regulation of T-helper 1 cell differentiation			ISO	Q8NEV9 	J:164563 	
+MGI:96590	Irf1	interferon regulatory factor 1	11		negative regulation of T-helper 2 cell differentiation			TAS		J:183979 	
+MGI:96590	Irf1	interferon regulatory factor 1	11		positive regulation of T-helper 1 cell differentiation			TAS		J:183979 	
+MGI:1096873	Irf4	interferon regulatory factor 4	13		T-helper 17 cell lineage commitment			IMP		J:190118 	
+MGI:99928	Jak3	Janus kinase 3	8		negative regulation of T-helper 1 cell differentiation			IMP		J:123902 	
+MGI:96770	Lef1	lymphoid enhancer binding factor 1	3		T-helper 1 cell differentiation			IDA		J:164710 	
+MGI:1337004	Loxl3	lysyl oxidase-like 3	6		negative regulation of T-helper 17 cell lineage commitment			IMP		J:239159 	
+MGI:96885	Ly9	lymphocyte antigen 9	1		T-helper 17 cell lineage commitment			ISO	Q9HBG7 	J:164563 	
+MGI:2445027	Malt1	MALT1 paracaspase	18		positive regulation of T-helper 17 cell differentiation			IDA		J:259145 	
+MGI:3619324	Mir301	microRNA 301	11		regulation of T-helper 17 cell differentiation			IMP		J:184679 	
+MGI:3619338	Mir326	microRNA 326	7		positive regulation of T-helper 17 cell differentiation			IDA		J:157744 	
+MGI:3619338	Mir326	microRNA 326	7		positive regulation of T-helper 17 cell differentiation			IMP		J:157744 	
+MGI:3718563	Mir873a	microRNA 873a	4		T-helper 17 cell differentiation			ISO	HGNC 	J:251356 	
+MGI:1928394	Mtor	mechanistic target of rapamycin kinase	4		T-helper 1 cell lineage commitment			IMP		J:233777 	
+MGI:97249	Myb	myeloblastosis oncogene	10		positive regulation of T-helper cell differentiation			ISO	P10242 	J:164563 	
+MGI:3041243	Nfkbid	nuclear factor of kappa light polypeptide gene enhancer in B cells inhibitor, delta	7		positive regulation of T-helper 17 cell differentiation			IMP		J:259145 	
+MGI:1931595	Nfkbiz	nuclear factor of kappa light polypeptide gene enhancer in B cells inhibitor, zeta	16		positive regulation of T-helper 17 cell differentiation			IMP		J:259145 	
+MGI:2653833	Nlrp3	NLR family, pyrin domain containing 3	11		positive regulation of T-helper 17 cell differentiation			IMP		J:224866 	
+MGI:2653833	Nlrp3	NLR family, pyrin domain containing 3	11		positive regulation of T-helper 2 cell differentiation			IMP		J:224866 	
+MGI:1859615	Otud5	OTU domain containing 5	X		T-helper 17 cell lineage commitment			IMP	MGI:2386448 MGI:5752247 	J:219495 	
+MGI:97602	Prkcz	protein kinase C, zeta	4		positive regulation of T-helper 2 cell differentiation			IMP		J:99860 	
+MGI:104311	Ptger4	prostaglandin E receptor 4 (subtype EP4)	15		T-helper cell differentiation			IDA		J:151236 	
+MGI:97856	Rara	retinoic acid receptor, alpha	11		positive regulation of T-helper 2 cell differentiation			ISO	P10276 	J:164563 	
+MGI:2685397	Rc3h1	RING CCCH (C3H) domains 1	1		negative regulation of T-helper 17 cell differentiation			IMP		J:259145 	
+MGI:2685397	Rc3h1	RING CCCH (C3H) domains 1	1		negative regulation of T-helper cell differentiation			IMP	MGI:3581675 	J:98938 	
+MGI:2685397	Rc3h1	RING CCCH (C3H) domains 1	1		T follicular helper cell differentiation			IGI	MGI:2442789 	J:196136 	
+MGI:2442789	Rc3h2	ring finger and CCCH-type zinc finger domains 2	2		negative regulation of T-helper 17 cell differentiation			IMP		J:259145 	
+MGI:2442789	Rc3h2	ring finger and CCCH-type zinc finger domains 2	2		T follicular helper cell differentiation			IGI	MGI:2685397 	J:196136 	
+MGI:103289	Relb	avian reticuloendotheliosis viral (v-rel) oncogene related B	7		T-helper 1 cell differentiation	results in the differentiation of T-helper 1 cell		IMP	MGI:2179545 	J:107516 	
+MGI:1891456	Ripk2	receptor (TNFRSF)-interacting serine-threonine kinase 2	4		positive regulation of T-helper 1 cell differentiation			IMP	MGI:2446070 	J:75401 	
+MGI:104661	Rora	RAR-related orphan receptor alpha	9		T-helper 17 cell differentiation			IMP		J:131020 	
+MGI:104856	Rorc	RAR-related orphan receptor gamma	3		T-helper 17 cell differentiation			IDA		J:141227 	
+MGI:104856	Rorc	RAR-related orphan receptor gamma	3		T-helper 17 cell differentiation			IMP		J:115922 J:131020 	
+MGI:104856	Rorc	RAR-related orphan receptor gamma	3		T-helper cell differentiation			IMP		J:87395 	
+MGI:107560	Sema4a	sema domain, immunoglobulin domain (Ig), transmembrane domain (TM) and short cytoplasmic domain, (semaphorin) 4A	3		T-helper 1 cell differentiation			IMP		J:97027 	
+MGI:98294	Shb	src homology 2 domain-containing transforming protein B	4		positive regulation of T-helper cell differentiation			IMP	MGI:3721903 	J:218575 	
+MGI:1353620	Slamf6	SLAM family member 6	1		T-helper 17 cell lineage commitment			IBA	PTN000249566 	J:265628 	
+MGI:1353620	Slamf6	SLAM family member 6	1		T-helper 17 cell lineage commitment			ISO	Q96DU3 	J:164563 	
+MGI:1100518	Smad7	SMAD family member 7	18		negative regulation of T-helper 17 cell differentiation	happens in CD4-positive helper T cell		IMP		J:220376 	
+MGI:2385459	Socs5	suppressor of cytokine signaling 5	17		negative regulation of T-helper 2 cell differentiation			IDA		J:113957 	
+MGI:2385459	Socs5	suppressor of cytokine signaling 5	17		positive regulation of T-helper 1 cell differentiation			IDA		J:113957 	
+MGI:98384	Spn	sialophorin	7		T-helper 1 cell lineage commitment			ISO	P16150 	J:164563 	
+MGI:103038	Stat3	signal transducer and activator of transcription 3	11		T-helper 17 cell lineage commitment			IMP		J:239159 	
+MGI:103034	Stat6	signal transducer and activator of transcription 6	10		T-helper 1 cell lineage commitment			IGI	MGI:96556 	J:165738 	
+MGI:1888984	Tbx21	T-box 21	11		negative regulation of T-helper 17 cell differentiation			IDA		J:167439 	
+MGI:1888984	Tbx21	T-box 21	11		negative regulation of T-helper 17 cell lineage commitment			IMP		J:167439 	
+MGI:98725	Tgfb1	transforming growth factor, beta 1	7		T-helper 17 cell lineage commitment			TAS		J:136164 	
+MGI:1923457	Tmem98	transmembrane protein 98	11		T-helper 1 cell differentiation			IDA		J:273519 	
+MGI:104511	Tnfsf4	tumor necrosis factor (ligand) superfamily, member 4	1		negative regulation of T-helper 1 cell differentiation			IDA		J:169814 	
+MGI:104511	Tnfsf4	tumor necrosis factor (ligand) superfamily, member 4	1		positive regulation of T-helper 2 cell differentiation			IDA		J:169884 	
+MGI:2673064	Tnfsf18	tumor necrosis factor (ligand) superfamily, member 18	1		negative regulation of T-helper 17 cell lineage commitment	happens in mesenteric lymph node,happens at the same time as inflammatory response		IMP		J:206613 	
+MGI:102755	Zbtb7b	zinc finger and BTB domain containing 7B	3		negative regulation of T-helper 17 cell differentiation			IMP	MGI:3530739 	J:190936 	
+MGI:2385891	Zc3h12a	zinc finger CCCH type containing 12A	4		negative regulation of T-helper 17 cell differentiation			IMP		J:259145 	
+MGI:99179	Zfp35	zinc finger protein 35	18		negative regulation of T-helper 2 cell differentiation			IMP	MGI:4398896 	J:153828 	
+
