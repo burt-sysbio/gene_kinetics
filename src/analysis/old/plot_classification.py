@@ -4,8 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 sns.set(context = "poster", style = "ticks")
 # load classification data
-df_win = pd.read_csv("../../output/fit_summary/category_assignment_winners.csv")
-df_modules = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
+df_win = pd.read_csv("../../../output/fit_summary/category_assignment_winners.csv")
+df_modules = pd.read_csv("../../../genesets_literature/gene_module_summary.csv")
 # load tfs, cytos, cytoR, th2 th1 genes
 
 def barplot(df, geneset, df_modules):

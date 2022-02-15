@@ -1,8 +1,7 @@
 
 import seaborn as sns
 import pandas as pd
-import numpy as np
-from utils_plot import plot_single_fit
+from code.analysis.utils_plot import plot_single_fit
 import matplotlib.pyplot as plt
 
 

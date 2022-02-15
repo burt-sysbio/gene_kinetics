@@ -2,7 +2,7 @@ import seaborn as sns
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
-sns.set(context = "poster", style = "ticks")
+sns.set(context = "paper", style = "ticks")
 # read in all files
 month = "feb2021"
 readdir = "../../output/gamma_fits/" + month + "/"
@@ -31,26 +31,26 @@ xlabels = ["Craw. 1", "Craw. 2", "Craw. 3", "Craw. 4",
            "Pros. 1"]
 
 palette = sns.color_palette()
-palette_reordered = [palette[0], palette[2], palette[1]]
-g = sns.catplot(data = df_dist, x = "study", y = "rmse", hue = "model", kind = "box", aspect= 2,
+palette_reordered = ["tab:blue", "tab:green", "tab:orange"]
+g = sns.catplot(data = df_dist, x = "study", y = "rmse", hue = "model", kind = "box",
                 fliersize = 0, hue_order= ["gamma", "expo", "longtail"], whis=[5, 95], legend_out=True,
-                palette = palette_reordered)
+                palette = palette_reordered, aspect= 2, height = 2)
 
-g.set(ylim = (0,0.7), ylabel = "RMSE (a.u.)", xlabel = "")
+g.set(ylim = (-0.1,0.8), ylabel = "fit error (RMSE)", xlabel = "")
 g.set_xticklabels(rotation=90, labels= xlabels)
+
+sns.despine(top = False, right = False)
+#plt.tight_layout()
+plt.show()
 
 savedir = "../../figures/fit_error_distributions/"
 g.savefig(savedir + "rmse_dist.pdf")
 g.savefig(savedir + "rmse_dist.svg")
 
-plt.tight_layout()
-plt.show()
-
-
 g = sns.displot(data = df_dist, x = "rmse", hue = "model", palette = palette_reordered,
                 hue_order= ["gamma", "expo", "longtail"], legend = False, alpha = 0.5, aspect = 1.2)
 g.set(xlim = (0,0.6), ylim = (0,1700), xlabel = "fit error (RMSE)", ylabel = "n genes")
 sns.despine(top = False, right = False)
-g.savefig(savedir + "rmse_dist_comb.pdf")
-g.savefig(savedir + "rmse_dist_comb.svg")
+#g.savefig(savedir + "rmse_dist_comb.pdf")
+#g.savefig(savedir + "rmse_dist_comb.svg")
 plt.show()

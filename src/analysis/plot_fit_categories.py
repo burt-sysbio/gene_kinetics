@@ -6,7 +6,7 @@ import glob
 import pandas as pd
 import matplotlib.pyplot as plt
 
-sns.set(style="ticks", context="poster")
+sns.set(style="ticks", context="paper")
 
 month = "feb2021"
 readdir = "../../output/gamma_fits/" + month + "/"
@@ -55,13 +55,14 @@ df = df.pivot(index="study", columns="best_fit", values="gene")
 
 sns.set_palette("deep")
 colors = sns.color_palette("deep", 10)
-mycolors = [colors[4], colors[2], colors[0], colors[1], colors[7]]
+mycolors = ["purple", colors[2], colors[0], colors[1], colors[7]]
 
 # plot total kinetic genes
-ax = df.plot.bar(stacked=True, color = mycolors, figsize = (8,6))
-ax.set_ylabel("n kinetic genes")
+mysize = 8
+ax = df.plot.bar(stacked=True, color = mycolors, figsize=(2.8, 2.2), width = 0.7)
+ax.set_ylabel("n kinetic genes", fontsize = mysize)
 ax.set_xlabel("")
-ax.set_xticklabels(xlabels)
+ax.set_xticklabels(xlabels, fontsize = mysize)
 
 fig = ax.get_figure()
 # title
@@ -81,9 +82,9 @@ df_norm.index = df.index
 
 df_norm = df_norm * 100
 
-mysize = 25
-ax = df_norm.plot.bar(stacked=True, color=mycolors, figsize=(8, 6))
-ax.set_ylabel("fit assignment", fontsize = mysize)
+
+ax = df_norm.plot.bar(stacked=True, color=mycolors, figsize=(2.8, 2.2), width = 0.7)
+ax.set_ylabel("fit assignment (%)", fontsize = mysize)
 ax.set_xticklabels(xlabels, fontsize = mysize)
 ax.set_ylim(0, 100)
 ax.set_xlabel("")
@@ -98,4 +99,4 @@ fig.savefig("../../figures/category_assignment/barplot_fit_categories.pdf")
 fig.savefig("../../figures/category_assignment/barplot_fit_categories.svg")
 
 # save the fit summary
-df_fits.to_csv("../../output/fit_summary/category_assignment.csv")
+#df_fits.to_csv("../../output/fit_summary/category_assignment.csv")

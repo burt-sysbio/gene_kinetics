@@ -5,7 +5,13 @@ needs thorough cleaning of gene annotations to match with pathways
 take fit information from individual genes and compute avg+SEM per module and study
 """
 
+from scipy.special import gammainc
 import numpy as np
+
+def gamma_cdf(t, alpha, beta):
+    dummy = t * beta
+    return gammainc(alpha, dummy)
+
 import pandas as pd
 import seaborn as sns
 import os
@@ -21,7 +27,7 @@ df_modules = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
 rm_module = ["Th17", "Differentiation"]
 df_modules = df_modules.loc[~df_modules["module"].isin(rm_module)]
 # only keep genes with good gamma fits
-rmse_thres = 0.3
+rmse_thres = 0.2
 
 ylim = [None,None]
 xlim = [None,None]
@@ -80,23 +86,83 @@ g.add_legend()
 g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel)
 plt.show()
 
-g.savefig("../../figures/module_quantification/th1_th2_condition.pdf")
-g.savefig("../../figures/module_quantification/th1_th2_condition.svg")
+
+#g.savefig("../../figures/module_quantification/th1_th2_condition.pdf")
+#g.savefig("../../figures/module_quantification/th1_th2_condition.svg")
+
+
+out_th1 = out.loc[out["study"] == "Peine_rtm_Th1_invitro"]
+mymodules = ["Cytokine Receptor", "Cytokines", "Transcription Factor", "Proliferation", "Th1"]
+out_th1 = out_th1.loc[out_th1["module"].isin(mymodules)]
+g = sns.FacetGrid(data = out_th1, hue = "module",  aspect = 1.1, legend_out=False,
+                  hue_order= ["Th1", "Proliferation","Transcription Factor","Cytokines","Cytokine Receptor"],
+                  height = 2.1)
+g.map_dataframe(plt.errorbar, x= "avg", y = "SD", yerr = "SD_err", xerr= "avg_err",elinewidth=linewidth, capsize=capsize)
+g.add_legend()
+g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel)
+sns.despine(top = False, right = False)
+plt.show()
+
+
+g.savefig("../../figures/module_quantification/peine_th1cell_modules.pdf")
+g.savefig("../../figures/module_quantification/peine_th1cell_modules.svg")
+
+
+#
+df_th1 = df.loc[(df["study"] == "Peine_rtm_Th1_invitro") & (df["module"]=="Th1")]
+
+g = sns.relplot(data = df_th1, x = "alpha", y = "beta",
+                kind = "scatter")
+g.set(xlim = [0,100], ylim = [0,2])
+plt.show()
+
+mydf = out_th1.loc[out_th1["module"] == "Th1"]
+
+time = np.linspace(0,96,100)
+
+alpha = mydf["alpha"].values[0]
+alpha_err = mydf["alpha_err"].values[0]
+beta = mydf["beta"].values[0]
+beta_err = mydf["beta_err"].values[0]
+
+y1 = gamma_cdf(time, alpha-alpha_err, beta-beta_err)
+y2 = gamma_cdf(time, alpha-alpha_err, beta+beta_err)
+y3 = gamma_cdf(time, alpha+alpha_err, beta-beta_err)
+y4 = gamma_cdf(time, alpha+alpha_err, beta+beta_err)
+y5 = gamma_cdf(time, alpha, beta)
+
+mylist = [y2,y3]
+
+fig, ax = plt.subplots(figsize = (2.5,2.2))
+for y in mylist:
+    ax.plot(time, y, color="tab:blue", lw=0.5)
+ax.plot(time, y5, color = "tab:blue", lw = 2)
+
+ax.fill_between(time, y2, y3, color = "tab:blue", alpha = 0.1)
+ax.set_xlim([0,time[-1]])
+ax.set_xlabel("time (h)")
+ax.set_ylabel("expr. norm.")
+ax.set_xticks([0,24,48,72,96])
+ax.set_title("Th1 differentiation onset")
+ax.set_ylim([0,1])
+plt.show()
+
+fig.savefig("../../figures/module_quantification/th1_module_timecourse.svg")
 
 #########################################################################
 #########################################################################
 #########################################################################
 # plot avg and SD distr as barplot + SEM (ci=68)
-for data in [df, df_exvivo]:
-    for y in ["mu", "SD"]:
-        g = sns.catplot(data = data, x = "module", y = y, aspect = 0.8,
-                        hue = "study", kind = "bar", ci = 68, capsize = 0.1)
-        g.set(xlabel = "")
-        g.set_titles("{col_name}")
-        g.set_xticklabels(rotation = 90)
-        sns.despine(top = False, right = False)
-        plt.show()
-
+# for data in [df, df_exvivo]:
+#     for y in ["mu", "SD"]:
+#         g = sns.catplot(data = data, x = "module", y = y, aspect = 0.8,
+#                         hue = "study", kind = "bar", ci = 68, capsize = 0.1)
+#         g.set(xlabel = "")
+#         g.set_titles("{col_name}")
+#         g.set_xticklabels(rotation = 90)
+#         sns.despine(top = False, right = False)
+#         plt.show()
+#
 
 
 # plot the actual gamma distributions

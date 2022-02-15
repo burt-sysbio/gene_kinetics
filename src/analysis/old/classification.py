@@ -35,7 +35,7 @@ df_fits = df_fits.loc[df_fits["n_obs"] >= 5, :]
 df_win = df_fits.groupby(["gene2", "best_fit"])["study"].nunique()
 df_win = df_win.reset_index()
 
-# code taken instead of idxmax from stack overflow
+# src taken instead of idxmax from stack overflow
 df_win = df_win.pivot(columns = "best_fit", values = "study", index = "gene2")
 a = df_win.copy()
 df_win['winner'] = a.idxmax(axis=1)

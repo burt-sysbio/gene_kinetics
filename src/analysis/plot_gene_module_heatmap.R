@@ -60,7 +60,12 @@ plot_heatmap <- function(df, sname, trafo){
 
 df <- read.csv("data/data_summary/data_rtm_gene_module.csv")
 
+mymodules <- c("prolif_genes", "th1_genes", "transcription_factors", "cytokines", "cytokine_receptor")
+
+df <- df[df$module %in% mymodules,]
+
 out <- df %>% group_by(ID)
+
 
 out_list <- out %>% group_split()
 out_keys <- out %>% group_keys()
