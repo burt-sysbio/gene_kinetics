@@ -1,0 +1,214 @@
+# take multiple pathways and plot them together in dotplot
+require(readr)
+require(tidyr)
+require(ggplot2)
+require(stringr)
+require(dplyr)
+require(forcats)
+require(RColorBrewer)
+require(pheatmap)
+
+source("src/utils.R")
+
+get_files <- function(category){
+  # list files
+  mypath <- "data/ORA_output/"
+  filenames <- list.files(mypath, pattern = ".csv", full.names = T)
+  filenames2 <- list.files(mypath, pattern = ".csv", full.names = F)
+  
+  filenames <- filenames[grepl(category, filenames)]
+  filenames2 <- filenames2[grepl(category, filenames2)]
+  
+  filenames <- filenames[grepl("Nir|Peine|Proserpio", filenames)]
+  filenames2 <- filenames2[grepl("Nir|Peine|Proserpio", filenames2)]
+  
+  # read files and combine
+  files <- lapply(filenames, read.table, header = T)
+  out <- mapply(myfun1, files, filenames2, SIMPLIFY = F)
+  out <- bind_rows(out)
+  
+  return(out)
+}
+
+myfun1 <- function(df, fname){
+  # add the filename as a column, transform filename first
+  name <- str_split(fname, "_")
+  
+  name <- name[[1]][5]
+  
+  df$name <- fname
+  return(df)
+}
+
+# remove nonsignif categories
+apply_fdr_filter <- function(df, alpha, filter){
+  df <- df %>% filter(qvalue <= alpha)
+  counts <- df %>% group_by(ID) %>% count()
+  myselec <- counts$ID[counts$n>=filter]
+  df <- df %>% filter(ID %in% myselec)  
+  return(df)
+}
+
+proc_files <- function(out, user_curated, savedir){
+  # add database as column and add -log10 column
+  out <- out %>% separate(ID, into = c("DB"), remove = F)
+  out <- out %>% mutate(fdrlog10 = -log10(qvalue))
+  
+  # rename transcription factor targets because the annotation doesnt work in combined feature
+  mycategories <- c("GOBP", "WP", "REACTOME", "HALLMARK")
+  out$DB[!(out$DB %in% mycategories)] <- "TFT"
+  
+  # use manual annotation 
+  fname <- paste0(savedir, "pathways_curated.csv")
+  out <- proc_pathways_curated(out, user_curated, fname)
+  
+  return(out)  
+}
+
+proc_pathways_curated <- function(out, user_curated, fname){
+  
+  # check if manual curation exists 
+  # if it exists and user_curated True, reduce out to manual curation subset and change pathway names and ordering according to file
+  # otherwise if it exists and user_curated False, add IDs to full table
+  # otherwise return original
+  if(file.exists(fname)){
+    sep = ";"
+    print("current separator is")
+    print(sep)
+    pathways_curated <- read.csv(fname, sep = sep)
+    stopifnot("New_ID" %in% colnames(pathways_curated))
+    
+    # show only pathways in manual curation file or alternatively add index of manual curation to full table    
+    if(user_curated){
+      # reorder according to provided manual order in csv file
+      pathways_curated$myorder <- rownames(pathways_curated)
+      
+      out <- inner_join(out, pathways_curated)
+      out <- out %>% mutate(New_ID = fct_reorder(New_ID, as.numeric(myorder), .desc = T), ID = New_ID)
+    } 
+    
+  } else {
+    print("no manual curation found, returning original")
+  }  
+  return(out)
+}
+
+
+plot_heatmap <- function(out, sname){
+  
+  #prepare data output format for pheatmap, make wider
+  # not that this can cause troubles if there are not enough hits in both categories
+  n_categories <- length(unique(out$name))
+  stopifnot(n_categories > 1)
+  
+  test <- out %>% select(name, fdrlog10, ID) %>% pivot_wider(names_from = name, values_from = fdrlog10)
+  
+  # all NAs get 0 instead (log10(1) = 0)
+  test[is.na(test)]= 0
+  
+  test <- as.data.frame(test)
+  # make coarse grained heatmap only showing signif *,** and *** differences
+  rownames(test) <- test$ID
+  
+  
+  test <- test[,2:ncol(test)]
+  mynames <- colnames(test)
+  
+  annot <- as.data.frame(mynames)
+  annot$dist <- "Expo/Other"
+  annot$dist[grepl("gamma", annot$mynames)] <- "Gamma"
+  rownames(annot) <- annot$mynames
+  annot <- annot %>% select(dist)
+  
+  # 
+  # keep all entries where there is at least one significant hit
+  mythres <- 0.1
+  test <- test[rowSums(test >= -log10(mythres)) > 0,]
+  # convert to log
+  test2 <- test
+  
+  
+  #annot <- annot[,colnames(annot) %in% colnames(test2)]
+  
+  cellwidth = 10
+  cellheight = 8
+  width = 3.5
+  height = 2.5
+  # get three distinct types of red
+  mycolors = colorRampPalette(brewer.pal(n = 9, name ="Reds"))(100)  
+  mycolors[1] <- "white"
+  mybreaks <- seq(-log10(mythres),-log10(0.001), length.out = 101)
+  
+  pheatmap(test2,
+           color = mycolors,
+           breaks = mybreaks,
+           annotation_col = annot,
+           annotation_legend = T,
+           cluster_rows = T,
+           cluster_cols = T,
+           fontsize_row = 8,
+           fontsize_col = 8,
+           cellwidth = cellwidth,
+           cellheight = cellheight,
+           width = width,
+           height = height,
+           legend = F,
+           filename = sname)
+  
+  
+  p <- pheatmap(test2,
+                color = mycolors,
+                breaks = mybreaks,
+                annotation_col = annot,
+                annotation_legend = T,
+                cluster_rows = T,
+                cluster_cols = T,
+                fontsize_row = 8,
+                fontsize_col = 8,
+                cellwidth = cellwidth,
+                cellheight = cellheight,
+                legend = F,
+                filename = sname)
+  
+  sname2 <- str_sub(sname, 1, -5)
+  sname2 <- paste0(sname2, ".svg")
+  
+  save_pheatmap(p, sname2, width = width, height = height)
+}
+
+
+pipeline <- function(alpha, filter, width, height, category, user_curated){
+  
+
+  savedir <- "figures/pathway_results/"
+  # list files in directory, read them and combine into data frame
+  out <- get_files(category)
+  
+  # process df
+  out <- proc_files(out, user_curated, savedir)
+  
+  # plot heatmap (before applying filter)
+  if(user_curated){
+    sname0 <- "curated"
+  } else {
+    sname0 <- "uncurated"
+  }
+
+  sname_heatmap <- paste0(savedir, "NEW_ORA_fdr_heatmap_", alpha, "filter", filter,"_", sname0, ".png")
+  
+  
+  # keep only signif categories
+  out <- apply_fdr_filter(out, alpha, filter)
+  
+  plot_heatmap(out, sname_heatmap)
+  
+  
+  return(out)
+}
+
+###################################################################################################
+###################################################################################################
+###################################################################################################
+# analysis starts here
+
+out1 <- pipeline(alpha = 1, filter = 1, width = 20, height = 30, category = "REACTOME", user_curated = F)
