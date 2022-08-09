@@ -10,9 +10,15 @@ require(pheatmap)
 
 source("src/utils.R")
 
-get_files <- function(category){
+get_files <- function(category, use_gene_module){
+  
   # list files
-  mypath <- "data/ORA_output/"
+  if(use_gene_module){
+    mypath <- "data/ORA_output_gene_module/"
+  } else{
+    mypath <- "data/ORA_output/"
+  }
+  
   filenames <- list.files(mypath, pattern = ".csv", full.names = T)
   filenames2 <- list.files(mypath, pattern = ".csv", full.names = F)
   
@@ -94,7 +100,7 @@ proc_pathways_curated <- function(out, user_curated, fname){
 }
 
 
-plot_heatmap <- function(out, sname){
+plot_heatmap <- function(out, sname, mythres){
   
   #prepare data output format for pheatmap, make wider
   # not that this can cause troubles if there are not enough hits in both categories
@@ -122,7 +128,6 @@ plot_heatmap <- function(out, sname){
   
   # 
   # keep all entries where there is at least one significant hit
-  mythres <- 0.1
   test <- test[rowSums(test >= -log10(mythres)) > 0,]
   # convert to log
   test2 <- test
@@ -173,16 +178,20 @@ plot_heatmap <- function(out, sname){
   sname2 <- str_sub(sname, 1, -5)
   sname2 <- paste0(sname2, ".svg")
   
-  save_pheatmap(p, sname2, width = width, height = height)
+  #save_pheatmap(p, sname2, width = width, height = height)
 }
 
 
-pipeline <- function(alpha, filter, width, height, category, user_curated){
+pipeline <- function(alpha, filter, width, height, category, user_curated, sname, use_gene_module){
   
-
-  savedir <- "figures/pathway_results/"
+  if(use_gene_module){
+    savedir <- "figures/pathway_results/tcell_universe/"
+  } else {
+    savedir <- "figures/pathway_results/full_universe/"
+  }
+  #savedir <- "figures/pathway_results/"
   # list files in directory, read them and combine into data frame
-  out <- get_files(category)
+  out <- get_files(category, use_gene_module)
   
   # process df
   out <- proc_files(out, user_curated, savedir)
@@ -194,13 +203,14 @@ pipeline <- function(alpha, filter, width, height, category, user_curated){
     sname0 <- "uncurated"
   }
 
-  sname_heatmap <- paste0(savedir, "NEW_ORA_fdr_heatmap_", alpha, "filter", filter,"_", sname0, ".png")
+  sname_heatmap <- paste0(savedir, category, "_", sname,"_", sname0, ".png")
   
   
   # keep only signif categories
-  out <- apply_fdr_filter(out, alpha, filter)
+  #out <- apply_fdr_filter(out, alpha, filter)
   
-  plot_heatmap(out, sname_heatmap)
+  # filtering step is now applied here
+  plot_heatmap(out, sname_heatmap, alpha)
   
   
   return(out)
@@ -210,5 +220,15 @@ pipeline <- function(alpha, filter, width, height, category, user_curated){
 ###################################################################################################
 ###################################################################################################
 # analysis starts here
+use_gene_module <- T
+myFDR <- "FDR01"
+alpha <- 0.1
+out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "REACTOME", user_curated = F, sname = myFDR, use_gene_module)
+out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "HALLMARK", user_curated = F, sname = myFDR, use_gene_module)
+out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "TFT", user_curated = F, sname = myFDR, use_gene_module)
+out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "GOBP", user_curated = F, sname = myFDR, use_gene_module)
+out1 <- pipeline(alpha = 1, filter = 1, width = 20, height = 30, category = "WIKIPATHWAYS", user_curated = F, sname = myFDR, use_gene_module)
+out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "IMMUNESIG", user_curated = F, sname = myFDR, use_gene_module)
 
-out1 <- pipeline(alpha = 1, filter = 1, width = 20, height = 30, category = "REACTOME", user_curated = F)
+
+

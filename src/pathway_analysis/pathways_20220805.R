@@ -10,6 +10,10 @@ myfiles <- list.files("output/gamma_fits/feb2021/", pattern = "fit_summary")
 myfiles <- myfiles[grepl("Peine|Nir|Proserpio", myfiles)]
 myfiles <- paste0("output/gamma_fits/feb2021/", myfiles)
 
+gene_module <- read.csv("genesets_literature/gene_module_summary.csv")
+
+use_gene_module <- T
+
 df_list = c()
 for (f in myfiles){
   df <- read.csv(f)
@@ -25,6 +29,10 @@ for (f in myfiles){
   df <- df %>% dplyr::filter(gene != "")
   df <- df %>% dplyr::select(gene, best_fit, study) %>% unique()
   
+  if (use_gene_module){
+    df <- df[df$gene %in% gene_module$gene,]
+  }
+  
   df_list <- c(df_list, list(df))
 }
 
@@ -35,27 +43,34 @@ cat2 <- msigdbr(species = "Mus musculus", category = "C2", subcategory = "REACTO
 cat3 <- msigdbr(species = "Mus musculus", category = "H")
 cat4 <- msigdbr(species = "Mus musculus", category = "C5", subcategory = "GO:BP")
 cat5 <- msigdbr(species = "Mus musculus", category = "C3", subcategory = "TFT:TFT_Legacy")
+cat6 <- msigdbr(species = "Mus musculus", category = "C7", subcategory = "IMMUNESIGDB")
 
-categories <- list(cat1, cat2, cat3, cat4, cat5)
-cat_names <- c("WIKIPATHWAYS", "REACTOME", "HALLMARK", "GOBP", "TFT")
 
-all_sets <- dplyr::bind_rows(categories)
-all_sets_nogo <- all_sets[all_sets$gs_subcat != "GO:BP",]
+
+categories <- list(cat1, cat2, cat3, cat4, cat5, cat6)
+cat_names <- c("WIKIPATHWAYS", "REACTOME", "HALLMARK", "GOBP", "TFT", "IMMUNESIG")
+
+#all_sets <- dplyr::bind_rows(categories)
+#all_sets_nogo <- all_sets[all_sets$gs_subcat != "GO:BP",]
 
 # do analyisis with and wo GOBP
-genesets1 <- as.data.frame(all_sets) %>% select(gs_name, gene_symbol)
-genesets2 <- as.data.frame(all_sets_nogo) %>% select(gs_name, gene_symbol)
+#genesets1 <- as.data.frame(all_sets) %>% select(gs_name, gene_symbol)
+#genesets2 <- as.data.frame(all_sets_nogo) %>% select(gs_name, gene_symbol)
 
 
 # for each study, check enrichment for gamma expo and other category
-sdir <- "data/ORA_output/"
+if(use_gene_module){
+  sdir <- "data/ORA_output_gene_module/"
+} else{
+  sdir <- "data/ORA_output/"
+}
 
 for (mydata in df_list){
   
   
-  deg_gamma <- mydata %>% filter(best_fit == "gamma") %>% select(gene) %>% unique() 
-  deg_expo <- mydata %>% filter(best_fit == "expo") %>% select(gene) %>% unique()
-  deg_other <- mydata %>% filter(best_fit == "other") %>% select(gene) %>% unique()
+  deg_gamma <- mydata %>% dplyr::filter(best_fit == "gamma") %>% select(gene) %>% unique() 
+  deg_expo <- mydata %>% dplyr::filter(best_fit == "expo") %>% select(gene) %>% unique()
+  deg_other <- mydata %>% dplyr::filter(best_fit == "other") %>% select(gene) %>% unique()
   universe <- as.character(unique(mydata$gene))
   
   files <- c(deg_gamma, deg_expo, deg_other)
@@ -69,15 +84,15 @@ for (mydata in df_list){
     degs <- files[i]
     
     # run ora for all categories combined
-    test <- enricher(degs$gene, TERM2GENE = genesets1, pAdjustMethod = "fdr", maxGSSize = 1000, pvalueCutoff = 1, qvalueCutoff = 1, universe = universe)
-    res <- test@result
-    out <- paste0(savedir, "ORA_combined_", savename)
-    write.table(res, out)
+    #test <- enricher(degs$gene, TERM2GENE = genesets1, pAdjustMethod = "fdr", maxGSSize = 1000, pvalueCutoff = 1, qvalueCutoff = 1, universe = universe)
+    #res <- test@result
+    #out <- paste0(savedir, "ORA_combined_", savename)
+    #write.table(res, out)
     
-    test <- enricher(degs$gene, TERM2GENE = genesets2, pAdjustMethod = "fdr", maxGSSize = 1000, pvalueCutoff = 1, qvalueCutoff = 1, universe = universe)
-    res <- test@result
-    out <- paste0(savedir, "ORA_nogo_", savename)
-    write.table(res, out)
+    #test <- enricher(degs$gene, TERM2GENE = genesets2, pAdjustMethod = "fdr", maxGSSize = 1000, pvalueCutoff = 1, qvalueCutoff = 1, universe = universe)
+    #res <- test@result
+    #out <- paste0(savedir, "ORA_nogo_", savename)
+    #write.table(res, out)
     
     # run ORA for each category separately
     for(j in seq_along(categories)){
