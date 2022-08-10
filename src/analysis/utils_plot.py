@@ -41,7 +41,7 @@ def prep_fit(gene: str, data, fit_res_gamma, fit_res_gmm):
     return df_sim, exp
 
 
-def plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, show_rmse=True, show_title=True, capsize=10,
+def plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, show_rmse=True, show_title=True,
                     my_categories = ["gamma", "expo", "longtail", "bimodal"], lw = 2):
     """
     plot gamma expo bimodal etc together
@@ -52,7 +52,7 @@ def plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, show_rmse=True, 
     sns.scatterplot(data=df2, x="time", y="avg_norm_rtm2", ax=ax, color="k", zorder = 1000)
     # add some error bars if available
     if not np.isnan(df2.SD).any():
-        ax.errorbar(df2.time, df2.avg_norm_rtm2, yerr=df2.SD, ecolor="k", fmt="none", capsize=capsize, zorder = 1000)
+        ax.errorbar(df2.time, df2.avg_norm_rtm2, yerr=df2.SD, ecolor="k", fmt="none", zorder = 1000)
 
     # for the best fit, use large font and solid lines, otherwise small and dashed
     colors = ["tab:green", "tab:blue", "tab:orange", "purple"]

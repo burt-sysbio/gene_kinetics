@@ -5,8 +5,7 @@ import os
 import glob
 import pandas as pd
 import matplotlib.pyplot as plt
-
-sns.set(style="ticks", context="paper")
+plt.style.use("../paper_theme_python.mplstyle")
 
 month = "feb2021"
 readdir = "../../output/gamma_fits/" + month + "/"
@@ -59,15 +58,16 @@ mycolors = ["purple", colors[2], colors[0], colors[1], colors[7]]
 
 # plot total kinetic genes
 mysize = 8
-ax = df.plot.bar(stacked=True, color = mycolors, figsize=(2.8, 2.2), width = 0.7)
-ax.set_ylabel("n kinetic genes", fontsize = mysize)
+ax = df.plot.bar(stacked=True, color = mycolors, figsize=(2.5,2.1), width = 0.85)
+ax.set_ylabel("n kinetic genes")
 ax.set_xlabel("")
-ax.set_xticklabels(xlabels, fontsize = mysize)
+ax.set_xticklabels(xlabels)
 
 fig = ax.get_figure()
 # title
 new_title = 'Category'
 ax.legend(title=new_title)
+plt.tight_layout()
 plt.show()
 
 fig.savefig("../../figures/category_assignment/barplot_total_kinetic.pdf")
@@ -83,9 +83,9 @@ df_norm.index = df.index
 df_norm = df_norm * 100
 
 
-ax = df_norm.plot.bar(stacked=True, color=mycolors, figsize=(2.8, 2.2), width = 0.7)
-ax.set_ylabel("fit assignment (%)", fontsize = mysize)
-ax.set_xticklabels(xlabels, fontsize = mysize)
+ax = df_norm.plot.bar(stacked=True, color=mycolors, figsize=(2.5, 2.1), width = 0.85)
+ax.set_ylabel("fit assignment (%)")
+ax.set_xticklabels(xlabels)
 ax.set_ylim(0, 100)
 ax.set_xlabel("")
 
@@ -93,6 +93,7 @@ fig = ax.get_figure()
 # title
 new_title = 'Category'
 ax.legend(title=new_title)
+plt.tight_layout()
 plt.show()
 
 fig.savefig("../../figures/category_assignment/barplot_fit_categories.pdf")

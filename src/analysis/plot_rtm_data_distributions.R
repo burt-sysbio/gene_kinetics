@@ -41,7 +41,7 @@ df <- df %>% select(study, value, val_norm, val_norm_rtm2) %>% pivot_longer(-stu
 
 #distplot(df, "value", "norm_log22")
 #distplot(df, "val_norm", "norm_d0")
-distplot(df, "val_norm_rtm2", "norm_rtm", ymin = -2, ymax = 2.5, width = 3.5, height = 2)
+distplot(df, "val_norm_rtm2", "norm_rtm", ymin = -2, ymax = 2.5, width = 3.5, height = 2.2)
 
 
 g <- ggplot(data = df, aes(x = study, y = value, colour = name)) +

@@ -16,7 +16,9 @@ theme_R <- function(){
   
       axis.title = element_text(              #axis text
         family = font,            #axis famuly
-        size = 9),        
+        size = 9),   
+      
+      panel.background = element_rect(size = 1, color = "black")
       #since the legend often requires manual tweaking 
       #based on plot content, don't define it here
     )

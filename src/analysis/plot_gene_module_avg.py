@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from src.analysis.utils import gamma_cdf, fit_gamma
-plt.rcParams.update({'font.size': 8})
-
+plt.style.use("../paper_theme_python.mplstyle")
 """
 idea: plot fit results for any gene module and study together with actual data
 concrete: plot Tbet dynamics, Tbet FACS DATA and Th1 module averages together, show that Tbet gene expression alone is not good
@@ -73,7 +72,7 @@ y_sim = [gamma_cdf(time_arr, alpha, beta) for alpha, beta in zip(alphas, betas)]
 
 y_sim_gamma = y_sim[1]
 
-fig, ax = plt.subplots(figsize = (2.4,2))
+fig, ax = plt.subplots(figsize = (2.4,2.1))
 #sns.scatterplot(data=data, x="time", y="avg_norm2", ax=ax, color="k")
 # plot tbet module data
 ax.plot(time_arr, y_sim_gamma, color = "tab:blue", ls = "--")
@@ -89,6 +88,7 @@ ax.plot(time_arr, tbet_facs_arr, ls = "--", color = "lightgrey")
 ax.set_xticks([0,24,48,72,96,120])
 ax.set_xlabel("time (h)")
 ax.set_ylabel("% of maximum")
+plt.tight_layout()
 plt.show()
 
 fig.savefig("../../figures/module_quantification/module_timecourse.pdf")
