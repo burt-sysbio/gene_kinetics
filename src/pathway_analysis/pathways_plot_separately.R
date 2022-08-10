@@ -114,23 +114,35 @@ plot_heatmap <- function(out, sname, mythres){
   
   test <- as.data.frame(test)
   # make coarse grained heatmap only showing signif *,** and *** differences
-  rownames(test) <- test$ID
-  
+  rownames(test) <- str_remove(test$ID, "REACTOME_|HALLMARK_|")
+  colnames(test) <- str_remove(colnames(test), ".csv")
+  colnames(test) <- str_remove(colnames(test), "_ORA_REACTOME")
+  colnames(test) <- str_remove(colnames(test), "_invitro")
   
   test <- test[,2:ncol(test)]
   mynames <- colnames(test)
   
   annot <- as.data.frame(mynames)
-  annot$dist <- "Expo/Other"
-  annot$dist[grepl("gamma", annot$mynames)] <- "Gamma"
+  annot$Model <- "Expo_Other"
+  annot$Model[grepl("gamma", annot$mynames)] <- "Gamma"
   rownames(annot) <- annot$mynames
-  annot <- annot %>% select(dist)
-  
+  annot <- annot %>% select(Model)
+
   # 
   # keep all entries where there is at least one significant hit
   test <- test[rowSums(test >= -log10(mythres)) > 0,]
-  # convert to log
+  thres1 <- -log10(0.1)
+  thres2 <- -log10(0.05)
+  thres3 <- -log10(0.01)
+ 
   test2 <- test
+  test2[test<thres1] = 0
+  test2[test>thres1] = 1
+  test2[test>thres2] = 2
+  test2[test>thres3] = 3
+
+  # convert to log
+
   
   
   #annot <- annot[,colnames(annot) %in% colnames(test2)]
@@ -140,14 +152,16 @@ plot_heatmap <- function(out, sname, mythres){
   width = 3.5
   height = 2.5
   # get three distinct types of red
-  mycolors = colorRampPalette(brewer.pal(n = 9, name ="Reds"))(100)  
+  mycolors = colorRampPalette(brewer.pal(n = 4, name ="Reds"))(4)  
   mycolors[1] <- "white"
-  mybreaks <- seq(-log10(mythres),-log10(0.001), length.out = 101)
+  mybreaks <- seq(-log10(mythres),-log10(0.01), length.out = 101)
+  
+  ann_colors = list(Model = c(Expo_Other = "chartreuse3", Gamma = "deepskyblue3"))
   
   pheatmap(test2,
            color = mycolors,
-           breaks = mybreaks,
            annotation_col = annot,
+           annotation_colors = ann_colors,
            annotation_legend = T,
            cluster_rows = T,
            cluster_cols = T,
@@ -157,14 +171,14 @@ plot_heatmap <- function(out, sname, mythres){
            cellheight = cellheight,
            width = width,
            height = height,
-           legend = F,
+           legend = T,
            filename = sname)
   
   
   p <- pheatmap(test2,
                 color = mycolors,
-                breaks = mybreaks,
                 annotation_col = annot,
+                annotation_colors = ann_colors,
                 annotation_legend = T,
                 cluster_rows = T,
                 cluster_cols = T,
@@ -172,13 +186,13 @@ plot_heatmap <- function(out, sname, mythres){
                 fontsize_col = 8,
                 cellwidth = cellwidth,
                 cellheight = cellheight,
-                legend = F,
+                legend = T,
                 filename = sname)
   
   sname2 <- str_sub(sname, 1, -5)
   sname2 <- paste0(sname2, ".svg")
   
-  #save_pheatmap(p, sname2, width = width, height = height)
+  save_pheatmap(p, sname2, width = 10, height = 20)
 }
 
 
@@ -220,15 +234,15 @@ pipeline <- function(alpha, filter, width, height, category, user_curated, sname
 ###################################################################################################
 ###################################################################################################
 # analysis starts here
-use_gene_module <- T
+use_gene_module <- F # list of t cell genes as baseline
 myFDR <- "FDR01"
 alpha <- 0.1
 out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "REACTOME", user_curated = F, sname = myFDR, use_gene_module)
-out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "HALLMARK", user_curated = F, sname = myFDR, use_gene_module)
-out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "TFT", user_curated = F, sname = myFDR, use_gene_module)
-out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "GOBP", user_curated = F, sname = myFDR, use_gene_module)
-out1 <- pipeline(alpha = 1, filter = 1, width = 20, height = 30, category = "WIKIPATHWAYS", user_curated = F, sname = myFDR, use_gene_module)
-out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "IMMUNESIG", user_curated = F, sname = myFDR, use_gene_module)
+#out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "HALLMARK", user_curated = F, sname = myFDR, use_gene_module)
+#out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "TFT", user_curated = F, sname = myFDR, use_gene_module)
+#out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "GOBP", user_curated = F, sname = myFDR, use_gene_module)
+#out1 <- pipeline(alpha = 1, filter = 1, width = 20, height = 30, category = "WIKIPATHWAYS", user_curated = F, sname = myFDR, use_gene_module)
+#out1 <- pipeline(alpha = alpha, filter = 1, width = 20, height = 30, category = "IMMUNESIG", user_curated = F, sname = myFDR, use_gene_module)
 
 
 
