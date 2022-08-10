@@ -5,6 +5,7 @@ require(dplyr)
 require(tidyr)
 require(ggplot2)
 require(stringr)
+source("src/paper_theme_R.R")
 
 mypath <- "data/data_rtm/"
 readnames <- list.files(path = mypath, pattern = "_rtm_", full.names = T)
@@ -25,13 +26,12 @@ distplot <- function(df, ycol, sname, ymin = -10, ymax = 10, breaks = c(-2,-1,0,
   df <- df %>% filter(name == ycol)
   g <- ggplot(data = df, aes(x = study, y = value)) +
     geom_boxplot(outlier.shape = NA) +
-    theme_bw() +
+    theme_R() +
     scale_y_continuous(limits = c(ymin, ymax), breaks = breaks) +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank()) +
-    labs(y = "expr / max(expr)", x = "")
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+    labs(y = "expr. norm.", x = "")
   print(g)
-  ggsave(sname, bg = "white", width = width, height = height)
+  ggsave(sname, bg = "white", width = width, height = height, dpi = 300)
 }
 
 
