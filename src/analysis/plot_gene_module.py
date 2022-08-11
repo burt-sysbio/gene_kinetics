@@ -19,8 +19,8 @@ from scipy.stats import gamma
 import matplotlib.pyplot as plt
 import warnings
 #sns.set(context = "paper", style = "ticks")
-plt.rcParams.update({'font.size': 8})
-
+plt.style.use("../paper_theme_python.mplstyle")
+sns.set_palette("deep")
 warnings.warn("time unit might not be adjusted between data sets")
 
 df_modules = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
@@ -76,8 +76,8 @@ out_general = out.loc[out["module"].isin(mymodules)]
 
 out_general = out_general.loc[out_general.study.str.contains("Peine|Nir|Proserpio", regex =True)]
 
-g = sns.FacetGrid(data = out_general, col = "module", hue = "study", legend_out=True, aspect = 0.7,
-                  col_wrap= 4)
+g = sns.FacetGrid(data = out_general, col = "module", hue = "study", legend_out=True, aspect = 0.9,
+                  col_wrap= 4, height = 2)
 g.map_dataframe(plt.errorbar, x= "avg", y = "SD", yerr = "SD_err", xerr= "avg_err",elinewidth=linewidth, capsize=capsize)
 g.set_titles("{col_name}")
 g.add_legend()

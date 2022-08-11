@@ -31,8 +31,8 @@ prep_data <- function(df, trafo= "norm_day0"){
 
 
 plot_heatmap <- function(df, sname, trafo){
-  cellwidth = 10
-  cellheight = 10
+  cellwidth = 8
+  cellheight = 8
   
   if(trafo == "norm_day0"){
     sdir <- "figures/tcell_module/heatmap_normd0/"
@@ -55,14 +55,17 @@ plot_heatmap <- function(df, sname, trafo){
            cluster_cols = F,
            cellwidth = cellwidth,
            cellheight = cellheight,
-           filename = sname)
+           filename = sname, 
+           fontsize = 8,
+           width = 4,
+           height = 2)
 }
 
 df <- read.csv("data/data_summary/data_rtm_gene_module.csv")
 
-mymodules <- c("prolif_genes", "th1_genes", "transcription_factors", "cytokines", "cytokine_receptor")
+mymodules <- c("expert_list")
 
-df <- df[df$module %in% mymodules,]
+df <- df[!(df$module %in% mymodules),]
 
 out <- df %>% group_by(ID)
 
