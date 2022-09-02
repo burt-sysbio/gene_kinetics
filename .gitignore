@@ -133,7 +133,8 @@ pip-selfcheck.json
 .idea/**/dynamic.xml
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
-
+.idea/misc.xml
+.idea/gene_kinetics.iml
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
