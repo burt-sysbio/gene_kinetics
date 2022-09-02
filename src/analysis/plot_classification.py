@@ -2,12 +2,13 @@ import pandas as pd
 import seaborn as sns
 import numpy as np
 import matplotlib.pyplot as plt
-sns.set(context = "poster", style = "ticks")
-# load classification data
-df_win = pd.read_csv("../../../output/fit_summary/category_assignment_winners.csv")
-df_modules = pd.read_csv("../../../genesets_literature/gene_module_summary.csv")
-# load tfs, cytos, cytoR, th2 th1 genes
 
+# load classification data
+df_win = pd.read_csv("../../output/fit_summary/category_assignment_winners.csv")
+df_modules = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
+# load tfs, cytos, cytoR, th2 th1 genes
+plt.style.use("../paper_theme_python.mplstyle")
+sns.set_palette("deep")
 def barplot(df, geneset, df_modules):
     """
     make barplot that counts number of gamma/expo, longtail etc
@@ -31,7 +32,7 @@ def barplot(df, geneset, df_modules):
     ax.set_title(geneset)
     plt.xticks(rotation=90)
 
-    plt.show()
+    #plt.show()
     #fig.savefig("../../figures/barplot_genelists_delays/delays_histplot_" + geneset +".pdf")
 
     out = df.groupby(["winner"])["gene"].count()
@@ -50,11 +51,20 @@ out = out.reset_index()
 out["sum"] = out.groupby(["group"])["gene"].transform("sum")
 out["relval"] = (out["gene"] / out["sum"])*100
 
-fig, ax = plt.subplots(figsize = (9,9))
+
+colors = sns.color_palette("deep", 10)
+palette = [colors[0], colors[2], colors[7], "purple"]
+
+# assign longtail as expo
+print("assigning longtail as expo")
+
+out.loc[out.winner == "longtail", "winner"] = "expo"
+
+fig, ax = plt.subplots(figsize = (1.7,1.3))
 g = sns.histplot(x = 'group', hue = 'winner',weights= 'relval',
-             multiple = 'stack',data=out,shrink = 0.7,
-                 palette = ["tab:blue", "tab:green", "tab:orange", "tab:grey", "tab:purple"],
-                 hue_order = ["gamma", "expo", "longtail", "other", "bimodal"]
+                multiple = 'stack',data=out,shrink = 0.75,
+                 palette = palette, alpha = 1,
+                 hue_order = ["gamma", "expo", "other", "bimodal"]
                  )
 ax.set_xlabel("")
 ax.set_ylabel("category assignment (%)")
@@ -66,17 +76,17 @@ fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_grou
 fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups.svg")
 
 
-out2 = out.loc[out["winner"].isin(["expo", "gamma"]),:]
-
-fig, ax = plt.subplots(figsize = (6,6))
-g = sns.barplot(data = out2, hue= "winner", y = "relval", x = "group",
-                palette= ["tab:green", "tab:blue"])
-ax.set_ylim([0,70])
-ax.set_ylabel("fit assignment (%)")
-ax.set_xlabel("")
-
-plt.xticks(rotation = 90)
-ax.get_legend().remove()
-plt.show()
-fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.pdf")
-fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.svg")
+# out2 = out.loc[out["winner"].isin(["expo", "gamma"]),:]
+#
+# fig, ax = plt.subplots(figsize = (6,6))
+# g = sns.barplot(data = out2, hue= "winner", y = "relval", x = "group",
+#                 palette= ["tab:green", "tab:blue"])
+# ax.set_ylim([0,70])
+# ax.set_ylabel("fit assignment (%)")
+# ax.set_xlabel("")
+#
+# plt.xticks(rotation = 90)
+# ax.get_legend().remove()
+# plt.show()
+# fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.pdf")
+# fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.svg")
