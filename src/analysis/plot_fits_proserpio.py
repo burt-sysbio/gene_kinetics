@@ -51,23 +51,26 @@ data = data.set_index("gene")
 
 # check if I have anything to show in each category
 #genes = ["Tnfsf4", "Socs2", "Cntf", "Il4"]
-genes = ["Sdf2l1", "Alox12", "Olfr56", "Ktn1", "Upp1"]
+genes = ["Sdf2l1", "Alox12", "Ktn1", "Upp1"]
 #genes = ["Ifng", "Tbx21", "Eomes", "Gata3", "Il4"]
-candidate_categories = [["expo"], ["gamma"], ["longtail"], ["bimodal"], ["expo"]]
+candidate_categories = [["expo"], ["gamma"], ["bimodal"], ["expo"]]
 # other expo candidates: "Gm15558"
-fig, axes = plt.subplots(1,5,figsize = (8,2))
+fig, axes = plt.subplots(2,2,figsize = (2.5,2.5))
 axes = axes.flatten()
 for i in range(len(genes)):
     gene = genes[i]
     ax = axes[i]
     my_cats = candidate_categories[i]
-    plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, my_categories= my_cats, show_rmse=False, lw = 2)
+    plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, my_categories=my_cats, show_rmse=False, lw = 2)
     ax.set_xticks([0,24,48,72,96])
     ax.set_yticks([0, 0.5, 1.0])
 
-    if i != 0:
+    if i not in [0,2]:
         ax.set_ylabel("")
         ax.set_yticklabels([])
+    if i not in [2,3]:
+        ax.set_xlabel("")
+        ax.set_xticklabels([])
 
 plt.tight_layout()
 plt.show()

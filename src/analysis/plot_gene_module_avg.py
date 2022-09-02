@@ -22,7 +22,6 @@ data_peine_facs_gata["val_norm"] = data_peine_facs_gata.val_norm / data_peine_fa
 fit_res_peine_facs_gata = fit_gamma(data_peine_facs_gata.time, data_peine_facs_gata.val_norm, gamma_fun= gamma_cdf,
                                     sigma_abs=False, sigma=None, bounds = (0, np.inf))
 
-
 fit_res_peine_facs = fit_gamma(data_peine_facs.time, data_peine_facs.val_norm, gamma_fun = gamma_cdf, sigma = None, sigma_abs= False,
                                bounds = (0, np.inf))
 tbet_facs_alpha = fit_res_peine_facs[0]

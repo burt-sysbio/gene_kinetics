@@ -42,17 +42,17 @@ def prep_fit(gene: str, data, fit_res_gamma, fit_res_gmm):
 
 
 def plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, show_rmse=True, show_title=True,
-                    my_categories = ["gamma", "expo", "longtail", "bimodal"], lw = 2):
+                    my_categories = ["gamma", "expo", "longtail", "bimodal"], lw = 1.5):
     """
     plot gamma expo bimodal etc together
     """
     # get simulation values for the gene
     df1, df2 = prep_fit(gene, data, fit_res_gamma, fit_res_gmm)
 
-    sns.scatterplot(data=df2, x="time", y="avg_norm_rtm2", ax=ax, color="k", zorder = 1000)
+    sns.scatterplot(data=df2, x="time", y="avg_norm_rtm2", ax=ax, color="k", zorder = 1000, s = 10)
     # add some error bars if available
     if not np.isnan(df2.SD).any():
-        ax.errorbar(df2.time, df2.avg_norm_rtm2, yerr=df2.SD, ecolor="k", fmt="none", zorder = 1000)
+        ax.errorbar(df2.time, df2.avg_norm_rtm2, yerr=df2.SD, ecolor="k", fmt="none", zorder = 1000, capsize = 2)
 
     # for the best fit, use large font and solid lines, otherwise small and dashed
     colors = ["tab:green", "tab:blue", "tab:orange", "purple"]
@@ -79,6 +79,6 @@ def plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, show_rmse=True, 
         ax.text(5,0.05,title)
 
     if show_title:
-        ax.set_title(gene)
+        ax.set_title(gene, style = "italic")
 
     return ax

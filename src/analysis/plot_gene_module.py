@@ -121,10 +121,8 @@ g.add_legend()
 g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel)
 sns.despine(top = False, right = False)
 plt.show()
-
 g.savefig("../../figures/module_quantification/main_diffmodules.pdf")
 g.savefig("../../figures/module_quantification/main_diffmodules.svg")
-
 
 out_th1 = out.loc[out["study"] == "Peine_rtm_Th1_invitro"]
 mymodules = ["Cytokine Receptor", "Cytokines", "Transcription Factor", "Proliferation", "Th1"]
@@ -137,8 +135,6 @@ g.add_legend()
 g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel)
 sns.despine(top = False, right = False)
 plt.show()
-
-
 g.savefig("../../figures/module_quantification/peine_th1cell_modules.pdf")
 g.savefig("../../figures/module_quantification/peine_th1cell_modules.svg")
 
