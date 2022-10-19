@@ -9,6 +9,7 @@ df_modules = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
 # load tfs, cytos, cytoR, th2 th1 genes
 plt.style.use("../paper_theme_python.mplstyle")
 sns.set_palette("deep")
+
 def barplot(df, geneset, df_modules):
     """
     make barplot that counts number of gamma/expo, longtail etc
@@ -90,3 +91,20 @@ fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_grou
 # plt.show()
 # fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.pdf")
 # fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.svg")
+
+keep_modules = ["Cytokines", "Cytokine Receptor"]
+df_modules_red = df_modules.loc[df_modules["module"].isin(keep_modules)]
+df_sign_genes = df_win.loc[df_win["gene"].isin(df_modules_red["gene"]), ["gene", "gamma"]]
+
+n_keep = 40
+df_sign_genes_top = df_sign_genes.sort_values(["gamma"], ascending=False).iloc[:n_keep,:]
+df_sign_genes_top["gamma"] = df_sign_genes_top["gamma"] * 100 / 11
+
+g = sns.catplot(data = df_sign_genes_top, x = "gamma", y = "gene", kind = "bar", color = "0.5",
+                aspect = 0.4, height = 4.8)
+g.set(xlabel = "delayed (% of studies)", ylabel = "", xticks = [0,50,100])
+g.set_yticklabels(style = "italic")
+plt.show()
+
+g.savefig("../../figures/barplot_genelists_delays/barplot_stacked_signature_genes.pdf")
+g.savefig("../../figures/barplot_genelists_delays/barplot_stacked_signature_genes.svg")

@@ -54,10 +54,15 @@ df = df.pivot(index="study", columns="best_fit", values="gene")
 
 sns.set_palette("deep")
 colors = sns.color_palette("deep", 10)
-mycolors = ["purple", colors[2], colors[0], colors[1], colors[7]]
+mycolors = ["purple", colors[2], colors[0], colors[7]]
 
 # plot total kinetic genes
 mysize = 8
+
+# remove longtail genes by assigning them to expo category
+df["expo"] = df["expo"] + df["longtail"]
+df.drop(["longtail"], axis = 1, inplace = True)
+
 ax = df.plot.bar(stacked=True, color = mycolors, figsize=(2.5,2.1), width = 0.85)
 ax.set_ylabel("n kinetic genes")
 ax.set_xlabel("")

@@ -31,11 +31,13 @@ xlabels = ["Craw. 1", "Craw. 2", "Craw. 3", "Craw. 4",
            "Ilott 1",
            "Pros. 1"]
 
-palette = sns.color_palette()
-palette_reordered = ["tab:blue", "tab:green", "tab:orange"]
-g = sns.catplot(data = df_dist, x = "study", y = "rmse", hue = "model", kind = "box",
-                fliersize = 0, hue_order= ["gamma", "expo", "longtail"], whis=[5, 95], legend_out=True,
-                palette = palette_reordered, aspect= 2, height = 2.1)
+colors = sns.color_palette("deep", 10)
+palette = [colors[0], colors[2]]
+
+df_dist_red = df_dist.loc[df_dist["model"] != "longtail"]
+g = sns.catplot(data = df_dist_red, x = "study", y = "rmse", hue = "model", kind = "box",
+                fliersize = 0, hue_order= ["gamma", "expo"], whis=[5, 95], legend_out=True,
+                palette = palette, aspect= 2, height = 2.1)
 
 g.set(ylim = (-0.1,0.8), ylabel = "fit error (RMSE)", xlabel = "")
 g.set_xticklabels(rotation=90, labels= xlabels)
@@ -48,11 +50,13 @@ savedir = "../../figures/fit_error_distributions/"
 g.savefig(savedir + "rmse_dist.pdf")
 g.savefig(savedir + "rmse_dist.svg")
 
-df_dist = df_dist.reset_index()
-# g = sns.displot(data = df_dist, x = "rmse", hue = "model", palette = palette_reordered,
-#                 hue_order= ["gamma", "expo", "longtail"], legend = False, alpha = 0.5, aspect = 1.2)
-# g.set(xlim = (0,0.6), ylim = (0,1700), xlabel = "fit error (RMSE)", ylabel = "n genes")
-# sns.despine(top = False, right = False)
-# #g.savefig(savedir + "rmse_dist_comb.pdf")
-# #g.savefig(savedir + "rmse_dist_comb.svg")
-# plt.show()
+df_dist_red = df_dist_red.reset_index()
+
+df_dist_red = df_dist_red.loc[df_dist_red["rmse"] > 1e-3]
+g = sns.displot(data = df_dist_red, x = "rmse", hue = "model", palette = palette,
+                hue_order= ["gamma", "expo"], legend = True, alpha = 0.5, aspect = 1.2, height = 1.8)
+g.set(xlim = (0,0.8), xticks = [0,0.2,0.4,0.6,0.8], ylim = (0,2000), xlabel = "fit error (RMSE)", ylabel = "n genes")
+sns.despine(top = False, right = False)
+g.savefig(savedir + "rmse_dist_comb.pdf")
+g.savefig(savedir + "rmse_dist_comb.svg")
+plt.show()
