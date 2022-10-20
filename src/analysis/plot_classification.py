@@ -96,12 +96,12 @@ keep_modules = ["Cytokines", "Cytokine Receptor"]
 df_modules_red = df_modules.loc[df_modules["module"].isin(keep_modules)]
 df_sign_genes = df_win.loc[df_win["gene"].isin(df_modules_red["gene"]), ["gene", "gamma"]]
 
-n_keep = 40
+n_keep = 30
 df_sign_genes_top = df_sign_genes.sort_values(["gamma"], ascending=False).iloc[:n_keep,:]
 df_sign_genes_top["gamma"] = df_sign_genes_top["gamma"] * 100 / 11
 
 g = sns.catplot(data = df_sign_genes_top, x = "gamma", y = "gene", kind = "bar", color = "0.5",
-                aspect = 0.4, height = 4.8)
+                aspect = 0.4, height = 3.6)
 g.set(xlabel = "delayed (% of studies)", ylabel = "", xticks = [0,50,100])
 g.set_yticklabels(style = "italic")
 plt.show()
