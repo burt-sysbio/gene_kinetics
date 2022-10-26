@@ -53,9 +53,9 @@ g.savefig(savedir + "rmse_dist.svg")
 df_dist_red = df_dist_red.reset_index()
 
 df_dist_red = df_dist_red.loc[df_dist_red["rmse"] > 1e-3]
-g = sns.displot(data = df_dist_red, x = "rmse", hue = "model", palette = palette,
+g = sns.displot(data = df_dist_red, x = "rmse", hue = "model", palette = palette, bins = 30,
                 hue_order= ["gamma", "expo"], legend = True, alpha = 0.5, aspect = 1.2, height = 1.8)
-g.set(xlim = (0,0.8), xticks = [0,0.2,0.4,0.6,0.8], ylim = (0,2000), xlabel = "fit error (RMSE)", ylabel = "n genes")
+g.set(xlim = (0,0.8), xticks = [0,0.2,0.4,0.6,0.8], ylim = (0,12000), xlabel = "fit error (RMSE)", ylabel = "n genes")
 sns.despine(top = False, right = False)
 g.savefig(savedir + "rmse_dist_comb.pdf")
 g.savefig(savedir + "rmse_dist_comb.svg")
