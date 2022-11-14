@@ -1,4 +1,7 @@
-# take multiple pathways and plot them together in dotplot
+# take multiple pathways and plot them together in heatmap
+# store table as xlsx
+# increase memory for java application
+options(java.parameters = "- Xmx1024m")
 require(readr)
 require(tidyr)
 require(ggplot2)
@@ -7,7 +10,7 @@ require(dplyr)
 require(forcats)
 require(RColorBrewer)
 require(pheatmap)
-
+require(xlsx)
 source("src/utils.R")
 
 get_files <- function(category, use_gene_module){
@@ -33,6 +36,27 @@ get_files <- function(category, use_gene_module){
   out <- mapply(myfun1, files, filenames2, SIMPLIFY = F)
   out <- bind_rows(out)
   
+  filenames_xlsx <- str_sub(filenames2, 1, -5)
+  
+  # store as supplementary table, note that this is quite memory consuming
+  store_table <- T
+  if(store_table){
+    for(i in seq_along(files)){
+      xlsx_file <- files[[i]]
+      # reformat the name to make it short enough to fit on an xlsx sheet
+      xlsx_name <- str_split(filenames_xlsx[[i]], pattern = "_")
+      xlsx_name <- paste(xlsx_name[[1]][1], xlsx_name[[1]][3], xlsx_name[[1]][7], sep = "_")
+      
+      if(i==1){
+        append <- FALSE
+      } else {
+        append <- TRUE
+        
+        write.xlsx(xlsx_file, file = "tables/Burt_etal_Supplementary_Table_Pathway_Analysis.xlsx",
+                   sheetName=xlsx_name, append=append)
+      }
+  }
+
   return(out)
 }
 
@@ -218,7 +242,7 @@ pipeline <- function(alpha, filter, width, height, category, user_curated, sname
   }
 
   sname_heatmap <- paste0(savedir, category, "_", sname,"_", sname0, ".png")
-  
+  print(paste("saving to", sname_heatmap))
   
   # keep only signif categories
   #out <- apply_fdr_filter(out, alpha, filter)
