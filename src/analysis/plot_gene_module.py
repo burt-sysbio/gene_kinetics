@@ -35,7 +35,7 @@ ylim = [None,None]
 xlim = [None,None]
 capsize = 4
 linewidth = 1.5
-xlabel = "avg (h)"
+xlabel = r"$\mu$ (h)"
 ylabel = "SD (h)"
 modelfit = "gamma"
 
@@ -76,12 +76,12 @@ out_general = out.loc[out["module"].isin(mymodules)]
 
 out_general = out_general.loc[out_general.study.str.contains("Peine|Nir|Proserpio", regex =True)]
 
-g = sns.FacetGrid(data = out_general, col = "module", hue = "study", legend_out=True, aspect = 0.9,
-                  col_wrap= 4, height = 2)
+g = sns.FacetGrid(data = out_general, col = "module", hue = "study", legend_out=True, aspect = 1,
+                  col_wrap= 4, height = 1.6)
 g.map_dataframe(plt.errorbar, x= "avg", y = "SD", yerr = "SD_err", xerr= "avg_err",elinewidth=linewidth, capsize=capsize)
 g.set_titles("{col_name}")
 g.add_legend()
-g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel)
+g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel, xticks = [10,20,30,40])
 plt.show()
 g.savefig("../../figures/module_quantification/supp_allmodules.pdf")
 g.savefig("../../figures/module_quantification/supp_allmodules.svg")

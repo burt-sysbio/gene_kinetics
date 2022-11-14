@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import random
 plt.style.use("../paper_theme_python.mplstyle")
 
-def plot_multi_genes(genes, savename, data , fit_res_gamma , fit_res_gmm, ncol = 6, nrow =3, figsize = (11, 6),
+def plot_multi_genes(genes, savename, data , fit_res_gamma , fit_res_gmm, ncol = 3, nrow =1, figsize = (4, 1.7),
                      make_tight = False, **kwargs):
 
     fig, axes = plt.subplots(nrow, ncol, figsize= figsize)
@@ -78,7 +78,7 @@ fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_cand
 fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.svg")
 
 # plot some genes from the other category
-fittypes = ["bimodal", "gamma", "expo", "longtail", "other"]
+fittypes = ["bimodal", "other"]
 
 # sample some genes for each category and plot it
 tcell_genes = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
@@ -95,10 +95,10 @@ for fit in fittypes:
     # to make sure that genes exist get the intersection of fitted genes and genes in data
     genes = set(genes)
     genes_intersect = list(genes.intersection(set(l1), set(l2)))
-    n_genes = 18
+    n_genes = 3
     genes = random.sample(genes_intersect, n_genes)
     #genes = [x for x in genes if (x in l1) & (x in l2)]
-    plot_multi_genes(genes, fit, data, fit_res_gamma, fit_res_gmm, my_categories = ["gamma", "expo", "longtail", "bimodal"],
+    plot_multi_genes(genes, fit, data, fit_res_gamma, fit_res_gmm, my_categories = ["gamma", "expo", "bimodal"],
                      show_rmse = False, lw = 2, make_tight=True)
 
 
