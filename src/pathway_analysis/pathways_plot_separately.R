@@ -39,8 +39,9 @@ get_files <- function(category, use_gene_module){
   filenames_xlsx <- str_sub(filenames2, 1, -5)
   
   # store as supplementary table, note that this is quite memory consuming
-  store_table <- T
+  store_table <- F
   if(store_table){
+    print("storing table, this takes memory, set to false if not needed...")
     for(i in seq_along(files)){
       xlsx_file <- files[[i]]
       # reformat the name to make it short enough to fit on an xlsx sheet
@@ -51,9 +52,11 @@ get_files <- function(category, use_gene_module){
         append <- FALSE
       } else {
         append <- TRUE
-        
-        write.xlsx(xlsx_file, file = "tables/Burt_etal_Supplementary_Table_Pathway_Analysis.xlsx",
-                   sheetName=xlsx_name, append=append)
+      }
+      
+      xlsx_file$ID <- NULL
+      write.xlsx(xlsx_file, file = "tables/Burt_etal_Supplementary_Table_Pathway_Analysis.xlsx",
+                   sheetName=xlsx_name, append=append, row.names = FALSE)
       }
   }
 

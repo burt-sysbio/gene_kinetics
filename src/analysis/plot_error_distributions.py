@@ -20,6 +20,19 @@ fits_all = [pd.read_csv(readdir+ f1) for f1 in files1]
 ftest_all = [pd.read_csv(readdir+ f2) for f2 in files2]
 fnames = [f2[6:-4] for f2 in files2]
 
+# store as excel sheet
+store_table = True
+if store_table:
+    print("storing supplement table, set to False if not needed")
+    with pd.ExcelWriter('Burt_etal_Supplementary_Table_Transcriptome_Analysis_Gamma_Fits.xlsx') as writer:
+        for df_xlsx, fname in zip(fits_all, fnames):
+            fname = str.split(fname, "_")
+            if fname[0] == "Powrie":
+                fname[0] = "Ilott"
+            fname = fname[0] + "_" + fname[2]
+            df_xlsx = df_xlsx.iloc[:,1:].copy()
+            df_xlsx.to_excel(writer, sheet_name=fname, index = False, na_rep="NA")
+
 for f,n in zip(fits_all,fnames):
     f["study"] = n
 
