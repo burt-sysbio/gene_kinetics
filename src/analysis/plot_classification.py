@@ -101,8 +101,8 @@ df_sign_genes_top = df_sign_genes.sort_values(["gamma"], ascending=False).iloc[:
 df_sign_genes_top["gamma"] = df_sign_genes_top["gamma"] * 100 / 11
 
 g = sns.catplot(data = df_sign_genes_top, x = "gamma", y = "gene", kind = "bar", color = "0.5",
-                aspect = 0.4, height = 3.6)
-g.set(xlabel = "delayed (% of studies)", ylabel = "", xticks = [0,50,100])
+                aspect = 0.6, height = 3.5)
+g.set(xlabel = "gamma distributed (% of studies)", ylabel = "", xticks = [0,50,100])
 g.set_yticklabels(style = "italic")
 plt.show()
 

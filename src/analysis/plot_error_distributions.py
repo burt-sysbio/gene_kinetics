@@ -37,7 +37,7 @@ palette = [colors[0], colors[2]]
 df_dist_red = df_dist.loc[df_dist["model"] != "longtail"]
 g = sns.catplot(data = df_dist_red, x = "study", y = "rmse", hue = "model", kind = "box",
                 fliersize = 0, hue_order= ["gamma", "expo"], whis=[5, 95], legend_out=True,
-                palette = palette, aspect= 2, height = 2.1)
+                palette = palette, aspect= 1.5, height = 1.9)
 
 g.set(ylim = (-0.1,0.8), ylabel = "fit error (RMSE)", xlabel = "")
 g.set_xticklabels(rotation=90, labels= xlabels)
