@@ -70,18 +70,19 @@ out.columns = ["module", "study", "avg", "avg_err", "SD", "SD_err", "alpha", "al
 out_th1_th2 = out.loc[out.study.str.contains("Peine")]
 out_th1_th2 = out_th1_th2.loc[out_th1_th2.study.str.contains("Th1|Th2", regex = True)]
 
-mymodules = ["Cytokine Receptor", "Cytokines", "Transcription Factor", "Proliferation", "Activation",
+mymodules = ["Cytokine Receptor", "Cytokines", "Transcription Factor", "Proliferation",
              "IL2_signal", "Differentiation"]
 out_general = out.loc[out["module"].isin(mymodules)]
 
 out_general = out_general.loc[out_general.study.str.contains("Peine|Nir|Proserpio", regex =True)]
 
-g = sns.FacetGrid(data = out_general, col = "module", hue = "study", legend_out=True, aspect = 1,
-                  col_wrap= 4, height = 1.6)
+g = sns.FacetGrid(data = out_general, col = "module", hue = "study", legend_out=True, aspect = 0.7,
+                  col_wrap= 6, height = 1.6)
 g.map_dataframe(plt.errorbar, x= "avg", y = "SD", yerr = "SD_err", xerr= "avg_err",elinewidth=linewidth, capsize=capsize)
 g.set_titles("{col_name}")
 g.add_legend()
 g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel, xticks = [10,20,30,40])
+sns.despine(top = False, right = False)
 plt.show()
 g.savefig("../../figures/module_quantification/supp_allmodules.pdf")
 g.savefig("../../figures/module_quantification/supp_allmodules.svg")
@@ -106,7 +107,7 @@ gata_facs_sd = np.sqrt(gata_facs_alpha / gata_facs_beta**2)
 
 g = sns.FacetGrid(data = out_differentiation, hue = "module", legend_out=True, aspect = 1.1,
                   hue_order= ["Th1", "Th2", "Th17"], palette=["tab:blue", "tab:red", "darkgoldenrod"],
-                  height= 2.1)
+                  height= 1.7)
 g.map_dataframe(plt.errorbar, x= "avg", y = "SD", yerr = "SD_err", xerr= "avg_err",elinewidth=linewidth, capsize=capsize)
 ax = g.axes.flatten()[0]
 ax.errorbar(x = out_th2_proserpio.avg, y = out_th2_proserpio.SD,
@@ -118,7 +119,7 @@ ax.errorbar(x = out_th2_proserpio.avg, y = out_th2_proserpio.SD,
 ax.scatter(gata_facs_mu, gata_facs_sd, color = "tab:red", label = "Th2 FACS")
 ax.scatter(tbet_facs_mu, tbet_facs_sd, color = "tab:blue", label = "Th1 FACS")
 g.add_legend()
-g.set(xlim = xlim, ylim = ylim, xlabel = xlabel, ylabel = ylabel)
+g.set(xlim = xlim, xticks = [10,20,30,40], ylim = ylim, xlabel = xlabel, ylabel = ylabel)
 sns.despine(top = False, right = False)
 plt.show()
 g.savefig("../../figures/module_quantification/main_diffmodules.pdf")
