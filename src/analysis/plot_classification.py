@@ -32,7 +32,7 @@ def barplot(df, geneset, df_modules):
     ax.set_ylabel("n genes")
     ax.set_title(geneset)
     plt.xticks(rotation=90)
-
+    plt.close()
     #plt.show()
     #fig.savefig("../../figures/barplot_genelists_delays/delays_histplot_" + geneset +".pdf")
 
@@ -76,6 +76,18 @@ plt.show()
 fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups.pdf")
 fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups.svg")
 
+fig, ax = plt.subplots(figsize = (1.4,1.5))
+g = sns.histplot(y = 'group', hue = 'winner',weights= 'relval',
+                multiple = 'stack',data=out,shrink = 0.9,
+                 palette = palette, alpha = 1,
+                 hue_order = ["gamma", "expo", "other", "bimodal"])
+ax.set_ylabel("")
+ax.set_xlabel("fit assignment (%)")
+ax.set_xlim([0,100])
+
+plt.show()
+fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups_rotated.pdf")
+fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups_rotated.svg")
 
 # out2 = out.loc[out["winner"].isin(["expo", "gamma"]),:]
 #
