@@ -19,6 +19,9 @@ def gmm_cdf(x, mean1, mean2, SD, w1 = 0.5, w2 = 0.5):
     gmm2 = w2 * stats.norm.cdf(x, loc = mean2, scale = SD)
     return gmm1 + gmm2
 
+def gamma_mixture_cdf(t, alpha1, beta1, alpha2, beta2, w1 = 0.5, w2 = 0.5):
+    return w1 * gamma_cdf(t, alpha1, beta1) + w2* gamma_cdf(t, alpha2, beta2)
+
 
 def conv_cols(df):
     #df.columns = df.columns.droplevel()
