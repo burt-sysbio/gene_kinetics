@@ -13,6 +13,8 @@ def gamma_cdf(t, alpha, beta):
 def gamma_cdf1(t, beta):
     return gamma_cdf(t, 1, beta)
 
+def gamma_mixture(t, alpha1, beta1, alpha2, beta2, w1 = 0.5, w2 = 0.5):
+    return w1 * gamma_cdf(t, alpha1, beta1) + w2* gamma_cdf(t, alpha2, beta2)
 
 def gmm_cdf(x, mean1, mean2, SD, w1 = 0.5, w2 = 0.5):
     gmm1 = w1 * stats.norm.cdf(x, loc = mean1, scale = SD)

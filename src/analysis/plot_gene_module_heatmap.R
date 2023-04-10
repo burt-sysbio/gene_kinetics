@@ -23,7 +23,17 @@ prep_data <- function(df, trafo= "norm_day0"){
   df <- unique(df)
   df <- df %>% pivot_wider(names_from = time, values_from = !!as.symbol(mycol))
   df <- as.data.frame(df)
+
   rownames(df) <- df$module
+  df <- df[c("Proliferation",
+             "Differentiation",
+             "IL2 signal",
+             "Cytokine",
+             "Cytokine Receptor",
+             "Transcription Factor",
+             "Th1",
+             "Th2",
+             "Th17"),]
   df <- df[,2:ncol(df)]
   
   return(df)
@@ -67,6 +77,20 @@ mymodules <- c("expert_list")
 
 df <- df[!(df$module %in% mymodules),]
 
+# rename modules
+
+df$module[df$module=="transcription_factors"] <- "Transcription Factor"
+df$module[df$module=="prolif_genes"] <- "Proliferation"
+df$module[df$module=="th2_genes"] <- "Th2"
+df$module[df$module=="cytokine_receptor"] <- "Cytokine Receptor"
+df$module[df$module=="th1_genes"] <- "Th1"
+df$module[df$module=="diff_genes"] <- "Differentiation"
+df$module[df$module=="il2_genes"] <- "IL2 signal"
+df$module[df$module=="cytokines"] <- "Cytokine"
+df$module[df$module=="th17_genes"] <- "Th17"
+
+
+
 out <- df %>% group_by(ID)
 
 
@@ -76,6 +100,8 @@ out_keys <- out_keys$ID
 
 
 mytrafos <- c("norm_day0", "rtm", "rtm2")
+#mytrafos <- c("norm_day0")
+
 
 for(trafo in mytrafos){
   out_list2 <- lapply(out_list, prep_data, trafo)
