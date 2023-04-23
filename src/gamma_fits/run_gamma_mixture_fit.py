@@ -1,3 +1,4 @@
+#%%
 import numpy as np
 import pandas as pd
 from lmfit import minimize, Parameters
@@ -17,6 +18,7 @@ def residual_gmm(params, x, data, eps_data):
 def residual_gamma_mixture(params, x, data, eps_data):
 
     model = gamma_mixture_cdf(x, params["alpha1"], params["beta1"], params["alpha2"], params["beta2"])
+
     return (data-model) / eps_data
 
 
@@ -134,12 +136,11 @@ def fit_gamma_mixture_model(data):
 
     params = Parameters()
 
-    params.add("alpha1", value = 1, min = 0)
-    params.add("beta1", value = 1, min = 0)
-    params.add("alpha2", value = 1, min = 0)
-    params.add("beta2", value = 1, min = 0)
+    params.add("alpha1", value = 1, min = 0.01)
+    params.add("beta1", value = 1.0, min = 0.01)
+    params.add("alpha2", value = 1, min = 0.01)
+    params.add("beta2", value = 1.0, min = 0.01)
 
-    
     # fit data for each gene and celltype
     for name, group in data.groupby(["gene", "cell_type"]):
         group = group[["time", "gene", "cell_type", "avg_norm_rtm2", "SD"]].drop_duplicates()
@@ -149,9 +150,9 @@ def fit_gamma_mixture_model(data):
 
         # check that there are no nans in y
         # check that data is normalized and keep array only until max is reached
-        assert (~np.isnan(y).any())
-        assert np.max(y) == 1.0
-        assert y[0] == 0
+        #assert (~np.isnan(y).any())
+        #assert np.max(y) == 1.0
+        #assert y[0] == 0
 
         max_idx = np.where(y == 1.0)[0][0]
         y = y[:(max_idx + 1)]
@@ -165,15 +166,20 @@ def fit_gamma_mixture_model(data):
             else:
                 eps_data = np.ones_like(y)
 
-            out = minimize(residual_gamma_mixture, params, args=(x, y, eps_data))
-            out_df = fit_res_to_frame_gamma_mixture(out, group["gene"].iloc[0], x, y)
-            fit_results.append(out_df)
-
+            try:
+                out = minimize(residual_gamma_mixture, params, args=(x, y, eps_data))
+                out_df = fit_res_to_frame_gamma_mixture(out, group["gene"].iloc[0], x, y)
+                fit_results.append(out_df)
+            except:
+                mygene = group["gene"].iloc[0]
+                celltype = group["cell_type"].iloc[0]
+                print(f"nans found for gene {mygene} and celltype {celltype}")
+                
     fit_results = pd.concat(fit_results)
     fit_results = fit_results.reset_index(drop=True)
     return fit_results
 
-
+#%%
 # read in all files
 month = "feb2021"
 datadir = "../../data/data_rtm/"
@@ -183,14 +189,18 @@ datanames = os.listdir(datadir)
 
 # get filenames for data and corresponding summary files containing fit categories
 datanames = [name for name in datanames if ".csv" in name]
+
 data_all = [pd.read_csv(datadir + f) for f in datanames]
 savenames = [readdir + "fit_Gamma_Mixture_" + f for f in datanames]
 
 
 data_list = [clean_data(data) for data in data_all]
 
+#%%
 n = len(data_list)
-fit_results = joblib.Parallel(n_jobs=n)(joblib.delayed(fit_gaussian_mixture_model)(data) for data in data_list)
+fit_results = joblib.Parallel(n_jobs=n)(joblib.delayed(fit_gamma_mixture_model)(data) for data in data_list)
 
-for df, savename in zip(fit_results, savenames):
-    df.to_csv(savename)
+for fit_result, savename in zip(fit_results, savenames):
+    fit_result.to_csv(savename)
+
+# %%

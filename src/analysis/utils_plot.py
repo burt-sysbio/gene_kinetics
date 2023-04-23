@@ -8,7 +8,7 @@ Created on Mon Nov  9 15:46:15 2020
 import seaborn as sns
 import pandas as pd
 import numpy as np
-from utils import gamma_cdf, gmm_cdf
+from utils import gamma_cdf, gamma_mixture
 
 def prep_fit(gene: str, data, fit_res_gamma, fit_res_gmm):
     """
@@ -31,11 +31,12 @@ def prep_fit(gene: str, data, fit_res_gamma, fit_res_gmm):
     y_sim = [gamma_cdf(x_sim, alpha, beta) for alpha, beta in zip(alphas, betas)]
 
     # gaussian model fit data
-    m1 = fit_res_gmm.loc[gene]["mean1"]
-    m2 = fit_res_gmm.loc[gene]["mean2"]
-    SD = fit_res_gmm.loc[gene]["SD"]
-    #sd2 = fit_res_gmm.loc[gene]["SD2"]
-    y_sim_gmm = gmm_cdf(x_sim, m1, m2, SD)
+    alpha1 = fit_res_gmm.loc[gene]["alpha1"]
+    beta1 = fit_res_gmm.loc[gene]["beta1"]
+    alpha2 = fit_res_gmm.loc[gene]["alpha2"]
+    beta2 = fit_res_gmm.loc[gene]["beta2"]
+    
+    y_sim_gmm = gamma_mixture(x_sim, alpha1, beta1, alpha2, beta2)
 
     df_sim = pd.DataFrame({"time": x_sim, "fit1": y_sim[0], "fit2": y_sim[1], "fit3": y_sim[2], "fit4": y_sim_gmm})
     return df_sim, exp

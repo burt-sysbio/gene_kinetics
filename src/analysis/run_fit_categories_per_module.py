@@ -1,13 +1,14 @@
-import pandas as pd
 
+#%%
 """
 take summary of fit categories and do some postprocessing
 first, clean up isoforms
 second, filter genes that are expressed at least n times across studies
 for those genes, assign "winner" based on how often gene was classified as gamma, expo, bimodal etc
 store output
-"""
 
+"""
+import pandas as pd
 month = "feb2021"
 readdir = "../../output/fit_summary/"
 df_fits = pd.read_csv(readdir + "category_assignment.csv")

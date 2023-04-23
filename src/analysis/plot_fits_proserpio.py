@@ -1,7 +1,7 @@
-
+#%%
 import seaborn as sns
 import pandas as pd
-from src.analysis.utils_plot import plot_single_fit
+from utils_plot import plot_single_fit
 import matplotlib.pyplot as plt
 import random
 plt.style.use("../paper_theme_python.mplstyle")
@@ -38,7 +38,7 @@ study = "Proserpio_rtm_Th2_parasite.csv"
 study2 = study[:-4]
 
 data = pd.read_csv(datadir + study)
-fit_res_gmm = pd.read_csv(fitdir + "fit_GMM_" + study)
+fit_res_gmm = pd.read_csv(fitdir + "fit_Gamma_Mixture_" + study)
 fit_res_gamma = pd.read_csv(fitdir + "fit_res_" + study)
 df_categories = pd.read_csv("../../output/fit_summary/category_assignment.csv")
 
@@ -108,4 +108,9 @@ for fit in fittypes:
 #
 # plot_multi_genes(genes_bad, "high_error", data , fit_res_gamma , fit_res_gmm)
 # plot_multi_genes(genes_no_success, "fit_unsuccessful", data , fit_res_gamma , fit_res_gmm)
-# plot_multi_genes(genes_bimodal, "bimodal_pos", data , fit_res_gamma , fit_res_gmm)
+
+#%%
+genes_fig_S2 = ["Capn3", "Ifitm3", "Lilra6","Txlna", "Ehd4", "Focad"]
+plot_multi_genes(genes_fig_S2, "bimodal_pos", data , fit_res_gamma , fit_res_gmm,
+                 my_categories = ["gamma", "expo", "bimodal"], ncol = 6, figsize = (7,1.7),
+                     show_rmse = False, lw = 2, make_tight=True)

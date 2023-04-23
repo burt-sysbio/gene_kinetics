@@ -1,3 +1,4 @@
+#%%
 import pandas as pd
 import seaborn as sns
 import numpy as np
@@ -89,20 +90,6 @@ plt.show()
 fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups_rotated.pdf")
 fig.savefig("../../figures/barplot_genelists_delays/barplot_stacked_kinetic_groups_rotated.svg")
 
-# out2 = out.loc[out["winner"].isin(["expo", "gamma"]),:]
-#
-# fig, ax = plt.subplots(figsize = (6,6))
-# g = sns.barplot(data = out2, hue= "winner", y = "relval", x = "group",
-#                 palette= ["tab:green", "tab:blue"])
-# ax.set_ylim([0,70])
-# ax.set_ylabel("fit assignment (%)")
-# ax.set_xlabel("")
-#
-# plt.xticks(rotation = 90)
-# ax.get_legend().remove()
-# plt.show()
-# fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.pdf")
-# fig.savefig("../../figures/barplot_genelists_delays/barplot_expo_vs_gamma.svg")
 
 keep_modules = ["Cytokines", "Cytokine Receptor"]
 df_modules_red = df_modules.loc[df_modules["module"].isin(keep_modules)]

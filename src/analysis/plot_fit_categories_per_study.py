@@ -1,3 +1,4 @@
+#%%
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -25,7 +26,7 @@ for n in filenames:
 df_fits = pd.concat(fits)
 
 # load the bimodal genes
-df_bimodal = pd.read_csv("../../output/bimodal_genes/bimodal_genes_gaussian.csv")
+df_bimodal = pd.read_csv("../../output/bimodal_genes/bimodal_genes_gamma_mixture.csv")
 df_bimodal = df_bimodal[["gene", "study", "bimodal"]]
 
 # merge bimodal genes to the original df
@@ -105,4 +106,4 @@ fig.savefig("../../figures/category_assignment/barplot_fit_categories.pdf")
 fig.savefig("../../figures/category_assignment/barplot_fit_categories.svg")
 
 # save the fit summary
-#df_fits.to_csv("../../output/fit_summary/category_assignment.csv")
+df_fits.to_csv("../../output/fit_summary/category_assignment.csv")
