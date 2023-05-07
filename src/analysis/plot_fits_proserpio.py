@@ -112,7 +112,7 @@ for fit in fittypes:
 #%%
 genes_fig_S2 = ["Capn3", "Ifitm3", "Lilra6","Txlna", "Ehd4", "Focad"]
 plot_multi_genes(genes_fig_S2, "bimodal_pos", data , fit_res_gamma , fit_res_gmm,
-                 my_categories = ["gamma", "expo", "bimodal"], ncol = 6, figsize = (7.5,1.7),
+                 my_categories = ["gamma", "expo", "bimodal"], ncol = 6, figsize = (7.4s,1.7),
                      show_rmse = False, lw = 2, make_tight=True)
 fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.pdf")
 fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.svg")
