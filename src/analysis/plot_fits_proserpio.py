@@ -55,16 +55,16 @@ genes = ["Sdf2l1", "Alox12", "Ktn1", "Upp1"]
 #genes = ["Ifng", "Tbx21", "Eomes", "Gata3", "Il4"]
 candidate_categories = [["expo"], ["gamma"], ["bimodal"], ["expo"]]
 # other expo candidates: "Gm15558"
-fig, axes = plt.subplots(2,2,figsize = (2.5,2.5))
+fig, axes = plt.subplots(2,2,figsize = (2.1,1.7))
 axes = axes.flatten()
 for i in range(len(genes)):
     gene = genes[i]
     ax = axes[i]
     my_cats = candidate_categories[i]
     plot_single_fit(gene, data, fit_res_gamma, fit_res_gmm, ax, my_categories=my_cats, show_rmse=False, lw = 2)
-    ax.set_xticks([0,24,48,72,96])
-    ax.set_yticks([0, 0.5, 1.0])
-
+    ax.set_xticks([0,48,96])
+    ax.set_yticks([0, 1.0])
+    ax.set_title("")
     if i not in [0,2]:
         ax.set_ylabel("")
         ax.set_yticklabels([])
@@ -112,5 +112,7 @@ for fit in fittypes:
 #%%
 genes_fig_S2 = ["Capn3", "Ifitm3", "Lilra6","Txlna", "Ehd4", "Focad"]
 plot_multi_genes(genes_fig_S2, "bimodal_pos", data , fit_res_gamma , fit_res_gmm,
-                 my_categories = ["gamma", "expo", "bimodal"], ncol = 6, figsize = (7,1.7),
+                 my_categories = ["gamma", "expo", "bimodal"], ncol = 6, figsize = (7.5,1.7),
                      show_rmse = False, lw = 2, make_tight=True)
+fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.pdf")
+fig.savefig("../../figures/example_fits_proserpio/timecourse_fits_proserpio_candidate_genes.svg")

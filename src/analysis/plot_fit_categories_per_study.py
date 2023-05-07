@@ -33,6 +33,8 @@ df_bimodal = df_bimodal[["gene", "study", "bimodal"]]
 df_fits = pd.merge(df_fits, df_bimodal, on=["gene", "study"], how="left")
 df_fits.loc[df_fits["bimodal"] & (df_fits["best_fit"] == "other"), "best_fit"] = "bimodal"
 
+#df_fits.loc[df_fits["best_fit"]=="bimodal", "best_fit"] = "gmm"
+
 xlabels = ["Craw. 1", "Craw. 2", "Craw. 3", "Craw. 4",
            "Nir 1", "Nir 2",
            "Peine 1", "Peine 2", "Peine 3", "Peine 4",
@@ -64,7 +66,7 @@ mysize = 8
 df["expo"] = df["expo"] + df["longtail"]
 df.drop(["longtail"], axis = 1, inplace = True)
 
-ax = df.plot.bar(stacked=True, color = mycolors, figsize=(2.5,2.1), width = 0.85)
+ax = df.plot.bar(stacked=True, color = mycolors, figsize=(2.5,2.), width = 0.85)
 ax.set_ylabel("n kinetic genes")
 ax.set_xlabel("")
 ax.set_xticklabels(xlabels)
@@ -89,7 +91,7 @@ df_norm.index = df.index
 df_norm = df_norm * 100
 
 
-ax = df_norm.plot.bar(stacked=True, color=mycolors, figsize=(2.5, 2.1), width = 0.85)
+ax = df_norm.plot.bar(stacked=True, color=mycolors, figsize=(2.5, 2.), width = 0.85)
 ax.set_ylabel("fit assignment (%)")
 ax.set_xticklabels(xlabels)
 ax.set_ylim(0, 100)

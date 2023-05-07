@@ -11,6 +11,8 @@ df_modules = pd.read_csv("../../genesets_literature/gene_module_summary.csv")
 plt.style.use("../paper_theme_python.mplstyle")
 sns.set_palette("deep")
 
+df_modules.loc[df_modules["module"]=="IL2_signal", "module"] = "IL2 signal"
+
 def barplot(df, geneset, df_modules):
     """
     make barplot that counts number of gamma/expo, longtail etc
